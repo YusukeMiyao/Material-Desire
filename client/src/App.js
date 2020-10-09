@@ -13,13 +13,14 @@ let currentId = 0;
 
 class App extends React.Component {
   constructor(props) {
-    super(props)
-
-    this.state = {
-      wants: [],
-      totalPrice: 0,
-    };
-  }
+      super(props);
+      this.state = JSON.parse(localStorage.getItem('Key'))
+      ? {wants:JSON.parse(localStorage.getItem('Key'))}
+      : {
+        wants: [],
+        totalPrice: 0,
+      }
+    }
   render() {
     return (
       <div>
@@ -66,18 +67,20 @@ class App extends React.Component {
       img: e.img,
       editing: false,
     };
-    axios.post('/api/lists', {
-      newWant
-    }) // オブジェクトをサーバーにPOST
-      .then(response => {
-        console.log(response) // 後で行う動作確認のためのコンソール出力
-      })
-      .catch(err => {
-        console.error(new Error(err))
-      })
+    // axios.post('/api/lists', {
+    //   newWant
+    // }) // オブジェクトをサーバーにPOST
+    // .then(response => {
+    //   console.log(response) // 後で行う動作確認のためのコンソール出力
+    // })
+    // .catch(err => {
+    //   console.error(new Error(err))
+    // })
     const newWants = [...this.state.wants, newWant]
     this.setState({ wants: newWants })
     this.calculatePrice(Number(e.price))
+    let obj = JSON.stringify(newWants);
+    localStorage.setItem('Key', obj);
     currentId++;
   };
 
