@@ -29,6 +29,7 @@ class Want extends React.Component {
       handoleClickDelete = () => {
         const { onDelete, id } = this.props;
         onDelete(id);
+        localStorage.clear();
       };
 }
 
