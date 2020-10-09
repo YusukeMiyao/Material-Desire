@@ -13,11 +13,10 @@ let currentId = 0;
 
 class App extends React.Component {
     constructor(props) {
-      super(props)
-
-      this.state = {
-        wants: [],
-      };
+      super(props);
+      this.state = JSON.parse(localStorage.getItem('datalist'))
+      ? {wants:JSON.parse(localStorage.getItem('datalist'))}
+      :{ wants : [] }
     }
   render() {
     return(
@@ -63,18 +62,21 @@ class App extends React.Component {
       price:e.price,
       img:e.img,
       editing: false,
+      
     };
-    axios.post('/api/lists', {
-      newWant
-    }) // オブジェクトをサーバーにPOST
-    .then(response => {
-      console.log(response) // 後で行う動作確認のためのコンソール出力
-    })
-    .catch(err => {
-      console.error(new Error(err))
-    })
+    // axios.post('/api/lists', {
+    //   newWant
+    // }) // オブジェクトをサーバーにPOST
+    // .then(response => {
+    //   console.log(response) // 後で行う動作確認のためのコンソール出力
+    // })
+    // .catch(err => {
+    //   console.error(new Error(err))
+    // })
     const newWants = [...this.state.wants, newWant]
     this.setState({ wants: newWants })
+    let obj = JSON.stringify(newWants);
+    localStorage.setItem('Key', obj);
     currentId++;
   };
 
