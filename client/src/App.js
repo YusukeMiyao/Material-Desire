@@ -14,8 +14,8 @@ let currentId = 0;
 class App extends React.Component {
     constructor(props) {
       super(props);
-      this.state = JSON.parse(localStorage.getItem('datalist'))
-      ? {wants:JSON.parse(localStorage.getItem('datalist'))}
+      this.state = JSON.parse(localStorage.getItem('Key'))
+      ? {wants:JSON.parse(localStorage.getItem('Key'))}
       :{ wants : [] }
     }
   render() {
@@ -99,8 +99,15 @@ class App extends React.Component {
   };
 
   handleClickDelete = id => {
+    localStorage.clear();
     const newWant = this.state.wants.filter(want => want.id !==id)
     this.setState({ wants:newWant })
+    let obj = JSON.stringify(newWant);
+    localStorage.setItem('Key', obj);
+    
+    if(localStorage.getItem('Key') === '[]' ) {
+      localStorage.clear();
+    }
   };
 
   handleChangeWantAttribute = (id, key, value) => {
