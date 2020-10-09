@@ -106,8 +106,15 @@ class App extends React.Component {
   };
 
   handleClickDelete = id => {
-    const newWant = this.state.wants.filter(want => want.id !== id)
-    this.setState({ wants: newWant })
+    localStorage.clear();
+    const newWant = this.state.wants.filter(want => want.id !==id)
+    this.setState({ wants:newWant })
+    let obj = JSON.stringify(newWant);
+    localStorage.setItem('Key', obj);
+
+    if(localStorage.getItem('Key') === '[]' ) {
+      localStorage.clear();
+    }
   };
 
   handleChangeWantAttribute = (id, key, value) => {
