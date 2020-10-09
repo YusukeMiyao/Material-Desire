@@ -104,6 +104,9 @@ class App extends React.Component {
     });
 
     this.setState({ wants: newWant });
+    localStorage.clear();
+      let obj = JSON.stringify(newWant);
+      localStorage.setItem('Key', obj);
   };
 
   handleClickDelete = id => {
