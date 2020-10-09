@@ -40,7 +40,7 @@ class App extends React.Component {
                 price={price}
                 img={img}
                 onCancel={this.handleChangeWantAttribute}
-                onSubmit={this.handleUpdateWantText}
+                onSubmit={this.editList}
               />
             ) : (
                 <Want
@@ -87,7 +87,7 @@ class App extends React.Component {
     currentId++;
   };
 
-  handleUpdateWantText = (id, e) => {
+  editList = (id, e) => {
     const newWant = this.state.wants.map(want => {
       if (want.id === id) {
         return {

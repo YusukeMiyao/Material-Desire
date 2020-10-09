@@ -16,7 +16,7 @@ class Want extends React.Component {
         <p>値段:{price}</p>
         <img src={img} height={100} width={100}/>
         <button onClick={this.handleClickEdit}>編集</button>
-        <button onClick={this.handoleClickDelete}>削除</button>
+        <button onClick={this.handleClickDelete}>削除</button>
       </div>
     );
   }
@@ -26,7 +26,7 @@ class Want extends React.Component {
         onChange(id, 'editing', !editing);
       };
 
-      handoleClickDelete = () => {
+      handleClickDelete = () => {
         const { onDelete, id } = this.props;
         onDelete(id);
       };
