@@ -1,68 +1,61 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# ToDoList
 
-## Available Scripts
+## How to start
 
-In the project directory, you can run:
+### server & DB
+1. `npm install`
+1. `mongod --config /usr/local/etc/mongod.conf`
+1. 別タブに移動し、`npm start`
 
-### `yarn start`
+### front
+1. `cd client`
+1. `npm install`
+1. `npm start`
+1. `http://localhost:3000/`にアクセス
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## 開発ルール
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+1. 自分の開発する機能に対応する issue を立てる。
 
-### `yarn test`
+1. ローカルで`develop`ブランチに`checkout`。
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. リモートの変更を反映するため、**必ずプルする**。
 
-### `yarn build`
+    - `git pull origin develop`
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. issue に対応したブランチを切る。
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+    - ブランチの命名
+      - まず`feature`（機能追加）, `fix`（バグ修正）, `hotfix` （致命的なバグの修正）など、そのブランチで行う作業の概要を書く。
+      - "/" で区切り、詳細な説明をハイフン区切りで記述。
+      - "_"で区切り、issue番号を追加。
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+      例
 
-### `yarn eject`
+      > about/detail-description-of-function_issue00
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+    - コミットは細かく。細かい変更目的毎にコミットすること。
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    - コミットメッセージの書き方
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+      - 一行目に概要。まず`ADD`, `DELETE`, `FIX`, `IMPROVE`など、そのコミットで行った作業を書く。
+      - ":"で区切り、詳細を書き足す。
+      - （もしあれば）二行目にTODOを書く。メモ代わり。
+      - 最終行には "#00" の形で対応するissue番号を下記。
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+      書き方
 
-## Learn More
+      > ABOUT: write about your development
+      >
+      > TODO(optional): write about your (or someone's) to-do
+      >
+      > #00 (issue number)
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+       具体例
+      > MODIFY: encoding of output csv of prediction
+      >
+      > TODO(optional): encoding of output accuracy
+      >
+      > #124
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+1. issue で書いた内容を必要十分に開発できたら、適切なブランチに対して（だいたいは`develop`）マージする。

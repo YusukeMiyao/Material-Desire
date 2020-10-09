@@ -4,6 +4,7 @@ import './App.css';
 import Form from './Form';
 import Want from './Want';
 import EditWant from './EditWant';
+import axios from 'axios';
 // import styled from 'styled-components';
 // import '@atlaskit/css-reset';
 
@@ -26,7 +27,7 @@ class App extends React.Component {
             {this.state.wants.map(({ id, goodsName, url, price, img, editing,index}) => (
               <li key={id}>
                 {editing ? (
-                  <EditWant 
+                  <EditWant
                     id={id}
                     goodsName={goodsName}
                     url={url}
@@ -36,7 +37,7 @@ class App extends React.Component {
                     onSubmit={this.handleUpdateWantText}
                   />
                 ): (
-                  <Want 
+                  <Want
                     key={id}
                     id={id}
                     goodsName={goodsName}
@@ -47,13 +48,13 @@ class App extends React.Component {
                     onDelete={this.handleClickDelete}
                     index={index}
                   />
-                )} 
+                )}
               </li>
             ))}
       </div>
     );
   }
-  
+
   handleSubmit = e => {
     const newWant = {
       id: currentId,
@@ -63,7 +64,16 @@ class App extends React.Component {
       img:e.img,
       editing: false,
     };
-    const  newWants = [...this.state.wants, newWant]
+    axios.post('/api/lists', {
+      newWant
+    }) // オブジェクトをサーバーにPOST
+    .then(response => {
+      console.log(response) // 後で行う動作確認のためのコンソール出力
+    })
+    .catch(err => {
+      console.error(new Error(err))
+    })
+    const newWants = [...this.state.wants, newWant]
     this.setState({ wants: newWants })
     currentId++;
   };
