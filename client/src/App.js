@@ -14,8 +14,11 @@ let currentId = 0;
 class App extends React.Component {
   constructor(props) {
       super(props);
-      this.state = JSON.parse(localStorage.getItem('Key'))
-      ? {wants:JSON.parse(localStorage.getItem('Key'))}
+      this.state = JSON.parse(localStorage.getItem('Key'), localStorage.getItem('TotalPrice'))
+      ? {
+        wants: JSON.parse(localStorage.getItem('Key')),
+        totalPrice: JSON.parse(localStorage.getItem('TotalPrice'))
+      }
       : {
         wants: [],
         totalPrice: 0,
@@ -123,6 +126,7 @@ class App extends React.Component {
   calculatePrice = (price) => {
     price = this.state.totalPrice + price
     this.setState({ totalPrice: price })
+    localStorage.setItem('TotalPrice', price)
   }
 }
 
