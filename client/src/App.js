@@ -81,7 +81,7 @@ class App extends React.Component {
     // })
     const newWants = [...this.state.wants, newWant]
     this.setState({ wants: newWants })
-    this.calculatePrice(Number(e.price))
+    this.plusPrice(Number(e.price))
     let obj = JSON.stringify(newWants);
     localStorage.setItem('Key', obj);
     currentId++;
@@ -93,6 +93,7 @@ class App extends React.Component {
         return {
           ...want,
           goodsName: e.goodsName,
+          price: e.price,
           url: e.url,
           img: e.img,
           editing: false,
@@ -106,13 +107,15 @@ class App extends React.Component {
   };
 
   handleClickDelete = id => {
+    const delItem = this.state.wants.filter(want => want.id === id)
+    this.minusPrice(delItem[0].price)
     localStorage.clear();
     const newWant = this.state.wants.filter(want => want.id !==id)
     this.setState({ wants:newWant })
     let obj = JSON.stringify(newWant);
     localStorage.setItem('Key', obj);
 
-    if(localStorage.getItem('Key') === '[]' ) {
+    if (localStorage.getItem('Key') === '[]') {
       localStorage.clear();
     }
   };
@@ -130,9 +133,16 @@ class App extends React.Component {
     this.setState({ wants: newWant })
   };
 
-  calculatePrice = (price) => {
+  plusPrice = (price) => {
     price = this.state.totalPrice + price
     this.setState({ totalPrice: price })
+    localStorage.setItem('TotalPrice', price)
+  }
+  minusPrice = (price) => {
+    price = this.state.totalPrice - price
+    this.setState({
+      totalPrice: price
+    })
     localStorage.setItem('TotalPrice', price)
   }
 }
