@@ -12,44 +12,51 @@ import axios from 'axios';
 let currentId = 0;
 
 class App extends React.Component {
-    constructor(props) {
+  constructor(props) {
       super(props);
-      this.state = JSON.parse(localStorage.getItem('Key'))
-      ? {wants:JSON.parse(localStorage.getItem('Key'))}
-      :{ wants : [] }
+      this.state = JSON.parse(localStorage.getItem('Key'), localStorage.getItem('TotalPrice'))
+      ? {
+        wants: JSON.parse(localStorage.getItem('Key')),
+        totalPrice: JSON.parse(localStorage.getItem('TotalPrice'))
+      }
+      : {
+        wants: [],
+        totalPrice: 0,
+      }
     }
   render() {
-    return(
+    return (
       <div>
         <h1>欲しいものリスト</h1>
-          <Form onSubmit={this.handleSubmit}/>
-            {this.state.wants.map(({ id, goodsName, url, price, img, editing,index}) => (
-              <li key={id}>
-                {editing ? (
-                  <EditWant
-                    id={id}
-                    goodsName={goodsName}
-                    url={url}
-                    price={price}
-                    img={img}
-                    onCancel={this.handleChangeWantAttribute}
-                    onSubmit={this.handleUpdateWantText}
-                  />
-                ): (
-                  <Want
-                    key={id}
-                    id={id}
-                    goodsName={goodsName}
-                    url={url}
-                    price={price}
-                    img={img}
-                    onChange={this.handleChangeWantAttribute}
-                    onDelete={this.handleClickDelete}
-                    index={index}
-                  />
-                )}
-              </li>
-            ))}
+        <p>合計金額：{this.state.totalPrice}</p>
+        <Form onSubmit={this.handleSubmit} />
+        {this.state.wants.map(({ id, goodsName, url, price, img, editing, index }) => (
+          <li key={id}>
+            {editing ? (
+              <EditWant
+                id={id}
+                goodsName={goodsName}
+                url={url}
+                price={price}
+                img={img}
+                onCancel={this.handleChangeWantAttribute}
+                onSubmit={this.handleUpdateWantText}
+              />
+            ) : (
+                <Want
+                  key={id}
+                  id={id}
+                  goodsName={goodsName}
+                  url={url}
+                  price={price}
+                  img={img}
+                  onChange={this.handleChangeWantAttribute}
+                  onDelete={this.handleClickDelete}
+                  index={index}
+                />
+              )}
+          </li>
+        ))}
       </div>
     );
   }
@@ -57,12 +64,11 @@ class App extends React.Component {
   handleSubmit = e => {
     const newWant = {
       id: currentId,
-      goodsName:e.goodsName,
-      url:e.url,
-      price:e.price,
-      img:e.img,
+      goodsName: e.goodsName,
+      url: e.url,
+      price: e.price,
+      img: e.img,
       editing: false,
-      
     };
     // axios.post('/api/lists', {
     //   newWant
@@ -75,27 +81,28 @@ class App extends React.Component {
     // })
     const newWants = [...this.state.wants, newWant]
     this.setState({ wants: newWants })
+    this.calculatePrice(Number(e.price))
     let obj = JSON.stringify(newWants);
     localStorage.setItem('Key', obj);
     currentId++;
   };
 
-  handleUpdateWantText = (id, e ) => {
+  handleUpdateWantText = (id, e) => {
     const newWant = this.state.wants.map(want => {
       if (want.id === id) {
-      return {
-        ...want,
-        goodsName:e.goodsName,
-        url:e.url,
-        img:e.img,
-        editing:false,
-      };
-    }
+        return {
+          ...want,
+          goodsName: e.goodsName,
+          url: e.url,
+          img: e.img,
+          editing: false,
+        };
+      }
 
-    return want
+      return want
     });
 
-    this.setState({wants:newWant});
+    this.setState({ wants: newWant });
   };
 
   handleClickDelete = id => {
@@ -104,7 +111,7 @@ class App extends React.Component {
     this.setState({ wants:newWant })
     let obj = JSON.stringify(newWant);
     localStorage.setItem('Key', obj);
-    
+
     if(localStorage.getItem('Key') === '[]' ) {
       localStorage.clear();
     }
@@ -112,16 +119,22 @@ class App extends React.Component {
 
   handleChangeWantAttribute = (id, key, value) => {
     const newWant = this.state.wants.map(want => {
-      if (want.id===id) {
+      if (want.id === id) {
         return {
           ...want,
-          [key] : value,
+          [key]: value,
         };
       }
       return want;
     })
-    this.setState({ wants:newWant })
+    this.setState({ wants: newWant })
   };
+
+  calculatePrice = (price) => {
+    price = this.state.totalPrice + price
+    this.setState({ totalPrice: price })
+    localStorage.setItem('TotalPrice', price)
+  }
 }
 
 export default App;
