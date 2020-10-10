@@ -8,6 +8,7 @@ class EditWant extends React.Component {
             data : {
                 goodsName:props.goodsName,
                 url:props.url,
+                place:props.place,
                 price:props.price,
                 img:props.img,
             }
@@ -19,8 +20,10 @@ class EditWant extends React.Component {
         <div>
             欲しいもの:
                 <input type="text" name='goodsName' value={this.state.data.goodsName} onChange={this.handleChange}/>
-            URL・場所:
-                <input type="text"  name='url' value={this.state.data.url} onChange={this.handleChange}/>
+            URL:
+                <input type="url"  name='url' value={this.state.data.url} onChange={this.handleChange}/>
+            場所:
+                <input type='place' name='place' value={this.state.data.place} onChange={this.handleChange}/>
             値段:
                 <input type='text' name='price' value={this.state.data.price} onChange={this.handleChange}/>
             画像:
@@ -44,6 +47,9 @@ class EditWant extends React.Component {
                 break;
             case 'url':
                 data.url = e.target.value;
+                break;
+            case 'place':
+                data.place = e.target.value;
                 break;
             case 'price':
                 data.price = e.target.value;
