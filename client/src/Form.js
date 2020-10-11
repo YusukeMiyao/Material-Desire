@@ -12,6 +12,7 @@ class Form extends React.Component {
                 url:'',
                 price:'',
                 img:Icon,
+                place:'',
             }
         };
     }
@@ -21,10 +22,13 @@ class Form extends React.Component {
             <form onSubmit={this.handleSubmit}>
                 欲しいもの:
                 <input type="text" name='goodsName' value={this.state.data.goodsName} onChange={this.handleChange}/>
-                URL・場所:
-                <input type="text"  name='url' value={this.state.data.url} onChange={this.handleChange}/>
+                URL:
+                <input type="url"  name='url' value={this.state.data.url} onChange={this.handleChange}/>
+                場所:
+                <input type="text" name= 'place' value={this.state.data.place} onChange={this.handleChange}/>
                 値段：
-                <input type='text' name='price' value={this.state.data.price} onChange={this.handleChange}/>
+                <input type="tel" step="1" name='price' value={this.state.data.price} onChange={this.handleChange}/>
+                <div className="error">整数のみ入力できます</div>
                 画像:
                 <input type="file" name='img'   accept="image/*" multiple onChange={this.handleChange} onClick={(e)=>{e.target.value = null}}/>
                 <img src={this.state.data.img} height={ 100 } width={ 100 } alt='画像' />
@@ -42,13 +46,16 @@ class Form extends React.Component {
         switch (e.target.name) {
             case 'goodsName':
                 data.goodsName = e.target.value
-                data.id = this.props.id
+                // data.id = this.props.id
                 break;
             case 'url':
                 data.url = e.target.value;
                 break;
+            case 'place':
+                data.place = e.target.value;
+                break;
             case 'price':
-                data.price = e.target.value;
+                data.price=e.target.value;
                 break;
             case 'img':
                 let files = e.target.files;
@@ -74,9 +81,9 @@ class Form extends React.Component {
     handleSubmit = e => {
         const data = this.state.data;
         e.preventDefault();
-        if (data.goodsName === '' && data.url === '' && data.img === Icon) return;
+        if (data.goodsName === '' && data.url === '' && data.img === Icon ) return;
         this.props.onSubmit(data)
-        this.setState({data:{ goodsName:'', url:'', price:'', img:Icon, }})
+        this.setState({data:{ goodsName:'', url:'', place:'', price:'', img:Icon, }})
     };
         
 }

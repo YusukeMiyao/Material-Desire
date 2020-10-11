@@ -7,16 +7,17 @@ import React from 'react';
 
 class Want extends React.Component {
   render() {
-    const { goodsName, url, img, price} = this.props
+    const { goodsName, url, img, price, place} = this.props
         
     return(
       <div>
         <p>欲しいもの:{goodsName}</p>
-        <p>URL・場所:{url}</p>
+        URL:<a target="_blank" href={url}>{url}</a>
+        <p>場所:{place}</p>
         <p>値段:{price}</p>
         <img src={img} height={100} width={100}/>
         <button onClick={this.handleClickEdit}>編集</button>
-        <button onClick={this.handoleClickDelete}>削除</button>
+        <button onClick={this.handleClickDelete}>削除</button>
       </div>
     );
   }
@@ -26,7 +27,7 @@ class Want extends React.Component {
         onChange(id, 'editing', !editing);
       };
 
-      handoleClickDelete = () => {
+      handleClickDelete = () => {
         const { onDelete, id } = this.props;
         onDelete(id);
       };

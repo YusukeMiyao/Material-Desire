@@ -8,7 +8,6 @@ import axios from 'axios';
 // import styled from 'styled-components';
 // import '@atlaskit/css-reset';
 
-
 let currentId = 0;
 
 class App extends React.Component {
@@ -30,17 +29,18 @@ class App extends React.Component {
         <h1>欲しいものリスト</h1>
         <p>合計金額：{this.state.totalPrice}</p>
         <Form onSubmit={this.handleSubmit} />
-        {this.state.wants.map(({ id, goodsName, url, price, img, editing, index }) => (
+        {this.state.wants.map(({ id, goodsName, url, place, price, img, editing, index }) => (
           <li key={id}>
             {editing ? (
               <EditWant
                 id={id}
                 goodsName={goodsName}
                 url={url}
+                place={place}
                 price={price}
                 img={img}
                 onCancel={this.handleChangeWantAttribute}
-                onSubmit={this.handleUpdateWantText}
+                onSubmit={this.editList}
               />
             ) : (
                 <Want
@@ -48,6 +48,7 @@ class App extends React.Component {
                   id={id}
                   goodsName={goodsName}
                   url={url}
+                  place={place}
                   price={price}
                   img={img}
                   onChange={this.handleChangeWantAttribute}
@@ -57,6 +58,7 @@ class App extends React.Component {
               )}
           </li>
         ))}
+        <button onClick={this.allDelete}>全消去</button>
       </div>
     );
   }
@@ -66,6 +68,7 @@ class App extends React.Component {
       id: currentId,
       goodsName: e.goodsName,
       url: e.url,
+      place: e.place,
       price: e.price,
       img: e.img,
       editing: false,
@@ -87,26 +90,34 @@ class App extends React.Component {
     currentId++;
   };
 
-  handleUpdateWantText = (id, e) => {
+  editList = (id, e) => {
     const newWant = this.state.wants.map(want => {
       if (want.id === id) {
         return {
           ...want,
           goodsName: e.goodsName,
           price: e.price,
+          place: e.place,
           url: e.url,
           img: e.img,
           editing: false,
         };
       }
-
       return want
     });
-
     this.setState({ wants: newWant });
     localStorage.clear();
       let obj = JSON.stringify(newWant);
       localStorage.setItem('Key', obj);
+
+      let zero = 0;
+      this.state.wants.map(want => (
+          zero + want.price 
+      ))
+    
+      this.setState({ totalPrice: zero })
+      localStorage.setItem('TotalPrice', zero)
+  
   };
 
   handleClickDelete = id => {
@@ -121,6 +132,11 @@ class App extends React.Component {
     if (localStorage.getItem('Key') === '[]') {
       localStorage.clear();
     }
+  };
+
+  allDelete = () => {
+    this.setState({wants:[],totalPrice:0})
+    localStorage.clear();
   };
 
   handleChangeWantAttribute = (id, key, value) => {
