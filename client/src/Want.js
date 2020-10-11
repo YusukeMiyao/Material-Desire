@@ -12,7 +12,7 @@ class Want extends React.Component {
     return(
       <div>
         <p>欲しいもの:{goodsName}</p>
-        URL:<a href='url'>{url}</a>
+        URL:<a target="_blank" href={url}>{url}</a>
         <p>場所:{place}</p>
         <p>値段:{price}</p>
         <img src={img} height={100} width={100}/>
