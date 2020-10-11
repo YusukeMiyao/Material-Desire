@@ -8,19 +8,20 @@ import axios from 'axios';
 // import styled from 'styled-components';
 // import '@atlaskit/css-reset';
 
-let currentId = 0;
 
 class App extends React.Component {
   constructor(props) {
-      super(props);
-      this.state = JSON.parse(localStorage.getItem('Key'), localStorage.getItem('TotalPrice'))
+    super(props);
+    this.state = JSON.parse(localStorage.getItem('Key'), localStorage.getItem('TotalPrice'), localStorage.getItem('Count'))
       ? {
         wants: JSON.parse(localStorage.getItem('Key')),
-        totalPrice: JSON.parse(localStorage.getItem('TotalPrice'))
+        totalPrice: JSON.parse(localStorage.getItem('TotalPrice')),
+        count: JSON.parse(localStorage.getItem('Count'))
       }
       : {
         wants: [],
         totalPrice: 0,
+        count: 0,
       }
     }
   render() {
@@ -63,7 +64,9 @@ class App extends React.Component {
     );
   }
 
-  handleSubmit = e => {
+  handleSubmit = async e => {
+    let currentId = this.state.count
+    currentId++
     const newWant = {
       id: currentId,
       goodsName: e.goodsName,
@@ -83,14 +86,14 @@ class App extends React.Component {
     //   console.error(new Error(err))
     // })
     const newWants = [...this.state.wants, newWant]
-    this.setState({ wants: newWants })
-    this.plusPrice(Number(e.price))
+    await this.setState({ wants: newWants, count: currentId })
+    this.calculatePrice()
     let obj = JSON.stringify(newWants);
     localStorage.setItem('Key', obj);
-    currentId++;
+    localStorage.setItem('Count', currentId);
   };
 
-  editList = (id, e) => {
+  editList = async (id, e) => {
     const newWant = this.state.wants.map(want => {
       if (want.id === id) {
         return {
@@ -105,37 +108,29 @@ class App extends React.Component {
       }
       return want
     });
-    this.setState({ wants: newWant });
+    await this.setState({ wants: newWant });
     localStorage.clear();
-      let obj = JSON.stringify(newWant);
-      localStorage.setItem('Key', obj);
-
-      let zero = 0;
-      this.state.wants.map(want => (
-          zero + want.price 
-      ))
-    
-      this.setState({ totalPrice: zero })
-      localStorage.setItem('TotalPrice', zero)
-  
-  };
-
-  handleClickDelete = id => {
-    const delItem = this.state.wants.filter(want => want.id === id)
-    this.minusPrice(delItem[0].price)
-    localStorage.clear();
-    const newWant = this.state.wants.filter(want => want.id !==id)
-    this.setState({ wants:newWant })
     let obj = JSON.stringify(newWant);
     localStorage.setItem('Key', obj);
+    localStorage.setItem('Count', this.state.count);
+    this.calculatePrice()
+  };
 
+  handleClickDelete = async id => {
+    localStorage.clear();
+    const newWant = this.state.wants.filter(want => want.id !==id)
+    await this.setState({ wants: newWant, count: this.state.count })
+    let obj = JSON.stringify(newWant);
+    localStorage.setItem('Key', obj);
+    localStorage.setItem('Count', this.state.count);
     if (localStorage.getItem('Key') === '[]') {
       localStorage.clear();
     }
+    this.calculatePrice()
   };
 
   allDelete = () => {
-    this.setState({wants:[],totalPrice:0})
+    this.setState({wants:[],totalPrice:0, count:0})
     localStorage.clear();
   };
 
@@ -152,17 +147,17 @@ class App extends React.Component {
     this.setState({ wants: newWant })
   };
 
-  plusPrice = (price) => {
-    price = this.state.totalPrice + price
-    this.setState({ totalPrice: price })
-    localStorage.setItem('TotalPrice', price)
-  }
-  minusPrice = (price) => {
-    price = this.state.totalPrice - price
-    this.setState({
-      totalPrice: price
+  calculatePrice = async () => {
+    let total = 0;
+    this.state.wants.map(want => {
+      let price = Number(want.price)
+      total = total + price
+      return total
     })
-    localStorage.setItem('TotalPrice', price)
+    await this.setState({
+      totalPrice: total
+    })
+    localStorage.setItem('TotalPrice', total)
   }
 }
 
