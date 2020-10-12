@@ -55,7 +55,7 @@ class EditWant extends React.Component {
                 let price = e.target.value.replace(/,/g, '')
                 if(Number(price) || price === '') {
                     if(price < 0) {
-                        price.replace(/-/g,'') 
+                        price.replace(/-/g,'')
                         return price;
                     }
                     price = Number(price).toLocaleString();
@@ -79,14 +79,14 @@ class EditWant extends React.Component {
                 data.img=null
                 break;
         }
-       // 状態を更新  
+       // 状態を更新
         this.setState({
             data: data
         });
 }
 
     imageDelete = () => {
-        
+
     }
     handleClickCancel = () => {
         const { onCancel, id } = this.props
