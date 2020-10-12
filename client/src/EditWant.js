@@ -52,7 +52,10 @@ class EditWant extends React.Component {
                 data.place = e.target.value;
                 break;
             case 'price':
-                data.price = e.target.value;
+                let price = e.target.value.replace(/,/g, '')
+                price = Number(price).toLocaleString()
+                data.price = price;
+                // data.price = e.target.value;
                 break;
             case 'img':
                 let files = e.target.files;
@@ -67,14 +70,14 @@ class EditWant extends React.Component {
                 data.img=null
                 break;
         }
-       // 状態を更新  
+       // 状態を更新
         this.setState({
             data: data
         });
 }
 
     imageDelete = () => {
-        
+
     }
     handleClickCancel = () => {
         const { onCancel, id } = this.props
