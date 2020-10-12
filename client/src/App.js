@@ -28,7 +28,7 @@ class App extends React.Component {
     return (
       <div>
         <h1>欲しいものリスト</h1>
-        <p>合計金額：{this.state.totalPrice}</p>
+        <p>合計金額：¥{this.state.totalPrice.toLocaleString()}</p>
         <Form onSubmit={this.handleSubmit} />
         {this.state.wants.map(({ id, goodsName, url, place, price, img, editing, index }) => (
           <li key={id}>
@@ -150,7 +150,8 @@ class App extends React.Component {
   calculatePrice = async () => {
     let total = 0;
     this.state.wants.map(want => {
-      let price = Number(want.price)
+      let price = want.price.replace(/,/g, '')
+      price = Number(price)
       total = total + price
       return total
     })
