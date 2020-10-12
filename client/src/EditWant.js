@@ -53,15 +53,14 @@ class EditWant extends React.Component {
                 break;
             case 'price':
                 let price = e.target.value.replace(/,/g, '')
+                if (price.match(/\.|\-/)) {
+                    return
+                }
                 if(Number(price) || price === '') {
-                    if(price < 0) {
-                        price.replace(/-/g,'')
-                        return price;
-                    }
                     price = Number(price).toLocaleString();
-                        if (price === '0') {
-                            price = '';
-                        }
+                    if (price === '0') {
+                    price = '';
+                    }
                     data.price = price;
                 }
                 else return

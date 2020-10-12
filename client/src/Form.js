@@ -26,10 +26,14 @@ class Form extends React.Component {
                 場所:
                 <input type="text" name='place' value={this.state.data.place} onChange={this.handleChange}/>
                 値段：
-                <input type="tel"  name='price' value={this.state.data.price} onChange={this.handleChange} placeholder='半角数字のみ'/>
+                < input type = "tel"
+                name = 'price'
+                value = { this.state.data.price }
+                onChange = { this.handleChange }
+                placeholder = '半角数字のみ' />
                 <div className="error">整数のみ入力できます</div>
                 画像:
-                <input type="file" name='img'   accept="image/*" multiple onChange={this.handleChange} onClick={(e)=>{e.target.value = null}}/>
+                <input type="file" name='img' accept="image/*" multiple onChange={this.handleChange} onClick={(e)=>{e.target.value = null}}/>
                 <img src={this.state.data.img} height={ 100 } width={ 100 } alt='画像' />
                 <button name='delete' onClick={this.handleChange}>画像リセット</button>
                 <button onClick={this.handleSubmit}>追加</button>
@@ -55,15 +59,14 @@ class Form extends React.Component {
                 break;
             case 'price':
                 let price = e.target.value.replace(/,/g, '')
+                if (price.match(/\.|\-/)) {
+                    return
+                }
                 if(Number(price) || price === '') {
-                    if(price < 0) {
-                        price.replace(/-/g,'') 
-                        return price;
-                    }
                     price = Number(price).toLocaleString();
-                        if (price === '0') {
-                            price = '';
-                        }
+                    if (price === '0') {
+                        price = '';
+                    }
                     data.price = price;
                 }
                 else return
@@ -96,7 +99,7 @@ class Form extends React.Component {
         this.props.onSubmit(data)
         this.setState({data:{ goodsName:'', url:'', place:'', price: 0, img:Icon, }})
     };
-    
+
 }
 
 export default Form;
