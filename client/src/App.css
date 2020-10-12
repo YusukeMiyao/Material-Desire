@@ -36,3 +36,9 @@
     transform: rotate(360deg);
   }
 }
+
+input:invalid + .error {
+  display: block;
+  color: red;
+  font-size: 0.9em;
+}

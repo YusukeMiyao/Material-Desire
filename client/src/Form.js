@@ -7,10 +7,9 @@ class Form extends React.Component {
 
         this.state= {
             data : {
-                text:'',
                 goodsName:'',
                 url:'',
-                price: 0,
+                price:'',
                 img:Icon,
                 place:'',
             }
@@ -27,7 +26,7 @@ class Form extends React.Component {
                 場所:
                 <input type="text" name='place' value={this.state.data.place} onChange={this.handleChange}/>
                 値段：
-                <input type="tel" step="1" name='price' value={this.state.data.price} onChange={this.handleChange} />
+                <input type="tel"  name='price' value={this.state.data.price} onChange={this.handleChange} placeholder='半角数字のみ'/>
                 <div className="error">整数のみ入力できます</div>
                 画像:
                 <input type="file" name='img'   accept="image/*" multiple onChange={this.handleChange} onClick={(e)=>{e.target.value = null}}/>
@@ -56,8 +55,18 @@ class Form extends React.Component {
                 break;
             case 'price':
                 let price = e.target.value.replace(/,/g, '')
-                price = Number(price).toLocaleString();
-                data.price = price;
+                if(Number(price) || price === '') {
+                    if(price < 0) {
+                        price.replace(/-/g,'') 
+                        return price;
+                    }
+                    price = Number(price).toLocaleString();
+                        if (price === '0') {
+                            price = '';
+                        }
+                    data.price = price;
+                }
+                else return
                 break;
             case 'img':
                 let files = e.target.files;
@@ -79,7 +88,7 @@ class Form extends React.Component {
         this.setState({
             data: data
         });
-}
+    }
     handleSubmit = e => {
         const data = this.state.data;
         e.preventDefault();
@@ -87,7 +96,7 @@ class Form extends React.Component {
         this.props.onSubmit(data)
         this.setState({data:{ goodsName:'', url:'', place:'', price: 0, img:Icon, }})
     };
-        
+    
 }
 
 export default Form;
