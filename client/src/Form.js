@@ -10,13 +10,13 @@ class Form extends React.Component {
                 text:'',
                 goodsName:'',
                 url:'',
-                price:'',
+                price: 0,
                 img:Icon,
                 place:'',
             }
         };
     }
-    
+
     render() {
         return(
             <form onSubmit={this.handleSubmit}>
@@ -25,9 +25,9 @@ class Form extends React.Component {
                 URL:
                 <input type="url"  name='url' value={this.state.data.url} onChange={this.handleChange}/>
                 場所:
-                <input type="text" name= 'place' value={this.state.data.place} onChange={this.handleChange}/>
+                <input type="text" name='place' value={this.state.data.place} onChange={this.handleChange}/>
                 値段：
-                <input type="tel" step="1" name='price' value={this.state.data.price} onChange={this.handleChange}/>
+                <input type="tel" step="1" name='price' value={this.state.data.price} onChange={this.handleChange} />
                 <div className="error">整数のみ入力できます</div>
                 画像:
                 <input type="file" name='img'   accept="image/*" multiple onChange={this.handleChange} onClick={(e)=>{e.target.value = null}}/>
@@ -55,7 +55,9 @@ class Form extends React.Component {
                 data.place = e.target.value;
                 break;
             case 'price':
-                data.price=e.target.value;
+                let price = e.target.value.replace(/,/g, '')
+                price = Number(price).toLocaleString();
+                data.price = price;
                 break;
             case 'img':
                 let files = e.target.files;
@@ -73,7 +75,7 @@ class Form extends React.Component {
                 e.target.value = null;
                 break;
         }
-       // 状態を更新  
+       // 状態を更新
         this.setState({
             data: data
         });
@@ -83,7 +85,7 @@ class Form extends React.Component {
         e.preventDefault();
         if (data.goodsName === '' && data.url === '' && data.img === Icon ) return;
         this.props.onSubmit(data)
-        this.setState({data:{ goodsName:'', url:'', place:'', price:'', img:Icon, }})
+        this.setState({data:{ goodsName:'', url:'', place:'', price: 0, img:Icon, }})
     };
         
 }
