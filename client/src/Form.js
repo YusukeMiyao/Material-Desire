@@ -7,7 +7,6 @@ class Form extends React.Component {
 
         this.state= {
             data : {
-                text:'',
                 goodsName:'',
                 url:'',
                 price:'',
@@ -25,9 +24,9 @@ class Form extends React.Component {
                 URL:
                 <input type="url"  name='url' value={this.state.data.url} onChange={this.handleChange}/>
                 場所:
-                <input type="text" name= 'place' value={this.state.data.place} onChange={this.handleChange}/>
+                <input type="text" name='place' value={this.state.data.place} onChange={this.handleChange}/>
                 値段：
-                <input type="tel" step="1" name='price' value={this.state.data.price} onChange={this.handleChange}/>
+                <input type="text" step="1" name='price' value={this.state.data.price} onChange={this.handleChange}/>
                 <div className="error">整数のみ入力できます</div>
                 画像:
                 <input type="file" name='img'   accept="image/*" multiple onChange={this.handleChange} onClick={(e)=>{e.target.value = null}}/>
@@ -55,7 +54,11 @@ class Form extends React.Component {
                 data.place = e.target.value;
                 break;
             case 'price':
-                data.price=e.target.value;
+                // if(this.isNumber(e.target.value)) {
+                    data.price= e.target.value.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
+                // }else return;
+                // let display = e.target.value.toLocaleString();
+                // data.price = display;
                 break;
             case 'img':
                 let files = e.target.files;
@@ -85,7 +88,7 @@ class Form extends React.Component {
         this.props.onSubmit(data)
         this.setState({data:{ goodsName:'', url:'', place:'', price:'', img:Icon, }})
     };
-        
+
 }
 
 export default Form;
