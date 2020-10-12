@@ -25,7 +25,7 @@ class EditWant extends React.Component {
             場所:
                 <input type='place' name='place' value={this.state.data.place} onChange={this.handleChange}/>
             値段:
-                <input type='text' name='price' value={this.state.data.price} onChange={this.handleChange}/>
+                <input type='text' name='price' value={this.state.data.price} onChange={this.handleChange} placeholder='半角数字のみ'/>
             画像:
                 <input type="file" name='img'   accept="image/*" multiple onChange={this.handleChange} onClick={(e)=>{e.target.value = null}}/>
                 <img src={this.state.data.img} height={ 200 } width={ 200 }/>
@@ -52,7 +52,19 @@ class EditWant extends React.Component {
                 data.place = e.target.value;
                 break;
             case 'price':
-                data.price = e.target.value;
+                let price = e.target.value.replace(/,/g, '')
+                if(Number(price) || price === '') {
+                    if(price < 0) {
+                        price.replace(/-/g,'') 
+                        return price;
+                    }
+                    price = Number(price).toLocaleString();
+                        if (price === '0') {
+                            price = '';
+                        }
+                    data.price = price;
+                }
+                else return
                 break;
             case 'img':
                 let files = e.target.files;

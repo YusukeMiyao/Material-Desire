@@ -15,7 +15,7 @@ class Form extends React.Component {
             }
         };
     }
-    
+
     render() {
         return(
             <form onSubmit={this.handleSubmit}>
@@ -26,7 +26,7 @@ class Form extends React.Component {
                 場所:
                 <input type="text" name='place' value={this.state.data.place} onChange={this.handleChange}/>
                 値段：
-                <input type="text" step="1" name='price' value={this.state.data.price} onChange={this.handleChange}/>
+                <input type="tel"  name='price' value={this.state.data.price} onChange={this.handleChange} placeholder='半角数字のみ'/>
                 <div className="error">整数のみ入力できます</div>
                 画像:
                 <input type="file" name='img'   accept="image/*" multiple onChange={this.handleChange} onClick={(e)=>{e.target.value = null}}/>
@@ -54,11 +54,19 @@ class Form extends React.Component {
                 data.place = e.target.value;
                 break;
             case 'price':
-                // if(this.isNumber(e.target.value)) {
-                    data.price= e.target.value.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,');
-                // }else return;
-                // let display = e.target.value.toLocaleString();
-                // data.price = display;
+                let price = e.target.value.replace(/,/g, '')
+                if(Number(price) || price === '') {
+                    if(price < 0) {
+                        price.replace(/-/g,'') 
+                        return price;
+                    }
+                    price = Number(price).toLocaleString();
+                        if (price === '0') {
+                            price = '';
+                        }
+                    data.price = price;
+                }
+                else return
                 break;
             case 'img':
                 let files = e.target.files;
@@ -76,19 +84,19 @@ class Form extends React.Component {
                 e.target.value = null;
                 break;
         }
-       // 状態を更新  
+       // 状態を更新
         this.setState({
             data: data
         });
-}
+    }
     handleSubmit = e => {
         const data = this.state.data;
         e.preventDefault();
         if (data.goodsName === '' && data.url === '' && data.img === Icon ) return;
         this.props.onSubmit(data)
-        this.setState({data:{ goodsName:'', url:'', place:'', price:'', img:Icon, }})
+        this.setState({data:{ goodsName:'', url:'', place:'', price: 0, img:Icon, }})
     };
-
+    
 }
 
 export default Form;
