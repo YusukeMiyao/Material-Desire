@@ -19,20 +19,20 @@ class Form extends React.Component {
     render() {
         return(
             <form onSubmit={this.handleSubmit}>
-                欲しいもの:
+                欲しいもの：
                 <input type="text" name='goodsName' value={this.state.data.goodsName} onChange={this.handleChange}/>
-                URL:
+                URL：
                 <input type="url"  name='url' value={this.state.data.url} onChange={this.handleChange}/>
-                場所:
+                場所：
                 <input type="text" name='place' value={this.state.data.place} onChange={this.handleChange}/>
-                値段：
-                < input type = "tel"
-                name = 'price'
-                value = { this.state.data.price }
-                onChange = { this.handleChange }
-                placeholder = '半角数字のみ' />
+                値段： { this.state.data.price !== '' ? '¥' : null }
+                <input type = "tel"
+                    name = 'price'
+                    value = { this.state.data.price }
+                    onChange = { this.handleChange }
+                    placeholder = '半角数字のみ' />
                 <div className="error">整数のみ入力できます</div>
-                画像:
+                画像：
                 <input type="file" name='img' accept="image/*" multiple onChange={this.handleChange} onClick={(e)=>{e.target.value = null}}/>
                 <img src={this.state.data.img} height={ 100 } width={ 100 } alt='画像' />
                 <button name='delete' onClick={this.handleChange}>画像リセット</button>
@@ -97,7 +97,7 @@ class Form extends React.Component {
         e.preventDefault();
         if (data.goodsName === '' && data.url === '' && data.img === Icon ) return;
         this.props.onSubmit(data)
-        this.setState({data:{ goodsName:'', url:'', place:'', price: 0, img:Icon, }})
+        this.setState({data:{ goodsName:'', url:'', place:'', price: '', img:Icon, }})
     };
 
 }

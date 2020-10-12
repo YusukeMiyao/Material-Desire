@@ -18,15 +18,15 @@ class EditWant extends React.Component {
     render() {
         return (
         <div>
-            欲しいもの:
+            欲しいもの：
                 <input type="text" name='goodsName' value={this.state.data.goodsName} onChange={this.handleChange}/>
-            URL:
+            URL：
                 <input type="url"  name='url' value={this.state.data.url} onChange={this.handleChange}/>
-            場所:
+            場所：
                 <input type='place' name='place' value={this.state.data.place} onChange={this.handleChange}/>
-            値段:
+            値段：{this.state.data.price !== '' ? '¥' : null}
                 <input type='text' name='price' value={this.state.data.price} onChange={this.handleChange} placeholder='半角数字のみ'/>
-            画像:
+            画像：
                 <input type="file" name='img'   accept="image/*" multiple onChange={this.handleChange} onClick={(e)=>{e.target.value = null}}/>
                 <img src={this.state.data.img} height={ 200 } width={ 200 }/>
                 <button name='delete' onClick={this.handleChange}>画像リセット</button>
