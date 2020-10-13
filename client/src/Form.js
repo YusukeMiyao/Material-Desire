@@ -12,6 +12,8 @@ class Form extends React.Component {
                 price:'',
                 img:Icon,
                 place:'',
+            },
+            errorMessege : {
                 priceError:false,
                 submitError:false,
                 urlError:false,
@@ -21,11 +23,11 @@ class Form extends React.Component {
 
     render() {
         return(
-            <form onSubmit={this.handleSubmit}>
+            <div >
                 欲しいもの：
                 <input type="text" name='goodsName' value={this.state.data.goodsName} onChange={this.handleChange}/>
                 URL：
-                <input type="url"  name='url' value={this.state.data.url} onChange={this.handleChange} />
+                <input type="url"  name='url' value={this.state.data.url} onChange={this.handleChange} onBlur={this.onBlurUrl}/>
                 {this.state.urlError ? <p>URLが正しくありません</p> : ''}
                 場所：
                 <input type="text" name='place' value={this.state.data.place} onChange={this.handleChange}/>
@@ -42,9 +44,9 @@ class Form extends React.Component {
                 <input type="file" name='img' accept="image/*" multiple onChange={this.handleChange} onClick={(e)=>{e.target.value = null}} />
                 <img src={this.state.data.img} height={ 100 } width={ 100 } alt='画像' />
                 <button name='delete' onClick={this.handleChange}>画像リセット</button>
-                <button name='submit' onClick={this.handleSubmit} onBlur={this.onBlurFunc}>追加</button>
+                <button  onClick={this.handleSubmit} >追加</button>
                 {this.state.submitError ? <p>欲しいもの、URL、画像のどれか一つは入力して下さい</p> : ''}
-            </form>
+            </div>
         );
     }
 
@@ -52,8 +54,13 @@ class Form extends React.Component {
         this.setState({
             priceError: false,
             submitError:false,
-            urlError:false
         });
+    }
+    onBlurUrl = () => {
+        if(this.state.data.url.startsWith('https://') || this.state.data.url.startsWith('http://')) 
+            return
+        else {this.setState({urlError:true})}
+        console.log(this.state.errorMessege.urlError)
     }
 
     handleChange= e => {
@@ -64,18 +71,20 @@ class Form extends React.Component {
         switch (e.target.name) {
             case 'goodsName':
                 data.goodsName = e.target.value
+                console.log(this.state.urlError)
                 // data.id = this.props.id
                 break;
             case 'url':
                 data.url = e.target.value;
+            
                 if(data.url.length >= 7){
-                    console.log(data.url.length)
-                    console.log(data.url)
-                    if(data.url.startsWith('https://' || 'http://')) {
-                        this.onBlurFunc()
+                    if(data.url.startsWith('https://') || data.url.startsWith('http://')) {
+                        this.onBlurUrl()
                     }
                     else {
-                        this.setState({urlError:true})
+                        this.setState({errorMessege:{urlError:true}})
+                        console.log(this.state.errorMessege.urlError)
+                        return
                     }
                 }
                 else if (data.url.length <=0) {
@@ -84,6 +93,7 @@ class Form extends React.Component {
                 break;
             case 'place':
                 data.place = e.target.value;
+                console.log(this.state.data.urlError)
                 break;
             case 'price':
                 let price = e.target.value.replace(/,/g, '')
@@ -99,7 +109,7 @@ class Form extends React.Component {
                     data.price = price;
                 }
                 else {
-                    this.setState({priceError: true});
+                    this.setState({errorMessege:{priceError: true}});
                 }
                 break;
             case 'img':
@@ -122,17 +132,24 @@ class Form extends React.Component {
         this.setState({
             data: data
         });
+        console.log(this.state.errorMessege.urlError)
     }
 
     handleSubmit = e => {
-        const data = this.state.data;
         e.preventDefault();
-        if (data.goodsName === '' && data.url === '' && data.img === Icon || data.urlError) {
+        console.log(this.state.errorMessege.urlError)
+        const data = this.state.data;
+        if (data.goodsName === '' && data.url === '' && data.img === Icon ) {
             this.setState({submitError:true})
             return
-        };
+        }else if (this.state.errorMessege.urlError) {
+            this.setState({submitError:true})
+            return;
+        }else {
         this.props.onSubmit(data)
+        console.log(this.state.errorMessege.urlError)
         this.setState({data:{ goodsName:'', url:'', place:'', price: '', img:Icon, }})
+        }
     };
 
 }

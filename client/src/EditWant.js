@@ -13,7 +13,8 @@ class EditWant extends React.Component {
                 price:props.price,
                 img:props.img,
                 priceError:false,
-                submitError:false
+                submitError:false,
+                urlError:false,
             }
         }
     }
@@ -24,7 +25,8 @@ class EditWant extends React.Component {
             欲しいもの：
                 <input type="text" name='goodsName' value={this.state.data.goodsName} onChange={this.handleChange}/>
             URL：
-                <input type="url"  name='url' value={this.state.data.url} onChange={this.handleChange}/>
+                <input type="url"  name='url' value={this.state.data.url} onChange={this.handleChange} onBlur={this.onBlurUrl}/>
+                {this.state.urlError ? <p>URLが正しくありません</p> : ''}
             場所：
                 <input type='place' name='place' value={this.state.data.place} onChange={this.handleChange}/>
             値段：{this.state.data.price !== '' ? '¥' : null}
@@ -48,6 +50,12 @@ class EditWant extends React.Component {
         });
     }
 
+    onBlurUrl = () => {
+        if(this.state.data.url.startsWith('https://') || this.state.data.url.startsWith('http://')) 
+            return
+        else {this.setState({urlError:true})}
+    }
+
     handleChange= e => {
         // ネストされたオブジェクトのdataまでアクセスしておく
         let data = this.state.data;
@@ -59,6 +67,18 @@ class EditWant extends React.Component {
                 break;
             case 'url':
                 data.url = e.target.value;
+            
+                if(data.url.length >= 7){
+                    if(data.url.startsWith('https://') || data.url.startsWith('http://')) {
+                        this.onBlurUrl()
+                    }
+                    else {
+                        this.setState({urlError:true})
+                    }
+                }
+                else if (data.url.length <=0) {
+                    this.onBlurFunc()
+                }
                 break;
             case 'place':
                 data.place = e.target.value;
@@ -107,7 +127,7 @@ class EditWant extends React.Component {
 
     handleSubmit = () => {
         const { id } = this.props
-        if (this.state.data.goodsName === '' && this.state.data.url === '' && this.state.data.img === Icon ) {
+        if (this.state.data.goodsName === '' && this.state.data.url === '' && this.state.data.img === Icon || (this.state.data.urlError)) {
             this.setState({submitError:true})
             return
         };
