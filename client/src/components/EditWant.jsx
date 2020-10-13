@@ -1,5 +1,5 @@
 import React from 'react';
-import Icon from './Icon.png';
+import Icon from '../assets/images/Icon.png';
 
 class EditWant extends React.Component {
     constructor(props) {
@@ -53,7 +53,7 @@ class EditWant extends React.Component {
     }
 
     onBlurUrl = () => {
-        if(this.state.data.url.startsWith("https://") || this.state.data.url.startsWith("http://") || this.state.data.url <= 0) 
+        if(this.state.data.url.startsWith("https://") || this.state.data.url.startsWith("http://") || this.state.data.url <= 0)
             return;
         else {this.setState({errorMessage:{urlError:true}})
             return;
@@ -71,7 +71,7 @@ class EditWant extends React.Component {
                 break;
             case 'url':
                 data.url = e.target.value;
-            
+
                 if(data.url.length >= 8){
                     if(data.url.startsWith('https://') || data.url.startsWith('http://')) {
                         this.onBlurUrl()
