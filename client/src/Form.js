@@ -56,7 +56,7 @@ class Form extends React.Component {
           placeholder="半角数字のみ"
           onBlur={this.onBlurFunc}
         />
-        {this.state.priceError ? <p>半角数字のみ入力して下さい</p> : ""}
+        {this.state.errorMessage.priceError ? <p>半角数字のみ入力して下さい</p> : ""}
         画像：
         <input
           type="file"
@@ -73,7 +73,7 @@ class Form extends React.Component {
           画像リセット
         </button>
         <button onClick={this.handleSubmit}>追加</button>
-        {this.state.submitError ? (
+        {this.state.errorMessage.submitError ? (
           <p>欲しいもの、URL、画像のどれか一つは入力して下さい</p>
         ) : (
           ""
@@ -83,24 +83,18 @@ class Form extends React.Component {
   }
 
   onBlurFunc = () => {
-    this.setState({
+    this.setState({errorMessage:{
       priceError: false,
       submitError: false,
-    });
+    }});
   };
   onBlurUrl = () => {
     if (
       this.state.data.url.startsWith("https://") ||
       this.state.data.url.startsWith("http://") ||
       this.state.data.url <= 0
-    ) {
-      this.setState({
-        errorMessage: {
-          urlError: false,
-        },
-      });
-      return;
-    } else {
+    )  return;
+    else {
       this.setState({
         errorMessage: {
           urlError: true,
@@ -122,7 +116,7 @@ class Form extends React.Component {
       case "url":
         data.url = e.target.value;
 
-        if (data.url.length >= 7) {
+        if (data.url.length >= 8) {
           if (
             data.url.startsWith("https://") ||
             data.url.startsWith("http://")
@@ -153,7 +147,7 @@ class Form extends React.Component {
           data.price = price;
         } else {
           this.setState({ errorMessage: { priceError: true } });
-        }
+        } 
         break;
       case "img":
         let files = e.target.files;
@@ -179,10 +173,9 @@ class Form extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    console.log(this.state.errorMessage.urlError);
     const data = this.state.data;
     if (data.goodsName === "" && data.url === "" && data.img === Icon) {
-      this.setState({ submitError: true });
+      this.setState({errorMessage:{ submitError: true }});
       return;
     } else if (this.state.errorMessage.urlError) {
       return;

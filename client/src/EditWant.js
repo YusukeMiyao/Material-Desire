@@ -12,6 +12,8 @@ class EditWant extends React.Component {
                 place:props.place,
                 price:props.price,
                 img:props.img,
+            },
+            errorMessage : {
                 priceError:false,
                 submitError:false,
                 urlError:false,
@@ -26,34 +28,36 @@ class EditWant extends React.Component {
                 <input type="text" name='goodsName' value={this.state.data.goodsName} onChange={this.handleChange}/>
             URL：
                 <input type="url"  name='url' value={this.state.data.url} onChange={this.handleChange} onBlur={this.onBlurUrl}/>
-                {this.state.urlError ? <p>URLが正しくありません</p> : ''}
+                {this.state.errorMessage.urlError ? <p>URLが正しくありません</p> : ''}
             場所：
                 <input type='place' name='place' value={this.state.data.place} onChange={this.handleChange}/>
             値段：{this.state.data.price !== '' ? '¥' : null}
                 <input type='text' name='price' value={this.state.data.price} onChange={this.handleChange} placeholder='半角数字のみ' onBlur={this.onBlurFunc}/>
-                {this.state.priceError ? <p>半角数字のみ入力して下さい</p> : ''}
+                {this.state.errorMessage.priceError ? <p>半角数字のみ入力して下さい</p> : ''}
             画像：
                 <input type="file" name='img'   accept="image/*" multiple onChange={this.handleChange} onClick={(e)=>{e.target.value = null}}/>
                 <img src={this.state.data.img} height={ 200 } width={ 200 }/>
                 <button name='delete' onClick={this.handleChange}>画像リセット</button>
             <button onClick={this.handleClickCancel}>キャンセル</button>
             <button onClick={this.handleSubmit} onBlur={this.onBlurFunc}>更新</button>
-            {this.state.submitError ? <p>欲しいもの、URL、画像のどれか一つは入力して下さい</p> : ''}
+            {this.state.errorMessage.submitError ? <p>欲しいもの、URL、画像のどれか一つは入力して下さい</p> : ''}
         </div>
         );
     }
 
     onBlurFunc = () =>{
-        this.setState({
+        this.setState({errorMessage:{
             priceError: false,
             submitError:false
-        });
+        }});
     }
 
     onBlurUrl = () => {
-        if(this.state.data.url.startsWith('https://') || this.state.data.url.startsWith('http://')) 
-            return
-        else {this.setState({urlError:true})}
+        if(this.state.data.url.startsWith("https://") || this.state.data.url.startsWith("http://") || this.state.data.url <= 0) 
+            return;
+        else {this.setState({errorMessage:{urlError:true}})
+            return;
+        }
     }
 
     handleChange= e => {
@@ -68,12 +72,13 @@ class EditWant extends React.Component {
             case 'url':
                 data.url = e.target.value;
             
-                if(data.url.length >= 7){
+                if(data.url.length >= 8){
                     if(data.url.startsWith('https://') || data.url.startsWith('http://')) {
                         this.onBlurUrl()
                     }
                     else {
-                        this.setState({urlError:true})
+                        this.setState({errorMessage:{urlError:true}})
+                        return;
                     }
                 }
                 else if (data.url.length <=0) {
@@ -96,7 +101,7 @@ class EditWant extends React.Component {
                     this.onBlurFunc()
                     data.price = price;
                 }
-                else {this.setState({priceError: true})}
+                else {this.setState({errorMessage:{priceError: true}})}
                 break;
             case 'img':
                 let files = e.target.files;
@@ -127,11 +132,14 @@ class EditWant extends React.Component {
 
     handleSubmit = () => {
         const { id } = this.props
-        if (this.state.data.goodsName === '' && this.state.data.url === '' && this.state.data.img === Icon || (this.state.data.urlError)) {
+        if (this.state.data.goodsName === '' && this.state.data.url === '' && this.state.data.img === Icon ) {
             this.setState({submitError:true})
-            return
-        };
-        this.props.onSubmit(id, this.state.data)
+            return;
+        } else if (this.state.errorMessage.urlError){
+            return;
+        } else {
+            this.props.onSubmit(id, this.state.data)
+        }
     }
 }
 
