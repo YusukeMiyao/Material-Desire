@@ -1,9 +1,8 @@
 import React from 'react';
-
-import './App.css';
-import Form from './Form';
-import Want from './Want';
-import EditWant from './EditWant';
+import '../assets/css/App.css';
+import Form from './Form.jsx';
+import Want from './Want.jsx';
+import EditWant from './EditWant.jsx';
 import axios from 'axios';
 // import styled from 'styled-components';
 // import '@atlaskit/css-reset';

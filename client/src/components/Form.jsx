@@ -1,5 +1,5 @@
 import React from "react";
-import Icon from "./Icon.png";
+import Icon from "../assets/images/Icon.png";
 
 class Form extends React.Component {
   constructor(props) {
@@ -147,7 +147,7 @@ class Form extends React.Component {
           data.price = price;
         } else {
           this.setState({ errorMessage: { priceError: true } });
-        } 
+        }
         break;
       case "img":
         let files = e.target.files;
