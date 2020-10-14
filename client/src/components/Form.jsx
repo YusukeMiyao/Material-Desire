@@ -109,7 +109,6 @@ class Form extends React.Component {
   handleChange = (e) => {
     // ネストされたオブジェクトのdataまでアクセスしておく
     let data = this.state.data;
-    // let error = this.state.errorMessage;
 
     // eventが発火したname属性名ごとに値を処理
     switch (e.target.name) {
