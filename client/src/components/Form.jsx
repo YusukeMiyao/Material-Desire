@@ -13,11 +13,9 @@ class Form extends React.Component {
         img: Icon,
         place: "",
       },
-      errorMessage: {
         priceError: false,
         submitError: false,
         urlError: false,
-      },
     };
   }
 
@@ -39,7 +37,7 @@ class Form extends React.Component {
           onChange={this.handleChange}
           onBlur={this.onBlurUrl}
         />
-        {this.state.errorMessage.urlError ? <p>URLが正しくありません</p> : ""}
+        {this.state.urlError ? <p>URLが正しくありません</p> : ""}
         場所：
         <input
           type="text"
@@ -56,7 +54,7 @@ class Form extends React.Component {
           placeholder="半角数字のみ"
           onBlur={this.onBlurFunc}
         />
-        {this.state.errorMessage.priceError ? <p>半角数字のみ入力して下さい</p> : ""}
+        {this.state.priceError ? <p>半角数字のみ入力して下さい</p> : ""}
         画像：
         <input
           type="file"
@@ -73,7 +71,7 @@ class Form extends React.Component {
           画像リセット
         </button>
         <button onClick={this.handleSubmit}>追加</button>
-        {this.state.errorMessage.submitError ? (
+        {this.state.submitError ? (
           <p>欲しいもの、URL、画像のどれか一つは入力して下さい</p>
         ) : (
           ""
@@ -83,22 +81,26 @@ class Form extends React.Component {
   }
 
   onBlurFunc = () => {
-    this.setState({errorMessage:{
+    
+    this.setState({
       priceError: false,
       submitError: false,
-    }});
+      
+    });
   };
+
   onBlurUrl = () => {
     if (
       this.state.data.url.startsWith("https://") ||
       this.state.data.url.startsWith("http://") ||
       this.state.data.url <= 0
-    )  return;
+    )  {
+      this.setState({urlError:false})
+      return;
+    }
     else {
       this.setState({
-        errorMessage: {
           urlError: true,
-        },
       });
       return;
     }
@@ -123,7 +125,7 @@ class Form extends React.Component {
           ) {
             this.onBlurUrl();
           } else {
-            this.setState({ errorMessage: { urlError: true } });
+            this.setState({  urlError: true });
             return;
           }
         } else if (data.url.length <= 0) {
@@ -146,7 +148,7 @@ class Form extends React.Component {
           this.onBlurFunc();
           data.price = price;
         } else {
-          this.setState({ errorMessage: { priceError: true } });
+          this.setState({ priceError: true });
         }
         break;
       case "img":
@@ -175,9 +177,9 @@ class Form extends React.Component {
     e.preventDefault();
     const data = this.state.data;
     if (data.goodsName === "" && data.url === "" && data.img === Icon) {
-      this.setState({errorMessage:{ submitError: true }});
+      this.setState({ submitError: true });
       return;
-    } else if (this.state.errorMessage.urlError) {
+    } else if (this.state.urlError) {
       return;
     } else {
       this.props.onSubmit(data);
