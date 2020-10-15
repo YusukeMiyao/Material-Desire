@@ -3,9 +3,11 @@ import '../assets/css/App.css';
 import Form from './Form.jsx';
 import Want from './Want.jsx';
 import EditWant from './EditWant.jsx';
+import {DragDropContext,Draggable,Droppable} from 'react-beautiful-dnd';
 import axios from 'axios';
 // import styled from 'styled-components';
 // import '@atlaskit/css-reset';
+
 
 
 class App extends React.Component {
@@ -24,13 +26,53 @@ class App extends React.Component {
       }
     }
   render() {
+    // const handleDragEnd = ({destination, source}) => {
+    //   if(!destination) {
+    //     return
+    //   }
+    
+    //   if(destination.index === source.index && destination.droppableId === source.droppableId) {
+    //     return
+    //   }
+    
+    //   //Creating a copy of item before removing it from state
+    //   const itemCopy = {...this.state[source.droppableId].newWant[source.index]}
+    
+    //   this.setState(prev => {
+    //     prev = {...prev}
+    //     //Remove from previous items array
+    //     prev[source.droppableId].newWant.splice(source.index, 1)
+    
+    
+    //     //Adding to new items array location
+    //     prev[destination.droppableId].newWant.splice(destination.index, 0, itemCopy)
+    //     return prev
+    //   })
+    // }
+
     return (
       <div>
         <h1>欲しいものリスト</h1>
         <p>合計金額：¥{this.state.totalPrice.toLocaleString()}</p>
         <Form onSubmit={this.handleSubmit} />
+        <DragDropContext onDragEnd= {this.handleDragEnd }>
+        <Droppable droppableId={'a'}>
+          { (provided,snapshot) => {
+              return(
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className={'droppable-col'}
+                >
         {this.state.wants.map(({ id, goodsName, url, place, price, img, editing, index }) => (
-          <li key={id}>
+          <Draggable key={id} index={index} draggableId={}>
+            {(provided, snapshot) => {
+              return(
+          <li key={id} 
+          className={`item ${snapshot.isDragging && "dragging"}`}
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}>
             {editing ? (
               <EditWant
                 id={id}
@@ -57,7 +99,15 @@ class App extends React.Component {
                 />
               )}
           </li>
+              )
+            }}
+          </Draggable>
         ))}
+        </div>
+              )
+  }}
+          </Droppable>
+        </DragDropContext>
         <button onClick={this.allDelete}>全消去</button>
       </div>
     );
