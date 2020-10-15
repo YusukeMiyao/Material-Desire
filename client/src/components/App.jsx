@@ -26,36 +26,46 @@ class App extends React.Component {
       }
     }
   render() {
-    // const handleDragEnd = ({destination, source}) => {
-    //   if(!destination) {
-    //     return
-    //   }
+    const handleDragEnd = ({destination, source}) => {
+      if(!destination) {
+        return
+      }
     
-    //   if(destination.index === source.index && destination.droppableId === source.droppableId) {
-    //     return
-    //   }
+      if(destination.index === source.index && destination.droppableId === source.droppableId) {
+        return
+      }
     
-    //   //Creating a copy of item before removing it from state
-    //   const itemCopy = {...this.state[source.droppableId].newWant[source.index]}
+      //Creating a copy of item before removing it from state
+      console.log(this.state[source])
+      console.log(source,destination)
+      //[]を消すとcopyされて全部同じになる
+      const itemCopy = {...this.state[source.droppableId].wants[source.index]}
     
-    //   this.setState(prev => {
-    //     prev = {...prev}
-    //     //Remove from previous items array
-    //     prev[source.droppableId].newWant.splice(source.index, 1)
+      this.setState(prev => {
+        prev = {...prev}
+        //Remove from previous items array
+        prev[source.droppableId].wants.splice(source.index, 1)
     
     
-    //     //Adding to new items array location
-    //     prev[destination.droppableId].newWant.splice(destination.index, 0, itemCopy)
-    //     return prev
-    //   })
-    // }
+        //Adding to new items array location
+        prev[destination.droppableId].wants.splice(destination.index, 0, itemCopy)
+        return prev
+      })
+
+//       const items = Array.from(this.state);
+// const [reorderedItem] = items.splice(result.source.index, 1);
+// items.splice(result.destination.index, 0, reorderedItem);
+
+// this.setState(items);
+
+    }
 
     return (
       <div>
         <h1>欲しいものリスト</h1>
         <p>合計金額：¥{this.state.totalPrice.toLocaleString()}</p>
         <Form onSubmit={this.handleSubmit} />
-        <DragDropContext onDragEnd= {this.handleDragEnd }>
+        <DragDropContext onDragEnd= {handleDragEnd }>
         <Droppable droppableId={'a'}>
           { (provided,snapshot) => {
               return(
@@ -64,12 +74,12 @@ class App extends React.Component {
                   {...provided.droppableProps}
                   className={'droppable-col'}
                 >
-        {this.state.wants.map(({ id, goodsName, url, place, price, img, editing, index }) => (
-          <Draggable key={id} index={index} draggableId={}>
+        {this.state.wants.map(({ id, goodsName, url, place, price, img, editing,  },index) => (
+          <Draggable key={id} index={index} draggableId={String(id)}>
             {(provided, snapshot) => {
               return(
           <li key={id} 
-          className={`item ${snapshot.isDragging && "dragging"}`}
+          // className={`item ${snapshot.isDragging && "dragging"}`}
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}>
@@ -103,6 +113,7 @@ class App extends React.Component {
             }}
           </Draggable>
         ))}
+        {provided.placeholder}
         </div>
               )
   }}
@@ -116,15 +127,40 @@ class App extends React.Component {
   handleSubmit = async e => {
     let currentId = this.state.count
     currentId++
-    const newWant = {
-      id: currentId,
-      goodsName: e.goodsName,
-      url: e.url,
-      place: e.place,
-      price: e.price,
-      img: e.img,
-      editing: false,
-    };
+    await this.setState(prev => {
+      return {
+        ...prev,
+        
+          wants: [
+            {
+              id:currentId,
+              goodsName: e.goodsName,
+              url: e.url,
+              place: e.place,
+              price: e.price,
+              img: e.img,
+              editing: false,
+            },
+            ...prev.wants],
+        
+        count: currentId
+      }
+    })
+    this.calculatePrice()
+    let obj = JSON.stringify(this.state.wants);
+    localStorage.setItem('Key', obj);
+    localStorage.setItem('Count', currentId);
+    // let currentId = this.state.count
+    // currentId++
+    // const newWant = {
+    //   id: currentId,
+    //   goodsName: e.goodsName,
+    //   url: e.url,
+    //   place: e.place,
+    //   price: e.price,
+    //   img: e.img,
+    //   editing: false,
+    // };
     // axios.post('/api/lists', {
     //   newWant
     // }) // オブジェクトをサーバーにPOST
@@ -134,12 +170,12 @@ class App extends React.Component {
     // .catch(err => {
     //   console.error(new Error(err))
     // })
-    const newWants = [...this.state.wants, newWant]
-    await this.setState({ wants: newWants, count: currentId })
-    this.calculatePrice()
-    let obj = JSON.stringify(newWants);
-    localStorage.setItem('Key', obj);
-    localStorage.setItem('Count', currentId);
+    // const newWants = [...this.state.wants, newWant]
+    // await this.setState({ wants: newWants, count: currentId })
+    // this.calculatePrice()
+    // let obj = JSON.stringify(newWants);
+    // localStorage.setItem('Key', obj);
+    // localStorage.setItem('Count', currentId);
   };
 
   editList = async (id, e) => {
