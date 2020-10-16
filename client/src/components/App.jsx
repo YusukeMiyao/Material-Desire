@@ -13,21 +13,16 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = JSON.parse(
-      localStorage.getItem("Wants"),
+      localStorage.getItem("Lists"),
       localStorage.getItem("TotalPrice"),
-      localStorage.getItem("Count"),
-      localStorage.getItem("Lists")
+      localStorage.getItem("Count")
     )
       ? {
-          wants: JSON.parse(localStorage.getItem("Wants")),
+          lists: JSON.parse(localStorage.getItem("Lists")),
           totalPrice: JSON.parse(localStorage.getItem("TotalPrice")),
           count: JSON.parse(localStorage.getItem("Count")),
-          lists: JSON.parse(localStorage.getItem("Lists")),
         }
       : {
-          wants: [],
-          totalPrice: 0,
-          count: 0,
           lists: [
             {
               title: "Todo",
@@ -42,6 +37,8 @@ class App extends React.Component {
               items: [],
             },
           ],
+          count: 0,
+          totalPrice: 0,
         };
   }
   render() {
@@ -72,28 +69,32 @@ class App extends React.Component {
         return;
       }
 
-      // console.log(result.source);
-      // console.log(result.destination);
-      // const items = Array.from(this.state.wants);
+      
       // const [reorderedItem] = items.splice(result.source.index, 1);
       // items.splice(result.destination.index, 0, reorderedItem);
       // this.setState({ wants: items });
 
+      const itemCopy = {
+        ...this.state.lists[result.source.droppableId].items[
+          result.source.index
+        ],
+      };
       this.state.lists.map(({ title, items }, index) => {
-        if (title === result.destination.droppableId) {
-          console.log(items);
+        if (index == result.destination.droppableId) {
+          items.push(itemCopy);
         }
-        if (title === result.source.droppableId) {
+        if (index == result.source.droppableId) {
           items.splice(result.source.index, 1);
-          this.saveList();
         }
+        this.saveList();
       });
-    };
+    };;
+
     const handleDragStart = (start, provided) => {
       // console.log(start);
     };
     const handleDragUpdate = (update, provided) => {
-      // console.log(update);
+      // console.log(provided);
     };
 
     const List = styled.div`
@@ -118,7 +119,7 @@ class App extends React.Component {
     return (
       <div>
         <h1>欲しいものリスト</h1>
-        <p>合計金額：¥{this.state.totalPrice.toLocaleString()}</p>
+        {/* <p>合計金額：¥{this.state.totalPrice.toLocaleString()}</p> */}
         <Form onSubmit={this.handleSubmit} />
         <DragDropContext
           onDragEnd={handleDragEnd}
@@ -127,13 +128,12 @@ class App extends React.Component {
         >
           <Wrap>
             {this.state.lists.map(({ title, items }, index) => (
-              <Droppable droppableId={String(title)} key={index}>
+              <Droppable droppableId={String(index)} key={index}>
                 {(provided, snapshot) => {
                   return (
                     <List
                       {...provided.droppableProps}
                       ref={provided.innerRef}
-                      className={"droppable-col"}
                       isDraggingOver={snapshot.isDraggingOver}
                     >
                       <p>{title}</p>
@@ -209,43 +209,35 @@ class App extends React.Component {
     await this.setState((prev) => {
       return {
         ...prev,
-        wants: [
+        lists: [
           {
-            id: currentId,
-            goodsName: e.goodsName,
-            url: e.url,
-            place: e.place,
-            price: e.price,
-            img: e.img,
-            editing: false,
+            title: "Todo",
+            items: [
+              {
+                id: currentId,
+                goodsName: e.goodsName,
+                url: e.url,
+                place: e.place,
+                price: e.price,
+                img: e.img,
+                editing: false,
+              },
+              ...prev.lists[0].items,
+            ],
           },
-          ...prev.wants,
+          {
+            title: "InProgress",
+            items: [...prev.lists[1].items],
+          },
+          {
+            title: "Done",
+            items: [...prev.lists[2].items],
+          },
         ],
         count: currentId,
       };
     });
-    this.setState((prev) => {
-      return {
-        ...prev,
-        lists: [
-          {
-            title: "Todo",
-            items: this.state.wants,
-          },
-          {
-            title: "InProgress",
-            items: [],
-          },
-          {
-            title: "Done",
-            items: [],
-          },
-        ],
-      };
-    });
-    this.calculatePrice();
-    let want = JSON.stringify(this.state.wants);
-    localStorage.setItem("Wants", want);
+    // this.calculatePrice();
     localStorage.setItem("Count", currentId);
     this.saveList();
     // let currentId = this.state.count
