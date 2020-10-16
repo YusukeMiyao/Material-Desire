@@ -4,6 +4,7 @@ import Form from './Form.jsx';
 import Want from './Want.jsx';
 import EditWant from './EditWant.jsx';
 import {DragDropContext,Draggable,Droppable} from 'react-beautiful-dnd';
+import _ from 'lodash';
 import axios from 'axios';
 // import styled from 'styled-components';
 // import '@atlaskit/css-reset';
@@ -55,7 +56,7 @@ class App extends React.Component {
         console.log('これ')
         return;}
 
-      if(destination.index === source.index && destination.droppableId === source.droppableId) {
+      if(result.destination.index === result.source.index && result.destination.droppableId === result.source.droppableId) {
         console.log('こッチ')
         return
       }
