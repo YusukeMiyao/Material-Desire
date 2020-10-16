@@ -13,31 +13,39 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = JSON.parse(
-      localStorage.getItem("Key"),
+      localStorage.getItem("Wants"),
       localStorage.getItem("TotalPrice"),
-      localStorage.getItem("Count")
+      localStorage.getItem("Count"),
+      localStorage.getItem("Lists")
     )
       ? {
-          wants: JSON.parse(localStorage.getItem("Key")),
+          wants: JSON.parse(localStorage.getItem("Wants")),
           totalPrice: JSON.parse(localStorage.getItem("TotalPrice")),
           count: JSON.parse(localStorage.getItem("Count")),
+          lists: JSON.parse(localStorage.getItem("Lists")),
         }
       : {
           wants: [],
           totalPrice: 0,
           count: 0,
+          lists: [
+            {
+              title: "Todo",
+              items: [],
+            },
+            {
+              title: "InProgress",
+              items: [],
+            },
+            {
+              title: "Done",
+              items: [],
+            },
+          ],
         };
   }
   render() {
     const handleDragEnd = (result) => {
-      // if(!destination) {
-      //   return
-      // }
-
-      // if(destination.index === source.index && destination.droppableId === source.droppableId) {
-      //   return
-      // }
-
       // //Creating a copy of item before removing it from state
       // console.log(this.state[source])
       // console.log(source,destination)
@@ -54,7 +62,6 @@ class App extends React.Component {
       //   return prev
       // })
       if (!result.destination) {
-        // console.log("これ");
         return;
       }
 
@@ -62,26 +69,31 @@ class App extends React.Component {
         result.destination.index === result.source.index &&
         result.destination.droppableId === result.source.droppableId
       ) {
-        // console.log("こッチ");
         return;
       }
 
-      const items = Array.from(this.state.wants);
-      // console.log(Array.from(this.state.wants))
-      // console.log(this.state)
-      // console.log(items)
-      const [reorderedItem] = items.splice(result.source.index, 1);
-      // console.log([reorderedItem])
-      items.splice(result.destination.index, 0, reorderedItem);
-      // console.log(items)
-      this.setState({ wants: items });
-      console.log(this.state);
+      // console.log(result.source);
+      // console.log(result.destination);
+      // const items = Array.from(this.state.wants);
+      // const [reorderedItem] = items.splice(result.source.index, 1);
+      // items.splice(result.destination.index, 0, reorderedItem);
+      // this.setState({ wants: items });
+
+      this.state.lists.map(({ title, items }, index) => {
+        if (title === result.destination.droppableId) {
+          console.log(items);
+        }
+        if (title === result.source.droppableId) {
+          items.splice(result.source.index, 1);
+          this.saveList();
+        }
+      });
     };
     const handleDragStart = (start, provided) => {
-      console.log(start);
+      // console.log(start);
     };
     const handleDragUpdate = (update, provided) => {
-      console.log(update);
+      // console.log(update);
     };
 
     const List = styled.div`
@@ -89,9 +101,9 @@ class App extends React.Component {
         props.isDraggingOver ? "lightblue" : "white"};
       transition: background-color 0.2s ease;
       border: 1px solid lightgray;
-      width: 50%;
-      padding: 20px;
-      margin: auto;
+      width: 28%;
+      padding: 0 20px;
+      margin: 20px auto;
     `;
     const Item = styled.div`
       background-color: ${(props) =>
@@ -99,6 +111,9 @@ class App extends React.Component {
       border: 1px solid lightgray;
       width: 100%;
       margin: 20px auto;
+    `;
+    const Wrap = styled.div`
+      display: flex;
     `;
     return (
       <div>
@@ -110,69 +125,79 @@ class App extends React.Component {
           onDragStart={handleDragStart}
           onDragUpdate={handleDragUpdate}
         >
-          <Droppable droppableId={"a"}>
-            {(provided, snapshot) => {
-              return (
-                <List
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  className={"droppable-col"}
-                  isDraggingOver={snapshot.isDraggingOver}
-                >
-                  {this.state.wants.map(
-                    (
-                      { id, goodsName, url, place, price, img, editing },
-                      index
-                    ) => (
-                      <Draggable
-                        key={id}
-                        index={index}
-                        draggableId={String(id)}
-                      >
-                        {(provided, snapshot) => {
+          <Wrap>
+            {this.state.lists.map(({ title, items }, index) => (
+              <Droppable droppableId={String(title)} key={index}>
+                {(provided, snapshot) => {
+                  return (
+                    <List
+                      {...provided.droppableProps}
+                      ref={provided.innerRef}
+                      className={"droppable-col"}
+                      isDraggingOver={snapshot.isDraggingOver}
+                    >
+                      <p>{title}</p>
+                      {items.map(
+                        (
+                          { id, goodsName, url, place, price, img, editing },
+                          index
+                        ) => {
                           return (
-                            <Item
-                              // className={`item ${snapshot.isDragging && "dragging"}`}
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              isDragging={snapshot.isDragging}
+                            <Draggable
+                              key={id}
+                              index={index}
+                              draggableId={String(id)}
                             >
-                              {editing ? (
-                                <EditWant
-                                  id={id}
-                                  goodsName={goodsName}
-                                  url={url}
-                                  place={place}
-                                  price={price}
-                                  img={img}
-                                  onCancel={this.handleChangeWantAttribute}
-                                  onSubmit={this.editList}
-                                />
-                              ) : (
-                                <Want
-                                  id={id}
-                                  goodsName={goodsName}
-                                  url={url}
-                                  place={place}
-                                  price={price}
-                                  img={img}
-                                  onChange={this.handleChangeWantAttribute}
-                                  onDelete={this.handleClickDelete}
-                                  index={index}
-                                />
-                              )}
-                            </Item>
+                              {(provided, snapshot) => {
+                                return (
+                                  <Item
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                    isDragging={snapshot.isDragging}
+                                  >
+                                    {editing ? (
+                                      <EditWant
+                                        id={id}
+                                        goodsName={goodsName}
+                                        url={url}
+                                        place={place}
+                                        price={price}
+                                        img={img}
+                                        onCancel={
+                                          this.handleChangeWantAttribute
+                                        }
+                                        onSubmit={this.editList}
+                                      />
+                                    ) : (
+                                      <Want
+                                        id={id}
+                                        goodsName={goodsName}
+                                        url={url}
+                                        place={place}
+                                        price={price}
+                                        img={img}
+                                        onChange={
+                                          this.handleChangeWantAttribute
+                                        }
+                                        onDelete={this.handleClickDelete}
+                                        index={index}
+                                      />
+                                    )}
+                                  </Item>
+                                );
+                              }}
+                            </Draggable>
                           );
-                        }}
-                      </Draggable>
-                    )
-                  )}
-                  {provided.placeholder}
-                </List>
-              );
-            }}
-          </Droppable>
+                        }
+                      )}
+                      {provided.placeholder}
+                    </List>
+                  );
+                }}
+              </Droppable>
+            ))}
+          </Wrap>
         </DragDropContext>
         <button onClick={this.allDelete}>全消去</button>
       </div>
@@ -184,7 +209,6 @@ class App extends React.Component {
     await this.setState((prev) => {
       return {
         ...prev,
-
         wants: [
           {
             id: currentId,
@@ -197,14 +221,33 @@ class App extends React.Component {
           },
           ...prev.wants,
         ],
-
         count: currentId,
       };
     });
+    this.setState((prev) => {
+      return {
+        ...prev,
+        lists: [
+          {
+            title: "Todo",
+            items: this.state.wants,
+          },
+          {
+            title: "InProgress",
+            items: [],
+          },
+          {
+            title: "Done",
+            items: [],
+          },
+        ],
+      };
+    });
     this.calculatePrice();
-    let obj = JSON.stringify(this.state.wants);
-    localStorage.setItem("Key", obj);
+    let want = JSON.stringify(this.state.wants);
+    localStorage.setItem("Wants", want);
     localStorage.setItem("Count", currentId);
+    this.saveList();
     // let currentId = this.state.count
     // currentId++
     // const newWant = {
@@ -228,8 +271,8 @@ class App extends React.Component {
     // const newWants = [...this.state.wants, newWant]
     // await this.setState({ wants: newWants, count: currentId })
     // this.calculatePrice()
-    // let obj = JSON.stringify(newWants);
-    // localStorage.setItem('Key', obj);
+    // let want = JSON.stringify(newWants);
+    // localStorage.setItem('Wants', want);
     // localStorage.setItem('Count', currentId);
   };
 
@@ -250,8 +293,8 @@ class App extends React.Component {
     });
     await this.setState({ wants: newWant });
     localStorage.clear();
-    let obj = JSON.stringify(newWant);
-    localStorage.setItem("Key", obj);
+    let want = JSON.stringify(newWant);
+    localStorage.setItem("Wants", want);
     localStorage.setItem("Count", this.state.count);
     this.calculatePrice();
   };
@@ -260,10 +303,10 @@ class App extends React.Component {
     localStorage.clear();
     const newWant = this.state.wants.filter((want) => want.id !== id);
     await this.setState({ wants: newWant, count: this.state.count });
-    let obj = JSON.stringify(newWant);
-    localStorage.setItem("Key", obj);
+    let want = JSON.stringify(newWant);
+    localStorage.setItem("Wants", want);
     localStorage.setItem("Count", this.state.count);
-    if (localStorage.getItem("Key") === "[]") {
+    if (localStorage.getItem("Wants") === "[]") {
       localStorage.clear();
     }
     this.calculatePrice();
@@ -299,6 +342,10 @@ class App extends React.Component {
       totalPrice: total,
     });
     localStorage.setItem("TotalPrice", total);
+  };
+  saveList = () => {
+    let list = JSON.stringify(this.state.lists);
+    localStorage.setItem("Lists", list);
   };
 }
 
