@@ -77,24 +77,43 @@ class App extends React.Component {
           result.source.index
         ],
       };
-      this.state.lists.map(({ title, items }, index) => {
-        if (String(index) === result.destination.droppableId) {
-          items.splice(result.destination.index, 0, itemCopy);
-        }
-        if (String(index) === result.source.droppableId) {
-          items.splice(result.source.index, 1);
-        }
-        if (
-          String(index) === result.source.droppableId &&
-          String(index) === result.destination.droppableId
-        ) {
-          // console.log(items[result.source.index]);
-          // console.log(items[result.destination.index]);
-          // console.log(result.source.index);
-          // console.log(result.destination.index);
-        }
-        this.saveList();
-      });
+      // this.state.lists.map(({ title, items }, index) => {
+      //   if (String(index) === result.destination.droppableId) {
+      //     items.splice(result.destination.index, 0, itemCopy);
+      //   }
+      //   if (String(index) === result.source.droppableId) {
+      //     items.splice(result.source.index, 1);
+      //   }
+      //   if (
+      //     String(index) === result.source.droppableId &&
+      //     String(index) === result.destination.droppableId
+      //   ) {
+      //     // console.log(items[result.source.index]);
+      //     // console.log(items[result.destination.index]);
+      //     // console.log(result.source.index);
+      //     // console.log(result.destination.index);
+      //   }
+
+      //   const newItems = Array.from(this.state);
+      //   const [reorderedItem] = newItems.splice(result.source.index, 1);
+      //   newItems.splice(result.destination.index, 0, reorderedItem);
+
+      //   this.setState(newItems);
+
+      //   this.saveList();
+      // });
+
+      this.setState(prev => {
+        prev = {...prev}
+        //Remove from previous items array
+        prev[result.source.droppableId].items.splice(result.source.index, 1)
+    
+    
+        //Adding to new items array location
+        prev[result.destination.droppableId].items.splice(result.destination.index, 0, itemCopy)
+        return prev
+      })
+
     };
 
     const handleDragStart = (start, provided) => {
