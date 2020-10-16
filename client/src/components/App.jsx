@@ -69,10 +69,8 @@ class App extends React.Component {
         return;
       }
 
-      
       // const [reorderedItem] = items.splice(result.source.index, 1);
       // items.splice(result.destination.index, 0, reorderedItem);
-      // this.setState({ wants: items });
 
       const itemCopy = {
         ...this.state.lists[result.source.droppableId].items[
@@ -80,15 +78,24 @@ class App extends React.Component {
         ],
       };
       this.state.lists.map(({ title, items }, index) => {
-        if (index == result.destination.droppableId) {
-          items.push(itemCopy);
+        if (String(index) === result.destination.droppableId) {
+          items.splice(result.destination.index, 0, itemCopy);
         }
-        if (index == result.source.droppableId) {
+        if (String(index) === result.source.droppableId) {
           items.splice(result.source.index, 1);
+        }
+        if (
+          String(index) === result.source.droppableId &&
+          String(index) === result.destination.droppableId
+        ) {
+          // console.log(items[result.source.index]);
+          // console.log(items[result.destination.index]);
+          // console.log(result.source.index);
+          // console.log(result.destination.index);
         }
         this.saveList();
       });
-    };;
+    };
 
     const handleDragStart = (start, provided) => {
       // console.log(start);
