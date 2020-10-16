@@ -43,21 +43,6 @@ class App extends React.Component {
   }
   render() {
     const handleDragEnd = (result) => {
-      // //Creating a copy of item before removing it from state
-      // console.log(this.state[source])
-      // console.log(source,destination)
-      // //[]を消すとcopyされて全部同じになる
-      // const itemCopy = {...this.state[source.droppableId].wants[source.index]}
-
-      // this.setState(prev => {
-      //   prev = {...prev}
-      //   //Remove from previous items array
-      //   prev[source.droppableId].wants.splice(source.index, 1)
-
-      //   //Adding to new items array location
-      //   prev[destination.droppableId].wants.splice(destination.index, 0, itemCopy)
-      //   return prev
-      // })
       if (!result.destination) {
         return;
       }
@@ -68,15 +53,11 @@ class App extends React.Component {
       ) {
         return;
       }
-
-      // const [reorderedItem] = items.splice(result.source.index, 1);
-      // items.splice(result.destination.index, 0, reorderedItem);
-
-      const itemCopy = {
-        ...this.state.lists[result.source.droppableId].items[
-          result.source.index
-        ],
-      };
+      // const itemCopy = {
+      //   ...this.state.lists[result.source.droppableId].items[
+      //     result.source.index
+      //   ],
+      // };
       // this.state.lists.map(({ title, items }, index) => {
       //   if (String(index) === result.destination.droppableId) {
       //     items.splice(result.destination.index, 0, itemCopy);
@@ -102,17 +83,25 @@ class App extends React.Component {
 
       //   this.saveList();
       // });
+      // const itemCopy = {
+      //   ...this.state.lists[result.source.droppableId].items[
+      //     result.source.index
+      //   ],
+      // };
 
-      this.setState(prev => {
-        prev = {...prev}
-        //Remove from previous items array
-        prev[result.source.droppableId].items.splice(result.source.index, 1)
-    
+        //配列を回す
+        const prev =Array.from(this.state.lists)
+        console.log(prev)
+        console.log(prev.items)
+        //delete
+        const [reoderedItem] = prev[result.source.droppableId].items.splice(result.source.index,1);
+        //add
+        prev[result.destination.droppableId].items.splice(result.destination.index,0,reoderedItem);
+        this.setState(prev)
     
         //Adding to new items array location
-        prev[result.destination.droppableId].items.splice(result.destination.index, 0, itemCopy)
-        return prev
-      })
+        // prev[result.destination.droppableId].items.splice(result.destination.index, 0, itemCopy)
+        // this.setState({lists:prev})
 
     };
 
@@ -153,7 +142,10 @@ class App extends React.Component {
           onDragUpdate={handleDragUpdate}
         >
           <Wrap>
+            {console.log(this.state.lists)}
             {this.state.lists.map(({ title, items }, index) => (
+              <div>
+                <p>{title}</p>
               <Droppable droppableId={String(index)} key={index}>
                 {(provided, snapshot) => {
                   return (
@@ -162,7 +154,7 @@ class App extends React.Component {
                       ref={provided.innerRef}
                       isDraggingOver={snapshot.isDraggingOver}
                     >
-                      <p>{title}</p>
+                      
                       {items.map(
                         (
                           { id, goodsName, url, place, price, img, editing },
@@ -222,6 +214,7 @@ class App extends React.Component {
                   );
                 }}
               </Droppable>
+              </div>
             ))}
           </Wrap>
         </DragDropContext>
