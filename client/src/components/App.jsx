@@ -89,7 +89,7 @@ class App extends React.Component {
       //   ],
       // };
 
-        //配列を回す
+        //配列を作る
         const prev =Array.from(this.state.lists)
         console.log(prev)
         console.log(prev.items)
@@ -98,6 +98,7 @@ class App extends React.Component {
         //add
         prev[result.destination.droppableId].items.splice(result.destination.index,0,reoderedItem);
         this.setState(prev)
+        this.saveList();
     
         //Adding to new items array location
         // prev[result.destination.droppableId].items.splice(result.destination.index, 0, itemCopy)
