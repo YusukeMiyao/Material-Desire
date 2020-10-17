@@ -92,13 +92,15 @@ class App extends React.Component {
         //配列を作る
         const prev =Array.from(this.state.lists)
         console.log(prev)
-        console.log(prev.items)
+        console.log(result)
+        console.log(result.source)
         //delete
         const [reoderedItem] = prev[result.source.droppableId].items.splice(result.source.index,1);
         //add
         prev[result.destination.droppableId].items.splice(result.destination.index,0,reoderedItem);
         this.setState(prev)
         this.saveList();
+        this.calculatePrice();
     
         //Adding to new items array location
         // prev[result.destination.droppableId].items.splice(result.destination.index, 0, itemCopy)
@@ -135,7 +137,7 @@ class App extends React.Component {
     return (
       <div>
         <h1>欲しいものリスト</h1>
-        {/* <p>合計金額：¥{this.state.totalPrice.toLocaleString()}</p> */}
+        <p>合計金額：¥{this.state.totalPrice.toLocaleString()}</p>
         <Form onSubmit={this.handleSubmit} />
         <DragDropContext
           onDragEnd={handleDragEnd}
@@ -257,7 +259,7 @@ class App extends React.Component {
         count: currentId,
       };
     });
-    // this.calculatePrice();
+    this.calculatePrice();
     localStorage.setItem("Count", currentId);
     this.saveList();
     // let currentId = this.state.count
@@ -311,16 +313,14 @@ class App extends React.Component {
     this.calculatePrice();
   };
 
-  handleClickDelete = async (id) => {
+  handleClickDelete = async (id,index) => {
     localStorage.clear();
-    const newWant = this.state.wants.filter((want) => want.id !== id);
-    await this.setState({ wants: newWant, count: this.state.count });
-    let want = JSON.stringify(newWant);
-    localStorage.setItem("Wants", want);
+    const prev =Array.from(this.state)
+    const newWant = prev.map(lists => lists[ 0 || 1 || 2 ].items[index].id !== id);
+    console.log(this.state.lists)
+    await this.setState({  newWant, count: this.state.count });
+    this.saveList();
     localStorage.setItem("Count", this.state.count);
-    if (localStorage.getItem("Wants") === "[]") {
-      localStorage.clear();
-    }
     this.calculatePrice();
   };
 
@@ -344,8 +344,9 @@ class App extends React.Component {
 
   calculatePrice = async () => {
     let total = 0;
-    this.state.wants.map((want) => {
-      let price = want.price.replace(/,/g, "");
+    let lists = {...this.state.lists}
+    lists[0].items.map((items) => {
+      let price = items.price.replace(/,/g, "");
       price = Number(price);
       total = total + price;
       return total;
@@ -358,6 +359,9 @@ class App extends React.Component {
   saveList = () => {
     let list = JSON.stringify(this.state.lists);
     localStorage.setItem("Lists", list);
+    if (localStorage.getItem("Lists") === "[]") {
+      localStorage.clear();
+    }
   };
 }
 

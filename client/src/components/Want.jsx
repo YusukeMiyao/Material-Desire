@@ -28,8 +28,8 @@ class Want extends React.Component {
       };
 
       handleClickDelete = () => {
-        const { onDelete, id } = this.props;
-        onDelete(id);
+        const { onDelete, id,index } = this.props;
+        onDelete(id,index);
       };
 }
 
