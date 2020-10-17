@@ -145,7 +145,7 @@ class App extends React.Component {
           <Wrap>
             {console.log(this.state.lists)}
             {this.state.lists.map(({ title, items }, index) => (
-              <div>
+              <div key={index}>
                 <p>{title}</p>
               <Droppable droppableId={String(index)} key={index}>
                 {(provided, snapshot) => {
@@ -325,7 +325,7 @@ class App extends React.Component {
   };
 
   allDelete = () => {
-    this.setState({ wants: [], totalPrice: 0, count: 0 });
+    this.setState({ lists: [], totalPrice: 0, count: 0 });
     localStorage.clear();
   };
 
