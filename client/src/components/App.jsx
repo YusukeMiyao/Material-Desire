@@ -154,6 +154,8 @@ class App extends React.Component {
                                           place={place}
                                           price={price}
                                           img={img}
+                                          itemIndex={itemIndex}
+                                          listIndex={listIndex}
                                           onCancel={
                                             this.handleChangeWantAttribute
                                           }
@@ -229,8 +231,8 @@ class App extends React.Component {
         count: currentId,
       };
     });
-    this.calculatePrice();
     localStorage.setItem("Count", currentId);
+    this.calculatePrice();
     this.saveList();
   };
 
@@ -268,7 +270,24 @@ class App extends React.Component {
   };
 
   allDelete = () => {
-    this.setState({ lists: [], totalPrice: 0, count: 0 });
+    this.setState({
+      lists: [
+        {
+          title: "Todo",
+          items: [],
+        },
+        {
+          title: "InProgress",
+          items: [],
+        },
+        {
+          title: "Done",
+          items: [],
+        },
+      ],
+      totalPrice: 0,
+      count: 0,
+    });
     localStorage.clear();
   };
 
