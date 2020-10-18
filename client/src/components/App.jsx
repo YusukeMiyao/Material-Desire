@@ -4,7 +4,7 @@ import Form from "./Form.jsx";
 import Want from "./Want.jsx";
 import EditWant from "./EditWant.jsx";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import _ from "lodash";
+import _, { intersectionWith } from "lodash";
 import axios from "axios";
 import styled from "styled-components";
 // import '@atlaskit/css-reset';
@@ -13,48 +13,37 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = JSON.parse(
-      localStorage.getItem("Key"),
+      localStorage.getItem("Lists"),
       localStorage.getItem("TotalPrice"),
       localStorage.getItem("Count")
     )
       ? {
-          wants: JSON.parse(localStorage.getItem("Key")),
+          lists: JSON.parse(localStorage.getItem("Lists")),
           totalPrice: JSON.parse(localStorage.getItem("TotalPrice")),
           count: JSON.parse(localStorage.getItem("Count")),
         }
       : {
-          wants: [],
-          totalPrice: 0,
+          lists: [
+            {
+              title: "Todo",
+              items: [],
+            },
+            {
+              title: "InProgress",
+              items: [],
+            },
+            {
+              title: "Done",
+              items: [],
+            },
+          ],
           count: 0,
+          totalPrice: 0,
         };
   }
   render() {
     const handleDragEnd = (result) => {
-      // if(!destination) {
-      //   return
-      // }
-
-      // if(destination.index === source.index && destination.droppableId === source.droppableId) {
-      //   return
-      // }
-
-      // //Creating a copy of item before removing it from state
-      // console.log(this.state[source])
-      // console.log(source,destination)
-      // //[]を消すとcopyされて全部同じになる
-      // const itemCopy = {...this.state[source.droppableId].wants[source.index]}
-
-      // this.setState(prev => {
-      //   prev = {...prev}
-      //   //Remove from previous items array
-      //   prev[source.droppableId].wants.splice(source.index, 1)
-
-      //   //Adding to new items array location
-      //   prev[destination.droppableId].wants.splice(destination.index, 0, itemCopy)
-      //   return prev
-      // })
       if (!result.destination) {
-        // console.log("これ");
         return;
       }
 
@@ -62,26 +51,39 @@ class App extends React.Component {
         result.destination.index === result.source.index &&
         result.destination.droppableId === result.source.droppableId
       ) {
-        // console.log("こッチ");
         return;
       }
 
-      const items = Array.from(this.state.wants);
-      // console.log(Array.from(this.state.wants))
-      // console.log(this.state)
-      // console.log(items)
-      const [reorderedItem] = items.splice(result.source.index, 1);
-      // console.log([reorderedItem])
-      items.splice(result.destination.index, 0, reorderedItem);
-      // console.log(items)
-      this.setState({ wants: items });
-      console.log(this.state);
+      //配列を作る
+      const prev = Array.from(this.state.lists);
+      // console.log(prev);
+      // console.log(result);
+      // console.log(result.source);
+      //delete
+      const [reoderedItem] = prev[result.source.droppableId].items.splice(
+        result.source.index,
+        1
+      );
+      //add
+      prev[result.destination.droppableId].items.splice(
+        result.destination.index,
+        0,
+        reoderedItem
+      );
+      this.setState(prev);
+      this.saveList();
+      this.calculatePrice();
+
+      //Adding to new items array location
+      // prev[result.destination.droppableId].items.splice(result.destination.index, 0, itemCopy)
+      // this.setState({lists:prev})
     };
+
     const handleDragStart = (start, provided) => {
-      console.log(start);
+      // console.log(start);
     };
     const handleDragUpdate = (update, provided) => {
-      console.log(update);
+      // console.log(provided);
     };
 
     const List = styled.div`
@@ -89,9 +91,9 @@ class App extends React.Component {
         props.isDraggingOver ? "lightblue" : "white"};
       transition: background-color 0.2s ease;
       border: 1px solid lightgray;
-      width: 50%;
-      padding: 20px;
-      margin: auto;
+      width: 28%;
+      padding: 0 20px;
+      margin: 20px auto;
     `;
     const Item = styled.div`
       background-color: ${(props) =>
@@ -99,6 +101,9 @@ class App extends React.Component {
       border: 1px solid lightgray;
       width: 100%;
       margin: 20px auto;
+    `;
+    const Wrap = styled.div`
+      display: flex;
     `;
     return (
       <div>
@@ -110,69 +115,83 @@ class App extends React.Component {
           onDragStart={handleDragStart}
           onDragUpdate={handleDragUpdate}
         >
-          <Droppable droppableId={"a"}>
-            {(provided, snapshot) => {
-              return (
-                <List
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  className={"droppable-col"}
-                  isDraggingOver={snapshot.isDraggingOver}
-                >
-                  {this.state.wants.map(
-                    (
-                      { id, goodsName, url, place, price, img, editing },
-                      index
-                    ) => (
-                      <Draggable
-                        key={id}
-                        index={index}
-                        draggableId={String(id)}
+          <Wrap>
+            {this.state.lists.map(({ title, items }, listIndex) => (
+              <div key={listIndex}>
+                <p>{title}</p>
+                <Droppable droppableId={String(listIndex)} key={listIndex}>
+                  {(provided, snapshot) => {
+                    return (
+                      <List
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                        isDraggingOver={snapshot.isDraggingOver}
                       >
-                        {(provided, snapshot) => {
-                          return (
-                            <Item
-                              // className={`item ${snapshot.isDragging && "dragging"}`}
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              isDragging={snapshot.isDragging}
-                            >
-                              {editing ? (
-                                <EditWant
-                                  id={id}
-                                  goodsName={goodsName}
-                                  url={url}
-                                  place={place}
-                                  price={price}
-                                  img={img}
-                                  onCancel={this.handleChangeWantAttribute}
-                                  onSubmit={this.editList}
-                                />
-                              ) : (
-                                <Want
-                                  id={id}
-                                  goodsName={goodsName}
-                                  url={url}
-                                  place={place}
-                                  price={price}
-                                  img={img}
-                                  onChange={this.handleChangeWantAttribute}
-                                  onDelete={this.handleClickDelete}
-                                  index={index}
-                                />
-                              )}
-                            </Item>
-                          );
-                        }}
-                      </Draggable>
-                    )
-                  )}
-                  {provided.placeholder}
-                </List>
-              );
-            }}
-          </Droppable>
+                        {items.map(
+                          (
+                            { id, goodsName, url, place, price, img, editing },
+                            itemIndex
+                          ) => {
+                            return (
+                              <Draggable
+                                key={id}
+                                index={itemIndex}
+                                draggableId={String(id)}
+                              >
+                                {(provided, snapshot) => {
+                                  return (
+                                    <Item
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
+                                      isDragging={snapshot.isDragging}
+                                    >
+                                      {editing ? (
+                                        <EditWant
+                                          id={id}
+                                          goodsName={goodsName}
+                                          url={url}
+                                          place={place}
+                                          price={price}
+                                          img={img}
+                                          itemIndex={itemIndex}
+                                          listIndex={listIndex}
+                                          onCancel={
+                                            this.handleChangeWantAttribute
+                                          }
+                                          onSubmit={this.editList}
+                                        />
+                                      ) : (
+                                        <Want
+                                          id={id}
+                                          goodsName={goodsName}
+                                          url={url}
+                                          place={place}
+                                          price={price}
+                                          img={img}
+                                          onChange={
+                                            this.handleChangeWantAttribute
+                                          }
+                                          onDelete={this.handleClickDelete}
+                                          itemIndex={itemIndex}
+                                          listIndex={listIndex}
+                                        />
+                                      )}
+                                    </Item>
+                                  );
+                                }}
+                              </Draggable>
+                            );
+                          }
+                        )}
+                        {provided.placeholder}
+                      </List>
+                    );
+                  }}
+                </Droppable>
+              </div>
+            ))}
+          </Wrap>
         </DragDropContext>
         <button onClick={this.allDelete}>全消去</button>
       </div>
@@ -184,53 +203,37 @@ class App extends React.Component {
     await this.setState((prev) => {
       return {
         ...prev,
-
-        wants: [
+        lists: [
           {
-            id: currentId,
-            goodsName: e.goodsName,
-            url: e.url,
-            place: e.place,
-            price: e.price,
-            img: e.img,
-            editing: false,
+            title: "Todo",
+            items: [
+              {
+                id: currentId,
+                goodsName: e.goodsName,
+                url: e.url,
+                place: e.place,
+                price: e.price,
+                img: e.img,
+                editing: false,
+              },
+              ...prev.lists[0].items,
+            ],
           },
-          ...prev.wants,
+          {
+            title: "InProgress",
+            items: [...prev.lists[1].items],
+          },
+          {
+            title: "Done",
+            items: [...prev.lists[2].items],
+          },
         ],
-
         count: currentId,
       };
     });
-    this.calculatePrice();
-    let obj = JSON.stringify(this.state.wants);
-    localStorage.setItem("Key", obj);
     localStorage.setItem("Count", currentId);
-    // let currentId = this.state.count
-    // currentId++
-    // const newWant = {
-    //   id: currentId,
-    //   goodsName: e.goodsName,
-    //   url: e.url,
-    //   place: e.place,
-    //   price: e.price,
-    //   img: e.img,
-    //   editing: false,
-    // };
-    // axios.post('/api/lists', {
-    //   newWant
-    // }) // オブジェクトをサーバーにPOST
-    // .then(response => {
-    //   console.log(response) // 後で行う動作確認のためのコンソール出力
-    // })
-    // .catch(err => {
-    //   console.error(new Error(err))
-    // })
-    // const newWants = [...this.state.wants, newWant]
-    // await this.setState({ wants: newWants, count: currentId })
-    // this.calculatePrice()
-    // let obj = JSON.stringify(newWants);
-    // localStorage.setItem('Key', obj);
-    // localStorage.setItem('Count', currentId);
+    this.calculatePrice();
+    this.saveList();
   };
 
   editList = async (id, e) => {
@@ -250,27 +253,41 @@ class App extends React.Component {
     });
     await this.setState({ wants: newWant });
     localStorage.clear();
-    let obj = JSON.stringify(newWant);
-    localStorage.setItem("Key", obj);
+    let want = JSON.stringify(newWant);
+    localStorage.setItem("Wants", want);
     localStorage.setItem("Count", this.state.count);
     this.calculatePrice();
   };
 
-  handleClickDelete = async (id) => {
-    localStorage.clear();
-    const newWant = this.state.wants.filter((want) => want.id !== id);
-    await this.setState({ wants: newWant, count: this.state.count });
-    let obj = JSON.stringify(newWant);
-    localStorage.setItem("Key", obj);
-    localStorage.setItem("Count", this.state.count);
-    if (localStorage.getItem("Key") === "[]") {
-      localStorage.clear();
-    }
+  handleClickDelete = async (listIndex, itemIndex) => {
+    const prev = Array.from(this.state.lists);
+    prev[listIndex].items.splice(itemIndex, 1);
+    await this.setState({
+      lists: prev,
+    });
+    this.saveList();
     this.calculatePrice();
   };
 
   allDelete = () => {
-    this.setState({ wants: [], totalPrice: 0, count: 0 });
+    this.setState({
+      lists: [
+        {
+          title: "Todo",
+          items: [],
+        },
+        {
+          title: "InProgress",
+          items: [],
+        },
+        {
+          title: "Done",
+          items: [],
+        },
+      ],
+      totalPrice: 0,
+      count: 0,
+    });
     localStorage.clear();
   };
 
@@ -289,16 +306,25 @@ class App extends React.Component {
 
   calculatePrice = async () => {
     let total = 0;
-    this.state.wants.map((want) => {
-      let price = want.price.replace(/,/g, "");
+    const lists = Array.from(this.state.lists);
+    lists[0].items.map(({ price }) => {
+      price = price.replace(/,/g, "");
       price = Number(price);
       total = total + price;
-      return total;
     });
+
     await this.setState({
       totalPrice: total,
     });
     localStorage.setItem("TotalPrice", total);
+  };
+
+  saveList = () => {
+    let list = JSON.stringify(this.state.lists);
+    localStorage.setItem("Lists", list);
+    if (localStorage.getItem("Lists") === "[]") {
+      localStorage.clear();
+    }
   };
 }
 
