@@ -10,12 +10,12 @@ class Form extends React.Component {
         goodsName: "",
         url: "",
         price: "",
-        img: Icon,
+        img: [Icon],
         place: "",
       },
-        priceError: false,
-        submitError: false,
-        urlError: false,
+      priceError: false,
+      submitError: false,
+      urlError: false,
     };
   }
 
@@ -81,11 +81,9 @@ class Form extends React.Component {
   }
 
   onBlurFunc = () => {
-    
     this.setState({
       priceError: false,
       submitError: false,
-      
     });
   };
 
@@ -94,13 +92,12 @@ class Form extends React.Component {
       this.state.data.url.startsWith("https://") ||
       this.state.data.url.startsWith("http://") ||
       this.state.data.url <= 0
-    )  {
-      this.setState({urlError:false})
+    ) {
+      this.setState({ urlError: false });
       return;
-    }
-    else {
+    } else {
       this.setState({
-          urlError: true,
+        urlError: true,
       });
       return;
     }
@@ -125,7 +122,7 @@ class Form extends React.Component {
           ) {
             this.onBlurUrl();
           } else {
-            this.setState({  urlError: true });
+            this.setState({ urlError: true });
             return;
           }
         } else if (data.url.length <= 0) {
@@ -155,7 +152,12 @@ class Form extends React.Component {
         let files = e.target.files;
         if (files.length > 0) {
           // ②createObjectURLで、files[0]を読み込む
-          data.img = URL.createObjectURL(files[0]);
+          // data.img.splice(0);
+          for (const file of files) {
+            data.img.splice(1, 0, URL.createObjectURL(file));
+            console.log(data.img);
+          }
+          // data.img = URL.createObjectURL(files[0]);
           break;
         } else {
           data.img = Icon;
