@@ -4,10 +4,7 @@ import Form from "./Form.jsx";
 import Want from "./Want.jsx";
 import EditWant from "./EditWant.jsx";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import _, { intersectionWith } from "lodash";
-import axios from "axios";
 import styled from "styled-components";
-// import '@atlaskit/css-reset';
 
 class App extends React.Component {
   constructor(props) {
@@ -42,7 +39,7 @@ class App extends React.Component {
         };
   }
   render() {
-    const handleDragEnd = (result) => {
+    const handleDragEnd = async (result) => {
       if (!result.destination) {
         return;
       }
@@ -55,28 +52,21 @@ class App extends React.Component {
       }
 
       //配列を作る
-      const prev = Array.from(this.state.lists);
-      // console.log(prev);
-      // console.log(result);
-      // console.log(result.source);
+      const lists = Array.from(this.state.lists);
       //delete
-      const [reoderedItem] = prev[result.source.droppableId].items.splice(
+      const [reoderedItem] = lists[result.source.droppableId].items.splice(
         result.source.index,
         1
       );
       //add
-      prev[result.destination.droppableId].items.splice(
+      lists[result.destination.droppableId].items.splice(
         result.destination.index,
         0,
         reoderedItem
       );
-      this.setState(prev);
+      await this.setState({ lists: lists });
       this.saveList();
       this.calculatePrice();
-
-      //Adding to new items array location
-      // prev[result.destination.droppableId].items.splice(result.destination.index, 0, itemCopy)
-      // this.setState({lists:prev})
     };
 
     const handleDragStart = (start, provided) => {
@@ -154,12 +144,10 @@ class App extends React.Component {
                                           place={place}
                                           price={price}
                                           img={img}
-                                          itemIndex={itemIndex}
                                           listIndex={listIndex}
-                                          onCancel={
-                                            this.handleChangeWantAttribute
-                                          }
-                                          onSubmit={this.editList}
+                                          itemIndex={itemIndex}
+                                          onCancel={this.clickEdit}
+                                          onSubmit={this.editListItem}
                                         />
                                       ) : (
                                         <Want
@@ -169,12 +157,10 @@ class App extends React.Component {
                                           place={place}
                                           price={price}
                                           img={img}
-                                          onChange={
-                                            this.handleChangeWantAttribute
-                                          }
-                                          onDelete={this.handleClickDelete}
-                                          itemIndex={itemIndex}
                                           listIndex={listIndex}
+                                          itemIndex={itemIndex}
+                                          onClickEdit={this.clickEdit}
+                                          onDelete={this.clickDelete}
                                         />
                                       )}
                                     </Item>
@@ -236,35 +222,25 @@ class App extends React.Component {
     this.saveList();
   };
 
-  editList = async (id, e) => {
-    const newWant = this.state.wants.map((want) => {
-      if (want.id === id) {
-        return {
-          ...want,
-          goodsName: e.goodsName,
-          price: e.price,
-          place: e.place,
-          url: e.url,
-          img: e.img,
-          editing: false,
-        };
-      }
-      return want;
-    });
-    await this.setState({ wants: newWant });
-    localStorage.clear();
-    let want = JSON.stringify(newWant);
-    localStorage.setItem("Wants", want);
-    localStorage.setItem("Count", this.state.count);
+  editListItem = async (listIndex, itemIndex, data) => {
+    const lists = Array.from(this.state.lists);
+    const item = lists[listIndex].items[itemIndex];
+    item.goodsName = data.goodsName;
+    item.price = data.price;
+    item.place = data.place;
+    item.url = data.url;
+    item.img = data.img;
+    item.editing = false;
+    await this.setState({ lists: lists });
+    this.saveList();
     this.calculatePrice();
   };
 
-  handleClickDelete = async (listIndex, itemIndex) => {
-    const prev = Array.from(this.state.lists);
-    prev[listIndex].items.splice(itemIndex, 1);
-    await this.setState({
-      lists: prev,
-    });
+  clickDelete = async (listIndex, itemIndex) => {
+    const lists = Array.from(this.state.lists);
+    const items = lists[listIndex].items;
+    items.splice(itemIndex, 1);
+    await this.setState({ lists: lists });
     this.saveList();
     this.calculatePrice();
   };
@@ -291,28 +267,23 @@ class App extends React.Component {
     localStorage.clear();
   };
 
-  handleChangeWantAttribute = (id, key, value) => {
-    const newWant = this.state.wants.map((want) => {
-      if (want.id === id) {
-        return {
-          ...want,
-          [key]: value,
-        };
-      }
-      return want;
-    });
-    this.setState({ wants: newWant });
+  clickEdit = (value, listIndex, itemIndex) => {
+    const lists = Array.from(this.state.lists);
+    const item = lists[listIndex].items[itemIndex];
+    item.editing = value;
+    this.setState({ lists: lists });
   };
 
   calculatePrice = async () => {
     let total = 0;
     const lists = Array.from(this.state.lists);
-    lists[0].items.map(({ price }) => {
+    const todo = lists[0].items;
+    todo.map(({ price }) => {
       price = price.replace(/,/g, "");
       price = Number(price);
       total = total + price;
+      return total;
     });
-
     await this.setState({
       totalPrice: total,
     });
@@ -320,7 +291,7 @@ class App extends React.Component {
   };
 
   saveList = () => {
-    let list = JSON.stringify(this.state.lists);
+    const list = JSON.stringify(this.state.lists);
     localStorage.setItem("Lists", list);
     if (localStorage.getItem("Lists") === "[]") {
       localStorage.clear();
