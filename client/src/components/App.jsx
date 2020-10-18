@@ -72,7 +72,7 @@ class App extends React.Component {
       );
       this.setState(prev);
       this.saveList();
-      // this.calculatePrice();
+      this.calculatePrice();
 
       //Adding to new items array location
       // prev[result.destination.droppableId].items.splice(result.destination.index, 0, itemCopy)
@@ -265,7 +265,7 @@ class App extends React.Component {
       lists: prev,
     });
     this.saveList();
-    // this.calculatePrice();
+    this.calculatePrice();
   };
 
   allDelete = () => {
@@ -288,18 +288,33 @@ class App extends React.Component {
 
   calculatePrice = async () => {
     let total = 0;
-    let lists = { ...this.state.lists };
-    lists[0].items.map((items) => {
-      let price = items.price.replace(/,/g, "");
+
+    // allVer
+    // const lists = Array.from(this.state.lists);
+    // lists.map(({ items }) => {
+    //   items.map(({ price }) => {
+    //     price = price.replace(/,/g, "");
+    //     price = Number(price);
+    //     total = total + price;
+    //   });
+    // });
+    // allVer
+
+    // todoVer
+    const lists = Array.from(this.state.lists);
+    lists[0].items.map(({ price }) => {
+      price = price.replace(/,/g, "");
       price = Number(price);
       total = total + price;
-      return total;
     });
+    // todoVer
+
     await this.setState({
       totalPrice: total,
     });
     localStorage.setItem("TotalPrice", total);
   };
+  
   saveList = () => {
     let list = JSON.stringify(this.state.lists);
     localStorage.setItem("Lists", list);
