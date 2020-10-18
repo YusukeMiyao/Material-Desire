@@ -116,11 +116,10 @@ class App extends React.Component {
           onDragUpdate={handleDragUpdate}
         >
           <Wrap>
-            {/* {console.log(this.state.lists)} */}
-            {this.state.lists.map(({ title, items }, listsIndex) => (
-              <div key={listsIndex}>
+            {this.state.lists.map(({ title, items }, listIndex) => (
+              <div key={listIndex}>
                 <p>{title}</p>
-                <Droppable droppableId={String(listsIndex)} key={listsIndex}>
+                <Droppable droppableId={String(listIndex)} key={listIndex}>
                   {(provided, snapshot) => {
                     return (
                       <List
@@ -131,12 +130,12 @@ class App extends React.Component {
                         {items.map(
                           (
                             { id, goodsName, url, place, price, img, editing },
-                            itemsIndex
+                            itemIndex
                           ) => {
                             return (
                               <Draggable
                                 key={id}
-                                index={itemsIndex}
+                                index={itemIndex}
                                 draggableId={String(id)}
                               >
                                 {(provided, snapshot) => {
@@ -172,8 +171,8 @@ class App extends React.Component {
                                             this.handleChangeWantAttribute
                                           }
                                           onDelete={this.handleClickDelete}
-                                          itemsIndex={itemsIndex}
-                                          listsIndex={listsIndex}
+                                          itemIndex={itemIndex}
+                                          listIndex={listIndex}
                                         />
                                       )}
                                     </Item>
@@ -258,9 +257,9 @@ class App extends React.Component {
     this.calculatePrice();
   };
 
-  handleClickDelete = async (listsIndex, itemsIndex) => {
+  handleClickDelete = async (listIndex, itemIndex) => {
     const prev = Array.from(this.state.lists);
-    prev[listsIndex].items.splice(itemsIndex, 1);
+    prev[listIndex].items.splice(itemIndex, 1);
     await this.setState({
       lists: prev,
     });
@@ -314,7 +313,7 @@ class App extends React.Component {
     });
     localStorage.setItem("TotalPrice", total);
   };
-  
+
   saveList = () => {
     let list = JSON.stringify(this.state.lists);
     localStorage.setItem("Lists", list);
