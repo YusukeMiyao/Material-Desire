@@ -34,8 +34,8 @@ class Want extends React.Component {
   };
 
   handleClickDelete = () => {
-    const { onDelete, listsIndex, itemsIndex } = this.props;
-    onDelete(listsIndex, itemsIndex);
+    const { onDelete, listIndex, itemIndex } = this.props;
+    onDelete(listIndex, itemIndex);
   };
 }
 
