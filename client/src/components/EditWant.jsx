@@ -16,6 +16,7 @@ class EditWant extends React.Component {
       priceError: false,
       submitError: false,
       urlError: false,
+      selectedImages: [],
     };
   }
 
@@ -74,9 +75,11 @@ class EditWant extends React.Component {
               height={100}
               width={100}
               alt="upload-image"
+              onClick={this.selectImages}
             />
           );
         })}
+        <button onClick={this.deleteImages}>選択画像削除</button>
         <button name="delete" onClick={this.handleChange}>
           画像リセット
         </button>
@@ -183,13 +186,28 @@ class EditWant extends React.Component {
     });
   };
 
-  imageDelete = () => {};
-
   clickCancel = () => {
     const { onCancel, listIndex, itemIndex } = this.props;
     onCancel(false, listIndex, itemIndex);
   };
-
+  selectImages = (e) => {
+    const src = e.target.src;
+    const data = this.state.data;
+    const img = data.img;
+    const selectedImages = this.state.selectedImages;
+    img.map((el, index) => {
+      if (el === src) {
+        selectedImages.push(index);
+      }
+    });
+  };
+  deleteImages = () => {
+    const selectedImages = this.state.selectedImages;
+    selectedImages.map((el) => {
+      this.state.data.img.splice(el, 1);
+    });
+    this.setState({ data: this.state.data });
+  };
   handleSubmit = () => {
     const { listIndex, itemIndex } = this.props;
     if (
