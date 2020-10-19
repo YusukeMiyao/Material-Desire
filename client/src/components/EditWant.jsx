@@ -92,7 +92,7 @@ class EditWant extends React.Component {
 
   checkUrlError = () => {
     if (
-      this.state.data.url.match(/^(ftp|http|https):\/\/[^ "]+$/) ||
+      this.state.data.url.match(/^(http|https):\/\/[^ "]+$/) ||
       this.state.data.url <= 0
     ) {
       this.setState({ urlError: false });
@@ -116,7 +116,7 @@ class EditWant extends React.Component {
         data.url = e.target.value;
 
         if (data.url.length >= 7) {
-          if (this.state.data.url.match(/^(ftp|http|https):\/\/[^ "]+$/)) {
+          if (this.state.data.url.match(/^(http|https):\/\/[^ "]+$/)) {
             this.checkUrlError();
           } else {
             this.setState({ urlError: true });
