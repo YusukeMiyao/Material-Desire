@@ -38,12 +38,12 @@ class Want extends React.Component {
     );
   }
 
-  handleClickEdit = () => {
-    const { onChange, id, editing } = this.props;
-    onChange(id, "editing", !editing);
+  ClickEdit = () => {
+    const { onClickEdit, editing, listIndex, itemIndex } = this.props;
+    onClickEdit(!editing, listIndex, itemIndex);
   };
 
-  handleClickDelete = () => {
+  ClickDelete = () => {
     const { onDelete, listIndex, itemIndex } = this.props;
     onDelete(listIndex, itemIndex);
   };
