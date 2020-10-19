@@ -89,8 +89,7 @@ class Form extends React.Component {
 
   checkUrlError = () => {
     if (
-      this.state.data.url.startsWith("https://") ||
-      this.state.data.url.startsWith("http://") ||
+      this.state.data.url.match(/^(ftp|http|https):\/\/[^ "]+$/) ||
       this.state.data.url <= 0
     ) {
       this.setState({ urlError: false });
@@ -113,10 +112,9 @@ class Form extends React.Component {
       case "url":
         data.url = e.target.value;
 
-        if (data.url.length >= 8) {
+        if (data.url.length >= 7) {
           if (
-            data.url.startsWith("https://") ||
-            data.url.startsWith("http://")
+            this.state.data.url.match(/^(ftp|http|https):\/\/[^ "]+$/)
           ) {
             this.checkUrlError();
           } else {

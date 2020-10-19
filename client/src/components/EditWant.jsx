@@ -92,8 +92,7 @@ class EditWant extends React.Component {
 
   checkUrlError = () => {
     if (
-      this.state.data.url.startsWith("https://") ||
-      this.state.data.url.startsWith("http://") ||
+      this.state.data.url.match(/^(ftp|http|https):\/\/[^ "]+$/) ||
       this.state.data.url <= 0
     ) {
       this.setState({ urlError: false });
@@ -116,11 +115,8 @@ class EditWant extends React.Component {
       case "url":
         data.url = e.target.value;
 
-        if (data.url.length >= 8) {
-          if (
-            data.url.startsWith("https://") ||
-            data.url.startsWith("http://")
-          ) {
+        if (data.url.length >= 7) {
+          if (this.state.data.url.match(/^(ftp|http|https):\/\/[^ "]+$/)) {
             this.checkUrlError();
           } else {
             this.setState({ urlError: true });
@@ -176,7 +172,7 @@ class EditWant extends React.Component {
   };
 
   handleSubmit = () => {
-    const {listIndex, itemIndex } = this.props;
+    const { listIndex, itemIndex } = this.props;
     if (
       this.state.data.goodsName === "" &&
       this.state.data.url === "" &&
