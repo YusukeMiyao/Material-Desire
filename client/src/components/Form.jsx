@@ -13,9 +13,9 @@ class Form extends React.Component {
         img: Icon,
         place: "",
       },
-        priceError: false,
-        submitError: false,
-        urlError: false,
+      priceError: false,
+      submitError: false,
+      urlError: false,
     };
   }
 
@@ -35,7 +35,7 @@ class Form extends React.Component {
           name="url"
           value={this.state.data.url}
           onChange={this.handleChange}
-          onBlur={this.onBlurUrl}
+          onBlur={this.checkUrlError}
         />
         {this.state.urlError ? <p>URLが正しくありません</p> : ""}
         場所：
@@ -52,7 +52,7 @@ class Form extends React.Component {
           value={this.state.data.price}
           onChange={this.handleChange}
           placeholder="半角数字のみ"
-          onBlur={this.onBlurFunc}
+          onBlur={this.resetErrors}
         />
         {this.state.priceError ? <p>半角数字のみ入力して下さい</p> : ""}
         画像：
@@ -80,28 +80,23 @@ class Form extends React.Component {
     );
   }
 
-  onBlurFunc = () => {
-    
+  resetErrors = () => {
     this.setState({
       priceError: false,
       submitError: false,
-      
     });
   };
 
-  onBlurUrl = () => {
+  checkUrlError = () => {
     if (
       this.state.data.url.startsWith("https://") ||
       this.state.data.url.startsWith("http://") ||
       this.state.data.url <= 0
-    )  {
-      this.setState({urlError:false})
+    ) {
+      this.setState({ urlError: false });
       return;
-    }
-    else {
-      this.setState({
-          urlError: true,
-      });
+    } else {
+      this.setState({ urlError: true });
       return;
     }
   };
@@ -123,13 +118,13 @@ class Form extends React.Component {
             data.url.startsWith("https://") ||
             data.url.startsWith("http://")
           ) {
-            this.onBlurUrl();
+            this.checkUrlError();
           } else {
-            this.setState({  urlError: true });
+            this.setState({ urlError: true });
             return;
           }
         } else if (data.url.length <= 0) {
-          this.onBlurFunc();
+          this.resetErrors();
         }
         break;
       case "place":
@@ -145,7 +140,7 @@ class Form extends React.Component {
           if (price === "0") {
             price = "";
           }
-          this.onBlurFunc();
+          this.resetErrors();
           data.price = price;
         } else {
           this.setState({ priceError: true });

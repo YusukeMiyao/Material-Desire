@@ -22,18 +22,18 @@ class Want extends React.Component {
           {price}
         </p>
         <img src={img} height={100} width={100} />
-        <button onClick={this.handleClickEdit}>編集</button>
-        <button onClick={this.handleClickDelete}>削除</button>
+        <button onClick={this.ClickEdit}>編集</button>
+        <button onClick={this.ClickDelete}>削除</button>
       </div>
     );
   }
 
-  handleClickEdit = () => {
-    const { onChange, id, editing } = this.props;
-    onChange(id, "editing", !editing);
+  ClickEdit = () => {
+    const { onClickEdit, editing, listIndex, itemIndex } = this.props;
+    onClickEdit(!editing, listIndex, itemIndex);
   };
 
-  handleClickDelete = () => {
+  ClickDelete = () => {
     const { onDelete, listIndex, itemIndex } = this.props;
     onDelete(listIndex, itemIndex);
   };
