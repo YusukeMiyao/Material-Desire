@@ -32,8 +32,8 @@ class Want extends React.Component {
               />
             );
           })}
-        <button onClick={this.handleClickEdit}>編集</button>
-        <button onClick={this.handleClickDelete}>削除</button>
+        <button onClick={this.ClickEdit}>編集</button>
+        <button onClick={this.ClickDelete}>削除</button>
       </div>
     );
   }

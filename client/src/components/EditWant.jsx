@@ -66,7 +66,17 @@ class EditWant extends React.Component {
             e.target.value = null;
           }}
         />
-        <img src={this.state.data.img} height={200} width={200} />
+        {this.state.data.img.map((el, index) => {
+          return (
+            <img
+              key={index}
+              src={el}
+              height={100}
+              width={100}
+              alt="upload-image"
+            />
+          );
+        })}
         <button name="delete" onClick={this.handleChange}>
           画像リセット
         </button>
@@ -152,14 +162,19 @@ class EditWant extends React.Component {
       case "img":
         let files = e.target.files;
         if (files.length > 0) {
-          // ②createObjectURLで、files[0]を読み込む
-          data.img = URL.createObjectURL(files[0]);
+          if (this.state.data.img[0] === Icon) {
+            this.state.data.img.splice(0, 1);
+          }
+          for (const file of files) {
+            data.img.splice(1, 0, URL.createObjectURL(file));
+          }
+          break;
         } else {
-          data.img = null;
+          data.img = [];
         }
         break;
       case "delete":
-        data.img = null;
+        data.img = [];
         break;
     }
     // 状態を更新
@@ -176,11 +191,11 @@ class EditWant extends React.Component {
   };
 
   handleSubmit = () => {
-    const {listIndex, itemIndex } = this.props;
+    const { listIndex, itemIndex } = this.props;
     if (
       this.state.data.goodsName === "" &&
       this.state.data.url === "" &&
-      this.state.data.img === Icon
+      this.state.data.img[0] === Icon
     ) {
       this.setState({ submitError: true });
       return;

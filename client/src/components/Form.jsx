@@ -190,7 +190,7 @@ class Form extends React.Component {
     // if (data.img.length > 1) {
     //   data.img.splice(0, 1);
     // }
-    if (data.goodsName === "" && data.url === "" && data.img === [Icon]) {
+    if (data.goodsName === "" && data.url === "" && data.img[0] === Icon) {
       this.setState({ submitError: true });
       return;
     } else if (this.state.urlError) {
