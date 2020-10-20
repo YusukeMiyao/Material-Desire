@@ -3,6 +3,8 @@ import "../assets/css/App.css";
 import Form from "./Form.jsx";
 import Want from "./Want.jsx";
 import EditWant from "./EditWant.jsx";
+import Title from "./Title.jsx";
+import EditTitle from "./EditTitle.jsx";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 
@@ -24,14 +26,17 @@ class App extends React.Component {
             {
               title: "Todo",
               items: [],
+              editing: false,
             },
             {
               title: "InProgress",
               items: [],
+              editing: false,
             },
             {
               title: "Done",
               items: [],
+              editing: false,
             },
           ],
           count: 0,
@@ -106,9 +111,23 @@ class App extends React.Component {
           onDragUpdate={handleDragUpdate}
         >
           <Wrap>
-            {this.state.lists.map(({ title, items }, listIndex) => (
+            {this.state.lists.map(({ title, items, editing }, listIndex) => (
               <div key={listIndex}>
-                <p>{title}</p>
+                {editing ? (
+                  <EditTitle
+                    title={title}
+                    listIndex={listIndex}
+                    onCancel={this.clickEditTitle}
+                    onSubmit={this.editTitle}
+                  />
+                ) : (
+                  <Title
+                    title={title}
+                    editing={editing}
+                    listIndex={listIndex}
+                    onClickEditTitle={this.clickEditTitle}
+                  />
+                )}
                 <Droppable droppableId={String(listIndex)} key={listIndex}>
                   {(provided, snapshot) => {
                     return (
@@ -191,7 +210,7 @@ class App extends React.Component {
         ...prev,
         lists: [
           {
-            title: "Todo",
+            title: prev.lists[0].title,
             items: [
               {
                 id: currentId,
@@ -204,14 +223,17 @@ class App extends React.Component {
               },
               ...prev.lists[0].items,
             ],
+            editing: false,
           },
           {
-            title: "InProgress",
+            title: prev.lists[1].title,
             items: [...prev.lists[1].items],
+            editing: false,
           },
           {
-            title: "Done",
+            title: prev.lists[2].title,
             items: [...prev.lists[2].items],
+            editing: false,
           },
         ],
         count: currentId,
@@ -245,32 +267,41 @@ class App extends React.Component {
     this.calculatePrice();
   };
 
-  allDelete = () => {
-    this.setState({
-      lists: [
-        {
-          title: "Todo",
-          items: [],
-        },
-        {
-          title: "InProgress",
-          items: [],
-        },
-        {
-          title: "Done",
-          items: [],
-        },
-      ],
-      totalPrice: 0,
-      count: 0,
+  allDelete = async () => {
+    await this.setState((prev) => {
+      return {
+        ...prev,
+        lists: [
+          {
+            title: prev.lists[0].title,
+            items: [],
+            editing: false,
+          },
+          {
+            title: prev.lists[1].title,
+            items: [],
+            editing: false,
+          },
+          {
+            title: prev.lists[2].title,
+            items: [],
+            editing: false,
+          },
+        ],
+        totalPrice: 0,
+        count: prev.count,
+      };
     });
     localStorage.clear();
+    this.saveList();
+    localStorage.setItem("Count", this.state.count);
+    localStorage.setItem("TotalPrice", this.state.totalPrice);
   };
 
-  clickEdit = (value, listIndex, itemIndex) => {
+  clickEdit = (listIndex, itemIndex, editing) => {
     const lists = Array.from(this.state.lists);
     const item = lists[listIndex].items[itemIndex];
-    item.editing = value;
+    item.editing = editing;
     this.setState({ lists: lists });
   };
 
@@ -296,6 +327,19 @@ class App extends React.Component {
     if (localStorage.getItem("Lists") === "[]") {
       localStorage.clear();
     }
+  };
+  clickEditTitle = (listIndex, editing) => {
+    const lists = Array.from(this.state.lists);
+    lists[listIndex].editing = editing;
+    this.setState({ lists: lists });
+  };
+  editTitle = async (listIndex, title) => {
+    const lists = Array.from(this.state.lists);
+    lists[listIndex].title = title;
+    lists[listIndex].editing = false;
+    await this.setState({ lists: lists });
+    this.saveList();
+    this.calculatePrice();
   };
 }
 
