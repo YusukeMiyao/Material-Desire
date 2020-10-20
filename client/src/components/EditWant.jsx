@@ -66,7 +66,7 @@ class EditWant extends React.Component {
             e.target.value = null;
           }}
         />
-        <img src={this.state.data.img} height={200} width={200} />
+        <img src={this.state.data.img} alt="" height={200} width={200} />
         <button name="delete" onClick={this.handleChange}>
           画像リセット
         </button>
@@ -157,6 +157,8 @@ class EditWant extends React.Component {
       case "delete":
         data.img = null;
         break;
+      default:
+        break;
     }
     // 状態を更新
     this.setState({
@@ -168,7 +170,7 @@ class EditWant extends React.Component {
 
   clickCancel = () => {
     const { onCancel, listIndex, itemIndex } = this.props;
-    onCancel(false, listIndex, itemIndex);
+    onCancel(listIndex, itemIndex, false);
   };
 
   handleSubmit = () => {
