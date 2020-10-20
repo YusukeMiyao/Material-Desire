@@ -113,9 +113,7 @@ class Form extends React.Component {
         data.url = e.target.value;
 
         if (data.url.length >= 7) {
-          if (
-            this.state.data.url.match(/^(http|https):\/\/[^ "]+$/)
-          ) {
+          if (this.state.data.url.match(/^(http|https):\/\/[^ "]+$/)) {
             this.checkUrlError();
           } else {
             this.setState({ urlError: true });
@@ -159,6 +157,8 @@ class Form extends React.Component {
         data.img = Icon;
         e.target.value = null;
         break;
+      default:
+        break;
     }
     // 状態を更新
     this.setState({
@@ -175,6 +175,7 @@ class Form extends React.Component {
     } else if (this.state.urlError) {
       return;
     } else {
+      this.setState({ submitError: false });
       this.props.onSubmit(data);
       this.setState({
         data: { goodsName: "", url: "", place: "", price: "", img: Icon },
