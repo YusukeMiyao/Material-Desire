@@ -13,7 +13,7 @@ class Want extends React.Component {
       <div>
         <p>欲しいもの：{goodsName}</p>
         URL：
-        <a target="_blank" href={url}>
+        <a target="_blank" rel="noopener noreferrer" href={url}>
           {url}
         </a>
         <p>場所：{place}</p>
@@ -40,7 +40,7 @@ class Want extends React.Component {
 
   ClickEdit = () => {
     const { onClickEdit, editing, listIndex, itemIndex } = this.props;
-    onClickEdit(!editing, listIndex, itemIndex);
+    onClickEdit(listIndex, itemIndex, !editing);
   };
 
   ClickDelete = () => {
