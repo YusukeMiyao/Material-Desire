@@ -1,5 +1,6 @@
 import React from "react";
 import Icon from "../assets/images/Icon.png";
+import DB from "../db/db.jsx";
 
 class Form extends React.Component {
   constructor(props) {
@@ -61,7 +62,7 @@ class Form extends React.Component {
           name="img"
           accept="image/*"
           multiple
-          onChange={this.handleChange}
+          onChange={this.selectImages}
           onClick={(e) => {
             e.target.value = null;
           }}
@@ -142,16 +143,17 @@ class Form extends React.Component {
           this.setState({ priceError: true });
         }
         break;
-      case "img":
-        let files = e.target.files;
-        if (files.length > 0) {
-          // ②createObjectURLで、files[0]を読み込む
-          data.img = URL.createObjectURL(files[0]);
-          break;
-        } else {
-          data.img = Icon;
-        }
-        break;
+      // case "img":
+      //   let files = e.target.files;
+      //   if (files.length > 0) {
+      //     // ②createObjectURLで、files[0]を読み込む
+      //     console.log(data.img);
+      //     // data.img = URL.createObjectURL(files[0]);
+      //     break;
+      //   } else {
+      //     data.img = Icon;
+      //   }
+      //   break;
       case "delete":
         e.preventDefault();
         data.img = Icon;
@@ -166,6 +168,25 @@ class Form extends React.Component {
     });
   };
 
+  selectImages = (e) => {
+    let files = e.target.files;
+    console.log(files);
+    if (files.length > 0) {
+      // ②createObjectURLで、files[0]を読み込む
+      // console.log(this.state.data.img);
+      // data.img = URL.createObjectURL(files[0]);
+    } else {
+      this.state.data.img = Icon;
+    }
+  };
+  addImages = async () => {
+    const image = Object.assign({}, this.state.data.img);
+    const id = await DB.add(image);
+    image.id = id;
+    // this.state.rows.push(image);
+    // this.setState({ rows: this.state.rows });
+  };
+
   handleSubmit = (e) => {
     e.preventDefault();
     const data = this.state.data;
@@ -176,6 +197,7 @@ class Form extends React.Component {
       return;
     } else {
       this.setState({ submitError: false });
+      this.addImages();
       this.props.onSubmit(data);
       this.setState({
         data: { goodsName: "", url: "", place: "", price: "", img: Icon },
