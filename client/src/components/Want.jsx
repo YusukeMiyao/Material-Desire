@@ -21,17 +21,17 @@ class Want extends React.Component {
           値段：{price !== "" ? "¥" : null}
           {price}
         </p>
-          {img.map((el, index) => {
-            return (
-              <img
-                key={index}
-                src={el}
-                alt="upload-image"
-                height={100}
-                width={100}
-              />
-            );
-          })}
+        {img.map((el, index) => {
+          return (
+            <img
+              key={index}
+              src={el.data}
+              alt={el.name}
+              height={100}
+              width={100}
+            />
+          );
+        })}
         <button onClick={this.ClickEdit}>編集</button>
         <button onClick={this.ClickDelete}>削除</button>
       </div>

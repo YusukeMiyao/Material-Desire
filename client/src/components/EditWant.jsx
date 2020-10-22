@@ -71,10 +71,10 @@ class EditWant extends React.Component {
           return (
             <img
               key={index}
-              src={el}
+              src={el.data}
               height={100}
               width={100}
-              alt="upload-image"
+              alt={el.name}
               onClick={this.selectImages}
             />
           );

@@ -11,9 +11,15 @@ class Form extends React.Component {
         goodsName: "",
         url: "",
         price: "",
-        img: [Icon],
+        img: [
+          {
+            name: "icon",
+            data: Icon,
+          },
+        ],
         place: "",
       },
+      count: 0,
       priceError: false,
       submitError: false,
       urlError: false,
@@ -71,10 +77,10 @@ class Form extends React.Component {
           return (
             <img
               key={index}
-              src={el}
+              src={el.data}
               height={100}
               width={100}
-              alt="upload-image"
+              alt={el.name}
             />
           );
         })}
@@ -153,25 +159,9 @@ class Form extends React.Component {
           this.setState({ priceError: true });
         }
         break;
-      case "img":
-        let files = e.target.files;
-        if (files.length > 0) {
-          // 初期画像を削除
-          if (this.state.data.img[0] === Icon) {
-            this.state.data.img.splice(0, 1);
-          }
-          // createObjectURLで、fileを読み込む
-          for (const file of files) {
-            data.img.splice(1, 0, URL.createObjectURL(file));
-          }
-          break;
-        } else {
-          data.img = [Icon];
-        }
-        break;
       case "delete":
         e.preventDefault();
-        data.img = [Icon];
+        data.img = [{ name: "icon", data: Icon }];
         e.target.value = null;
         break;
       default:
@@ -183,17 +173,36 @@ class Form extends React.Component {
     });
   };
 
-  selectImages = (e) => {
-    let files = e.target.files;
-    console.log(files);
+  selectImages = async (e) => {
+    const files = e.target.files;
+    let count = this.state.count;
+    count++;
     if (files.length > 0) {
-      // ②createObjectURLで、files[0]を読み込む
-      // console.log(this.state.data.img);
-      // data.img = URL.createObjectURL(files[0]);
+      // 初回追加時に初期画像を削除
+      if (count === 1) {
+        this.state.data.img.splice(0, 1);
+      }
+      // createObjectURLで、fileを読み込む
+      for (const file of files) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          const data = reader.result;
+          this.state.data.img.splice(1, 0, {
+            name: file.name,
+            data: data,
+          });
+        };
+      }
     } else {
-      this.state.data.img = Icon;
+      this.state.data.img = { name: "icon", data: Icon };
     }
+    this.setState({
+      data: this.state.data,
+      count: count,
+    });
   };
+
   addImages = async () => {
     const image = Object.assign({}, this.state.data.img);
     const id = await DB.add(image);
@@ -208,7 +217,11 @@ class Form extends React.Component {
     // if (data.img.length > 1) {
     //   data.img.splice(0, 1);
     // }
-    if (data.goodsName === "" && data.url === "" && data.img[0] === Icon) {
+    if (
+      data.goodsName === "" &&
+      data.url === "" &&
+      data.img[0] === { name: "icon", data: Icon }
+    ) {
       this.setState({ submitError: true });
       return;
     } else if (this.state.urlError) {
@@ -218,7 +231,14 @@ class Form extends React.Component {
       this.addImages();
       this.props.onSubmit(data);
       this.setState({
-        data: { goodsName: "", url: "", place: "", price: "", img: [Icon] },
+        data: {
+          goodsName: "",
+          url: "",
+          place: "",
+          price: "",
+          img: [{ name: "icon", data: Icon }],
+        },
+        count: 0,
       });
     }
   };
