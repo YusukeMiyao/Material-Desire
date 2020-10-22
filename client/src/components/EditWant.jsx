@@ -16,6 +16,7 @@ class EditWant extends React.Component {
       priceError: false,
       submitError: false,
       urlError: false,
+      selectedImages: [],
     };
   }
 
@@ -66,7 +67,19 @@ class EditWant extends React.Component {
             e.target.value = null;
           }}
         />
-        <img src={this.state.data.img} alt="" height={200} width={200} />
+        {this.state.data.img.map((el, index) => {
+          return (
+            <img
+              key={index}
+              src={el}
+              height={100}
+              width={100}
+              alt="upload-image"
+              onClick={this.selectImages}
+            />
+          );
+        })}
+        <button onClick={this.deleteImages}>選択画像削除</button>
         <button name="delete" onClick={this.handleChange}>
           画像リセット
         </button>
@@ -148,14 +161,19 @@ class EditWant extends React.Component {
       case "img":
         let files = e.target.files;
         if (files.length > 0) {
-          // ②createObjectURLで、files[0]を読み込む
-          data.img = URL.createObjectURL(files[0]);
+          if (this.state.data.img[0] === Icon) {
+            this.state.data.img.splice(0, 1);
+          }
+          for (const file of files) {
+            data.img.splice(1, 0, URL.createObjectURL(file));
+          }
+          break;
         } else {
-          data.img = null;
+          data.img = [];
         }
         break;
       case "delete":
-        data.img = null;
+        data.img = [];
         break;
       default:
         break;
@@ -166,19 +184,34 @@ class EditWant extends React.Component {
     });
   };
 
-  imageDelete = () => {};
-
   clickCancel = () => {
     const { onCancel, listIndex, itemIndex } = this.props;
     onCancel(listIndex, itemIndex, false);
   };
-
+  selectImages = (e) => {
+    const src = e.target.src;
+    const data = this.state.data;
+    const img = data.img;
+    const selectedImages = this.state.selectedImages;
+    img.map((el, index) => {
+      if (el === src) {
+        selectedImages.push(index);
+      }
+    });
+  };
+  deleteImages = () => {
+    const selectedImages = this.state.selectedImages;
+    selectedImages.map((el) => {
+      this.state.data.img.splice(el, 1);
+    });
+    this.setState({ data: this.state.data });
+  };
   handleSubmit = () => {
     const { listIndex, itemIndex } = this.props;
     if (
       this.state.data.goodsName === "" &&
       this.state.data.url === "" &&
-      this.state.data.img === Icon
+      this.state.data.img[0] === Icon
     ) {
       this.setState({ submitError: true });
       return;

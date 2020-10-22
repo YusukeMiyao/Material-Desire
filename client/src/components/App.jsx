@@ -320,7 +320,6 @@ class App extends React.Component {
     });
     localStorage.setItem("TotalPrice", total);
   };
-
   saveList = () => {
     const list = JSON.stringify(this.state.lists);
     localStorage.setItem("Lists", list);

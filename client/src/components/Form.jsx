@@ -11,7 +11,7 @@ class Form extends React.Component {
         goodsName: "",
         url: "",
         price: "",
-        img: Icon,
+        img: [Icon],
         place: "",
       },
       priceError: false,
@@ -67,7 +67,17 @@ class Form extends React.Component {
             e.target.value = null;
           }}
         />
-        <img src={this.state.data.img} height={100} width={100} alt="画像" />
+        {this.state.data.img.map((el, index) => {
+          return (
+            <img
+              key={index}
+              src={el}
+              height={100}
+              width={100}
+              alt="upload-image"
+            />
+          );
+        })}
         <button name="delete" onClick={this.handleChange}>
           画像リセット
         </button>
@@ -143,20 +153,25 @@ class Form extends React.Component {
           this.setState({ priceError: true });
         }
         break;
-      // case "img":
-      //   let files = e.target.files;
-      //   if (files.length > 0) {
-      //     // ②createObjectURLで、files[0]を読み込む
-      //     console.log(data.img);
-      //     // data.img = URL.createObjectURL(files[0]);
-      //     break;
-      //   } else {
-      //     data.img = Icon;
-      //   }
-      //   break;
+      case "img":
+        let files = e.target.files;
+        if (files.length > 0) {
+          // 初期画像を削除
+          if (this.state.data.img[0] === Icon) {
+            this.state.data.img.splice(0, 1);
+          }
+          // createObjectURLで、fileを読み込む
+          for (const file of files) {
+            data.img.splice(1, 0, URL.createObjectURL(file));
+          }
+          break;
+        } else {
+          data.img = [Icon];
+        }
+        break;
       case "delete":
         e.preventDefault();
-        data.img = Icon;
+        data.img = [Icon];
         e.target.value = null;
         break;
       default:
@@ -190,7 +205,10 @@ class Form extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const data = this.state.data;
-    if (data.goodsName === "" && data.url === "" && data.img === Icon) {
+    // if (data.img.length > 1) {
+    //   data.img.splice(0, 1);
+    // }
+    if (data.goodsName === "" && data.url === "" && data.img[0] === Icon) {
       this.setState({ submitError: true });
       return;
     } else if (this.state.urlError) {
@@ -200,7 +218,7 @@ class Form extends React.Component {
       this.addImages();
       this.props.onSubmit(data);
       this.setState({
-        data: { goodsName: "", url: "", place: "", price: "", img: Icon },
+        data: { goodsName: "", url: "", place: "", price: "", img: [Icon] },
       });
     }
   };
