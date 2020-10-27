@@ -1,19 +1,27 @@
 import React from "react";
-// import styled from 'styled-components';
+import styled from "styled-components";
 
-// const Container = styled.div`
-//   display:flex;
-// `
+const Wrap = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 1em 0;
+`;
 
-class Want extends React.Component {
+const ListTitle = styled.p`
+  margin: 0 1em 0 0;
+`;
+
+const EditButton = styled.button``;
+
+class Title extends React.Component {
   render() {
     const { title } = this.props;
 
     return (
-      <div>
-        <p>{title}</p>
-        <button onClick={this.clickEdit}>編集</button>
-      </div>
+      <Wrap>
+        <ListTitle>{title}</ListTitle>
+        <EditButton onClick={this.clickEdit}>編集</EditButton>
+      </Wrap>
     );
   }
 
@@ -23,4 +31,4 @@ class Want extends React.Component {
   };
 }
 
-export default Want;
+export default Title;

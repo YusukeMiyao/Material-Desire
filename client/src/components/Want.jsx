@@ -1,16 +1,32 @@
 import React from "react";
-// import styled from 'styled-components';
+import styled from "styled-components";
 
-// const Container = styled.div`
-//   display:flex;
-// `
+const Wrap = styled.div`
+  width: 100%;
+  padding: 20px;
+`;
+
+const WantImage = styled.div`
+  display: flex;
+  overflow: auto;
+  img {
+    width: 100%;
+    height: 160px;
+    border: solid 1px black;
+    /* margin-right: 20px; */
+  }
+`;
 
 class Want extends React.Component {
   render() {
     const { goodsName, url, img, price, place } = this.props;
 
     return (
-      <div>
+      <Wrap>
+        <WantImage>
+          <img src={img} alt="" height={100} width={100} />
+          {/* <img src={img} alt="" height={100} width={100} /> */}
+        </WantImage>
         <p>欲しいもの：{goodsName}</p>
         URL：
         <a target="_blank" rel="noopener noreferrer" href={url}>
@@ -21,10 +37,9 @@ class Want extends React.Component {
           値段：{price !== "" ? "¥" : null}
           {price}
         </p>
-        <img src={img} alt="" height={100} width={100} />
         <button onClick={this.ClickEdit}>編集</button>
         <button onClick={this.ClickDelete}>削除</button>
-      </div>
+      </Wrap>
     );
   }
 
