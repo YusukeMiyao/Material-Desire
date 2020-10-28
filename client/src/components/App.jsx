@@ -85,6 +85,71 @@ class App extends React.Component {
     const handleDragUpdate = (update, provided) => {
       // console.log(provided);
     };
+
+    class InnerList extends React.Component {
+      shouldComponentUpdate(nextProps) {
+        if (nextProps.items === this.props.items) {
+          return false;
+        }
+        return true;
+      }
+      render() {
+        return this.props.items.map(
+          (
+            { id, goodsName, url, place, price, img, editing },
+            itemIndex
+          ) => {
+            return (
+              <Draggable
+                key={id}
+                index={itemIndex}
+                draggableId={String(id)}
+              >
+                {(provided, snapshot) => {
+                  return (
+                    <Item
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                      isDragging={snapshot.isDragging}
+                    >
+                      {editing ? (
+                        <EditWant
+                          id={id}
+                          goodsName={goodsName}
+                          url={url}
+                          place={place}
+                          price={price}
+                          img={img}
+                          listIndex={this.props.listIndex}
+                          itemIndex={itemIndex}
+                          onCancel={this.clickEdit}
+                          onSubmit={this.editListItem}
+                        />
+                      ) : (
+                        <Want
+                          id={id}
+                          goodsName={goodsName}
+                          url={url}
+                          place={place}
+                          price={price}
+                          img={img}
+                          listIndex={this.props.listIndex}
+                          itemIndex={itemIndex}
+                          onClickEdit={this.clickEdit}
+                          onDelete={this.clickDelete}
+                        />
+                      )}
+                    </Item>
+                  );
+                }}
+              </Draggable>
+            );
+          }
+        )
+      }
+    }
+
     const Main = styled.main``;
     const Wrap = styled.div`
       width: 70%;
@@ -215,59 +280,7 @@ class App extends React.Component {
                         ref={provided.innerRef}
                         isDraggingOver={snapshot.isDraggingOver}
                       >
-                        {items.map(
-                          (
-                            { id, goodsName, url, place, price, img, editing },
-                            itemIndex
-                          ) => {
-                            return (
-                              <Draggable
-                                key={id}
-                                index={itemIndex}
-                                draggableId={String(id)}
-                              >
-                                {(provided, snapshot) => {
-                                  return (
-                                    <Item
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}
-                                      isDragging={snapshot.isDragging}
-                                    >
-                                      {editing ? (
-                                        <EditWant
-                                          id={id}
-                                          goodsName={goodsName}
-                                          url={url}
-                                          place={place}
-                                          price={price}
-                                          img={img}
-                                          listIndex={listIndex}
-                                          itemIndex={itemIndex}
-                                          onCancel={this.clickEdit}
-                                          onSubmit={this.editListItem}
-                                        />
-                                      ) : (
-                                        <Want
-                                          id={id}
-                                          goodsName={goodsName}
-                                          url={url}
-                                          place={place}
-                                          price={price}
-                                          img={img}
-                                          listIndex={listIndex}
-                                          itemIndex={itemIndex}
-                                          onClickEdit={this.clickEdit}
-                                          onDelete={this.clickDelete}
-                                        />
-                                      )}
-                                    </Item>
-                                  );
-                                }}
-                              </Draggable>
-                            );
-                          }
-                        )}
+                        <InnerList items={items} listIndex={listIndex} />
                         {provided.placeholder}
                       </List>
                     );
