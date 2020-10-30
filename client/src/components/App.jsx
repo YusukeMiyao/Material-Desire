@@ -86,6 +86,59 @@ class App extends React.Component {
       // console.log(provided);
     };
 
+    class InList extends React.Component{
+      shouldComponentUpdate(nextState) {
+        if (nextState.list === this.state.list) {
+          return false;
+        }
+        return true; 
+      }
+      render() {
+        return this.state.lists.map(({ title, items, editing }, listIndex) => (
+          <Section key={listIndex}>
+            <Content>
+              {listIndex === 0 ? (
+                <TotalPrice>
+                  総額 ¥{this.state.totalPrice.toLocaleString()}
+                </TotalPrice>
+              ) : (
+                ""
+              )}
+              {editing ? (
+                <EditTitle
+                  title={title}
+                  listIndex={listIndex}
+                  onCancel={this.clickEditTitle}
+                  onSubmit={this.editTitle}
+                />
+              ) : (
+                <Title
+                  title={title}
+                  editing={editing}
+                  listIndex={listIndex}
+                  onClickEditTitle={this.clickEditTitle}
+                />
+              )}
+            </Content>
+            <Droppable droppableId={String(listIndex)} key={listIndex}>
+              {(provided, snapshot) => {
+                return (
+                  <List
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    isDraggingOver={snapshot.isDraggingOver}
+                  >
+                    <InnerList items={items} listIndex={listIndex} />
+                    {provided.placeholder}
+                  </List>
+                );
+              }}
+            </Droppable>
+          </Section>
+        ))}
+      
+    }
+
     class InnerList extends React.Component {
       shouldComponentUpdate(nextProps) {
         if (nextProps.items === this.props.items) {
@@ -139,7 +192,9 @@ class App extends React.Component {
                           onClickEdit={this.clickEdit}
                           onDelete={this.clickDelete}
                         />
+                        
                       )}
+                       {provided.placeholder}
                     </Item>
                   );
                 }}
@@ -246,48 +301,7 @@ class App extends React.Component {
             onDragStart={handleDragStart}
             onDragUpdate={handleDragUpdate}
           >
-            {this.state.lists.map(({ title, items, editing }, listIndex) => (
-              <Section key={listIndex}>
-                <Content>
-                  {listIndex === 0 ? (
-                    <TotalPrice>
-                      総額 ¥{this.state.totalPrice.toLocaleString()}
-                    </TotalPrice>
-                  ) : (
-                    ""
-                  )}
-                  {editing ? (
-                    <EditTitle
-                      title={title}
-                      listIndex={listIndex}
-                      onCancel={this.clickEditTitle}
-                      onSubmit={this.editTitle}
-                    />
-                  ) : (
-                    <Title
-                      title={title}
-                      editing={editing}
-                      listIndex={listIndex}
-                      onClickEditTitle={this.clickEditTitle}
-                    />
-                  )}
-                </Content>
-                <Droppable droppableId={String(listIndex)} key={listIndex}>
-                  {(provided, snapshot) => {
-                    return (
-                      <List
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                        isDraggingOver={snapshot.isDraggingOver}
-                      >
-                        <InnerList items={items} listIndex={listIndex} />
-                        {provided.placeholder}
-                      </List>
-                    );
-                  }}
-                </Droppable>
-              </Section>
-            ))}
+            <InList />
           </DragDropContext>
         </Wrap>
         <button onClick={this.allDelete}>全消去</button>
