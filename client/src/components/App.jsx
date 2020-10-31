@@ -10,6 +10,7 @@ import EditTitle from "./EditTitle.jsx";
 import Footer from "./Footer.jsx";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
+import { PureComponent } from "react";
 
 class App extends React.Component {
   constructor(props) {
@@ -85,6 +86,82 @@ class App extends React.Component {
     const handleDragUpdate = (update, provided) => {
       // console.log(provided);
     };
+
+    class OuterLine extends React.Component {
+      shouldComponentUpdate(nextProps) {
+        console.log(nextProps)
+        if(this.props.items.length !== nextProps.length) {
+          console.log('こっち')
+          return true;
+        }
+        console.log('イエス')
+        return false;
+      }
+      render() {
+        const {title, items, editing, listIndex, totalPrice}=this.props;
+        return <Section key={listIndex}>
+          <Content>
+            {console.log('あ')}
+            {listIndex === 0 ? (
+              <TotalPrice>
+                総額 ¥{totalPrice.toLocaleString()}
+              </TotalPrice>
+            ) : (
+              ""
+            )}
+            {editing ? (
+              <EditTitle
+                title={title}
+                listIndex={listIndex}
+                onCancel={this.clickEditTitle}
+                onSubmit={this.editTitle}
+              />
+            ) : (
+              <Title
+                title={title}
+                editing={editing}
+                listIndex={listIndex}
+                onClickEditTitle={this.clickEditTitle}
+              />
+            )}
+          </Content>
+          <Droppable droppableId={String(listIndex)} key={listIndex} direction='horizontal'>
+            {(provided, snapshot) => {
+              return (
+                <List
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                  isDraggingOver={snapshot.isDraggingOver}
+                >
+                  {items.map(
+                    (
+                      { id, goodsName, url, place, price, img, editing },
+                      itemIndex
+                    ) => {
+                    return (
+                            <InnerList 
+                              provided={provided} 
+                              snapshot={snapshot} 
+                              id={id} 
+                              goodsName={goodsName} 
+                              url={url} place={place} 
+                              price={price} 
+                              img={img} 
+                              editing={editing} 
+                              itemIndex={itemIndex}
+                            />
+                    );
+                  }
+                  )}
+                  {provided.placeholder}
+                </List>
+              );
+            }}
+          </Droppable>
+        </Section>
+      }
+    }
+
 
     class InnerList extends React.Component {
       shouldComponentUpdate(nextProps) {
@@ -241,68 +318,21 @@ class App extends React.Component {
             onDragStart={handleDragStart}
             onDragUpdate={handleDragUpdate}
           >
-            {this.state.lists.map(({ title, items, editing }, listIndex) => (
-          <Section key={listIndex}>
-            <Content>
-              {listIndex === 0 ? (
-                <TotalPrice>
-                  総額 ¥{this.state.totalPrice.toLocaleString()}
-                </TotalPrice>
-              ) : (
-                ""
-              )}
-              {editing ? (
-                <EditTitle
-                  title={title}
-                  listIndex={listIndex}
-                  onCancel={this.clickEditTitle}
-                  onSubmit={this.editTitle}
-                />
-              ) : (
-                <Title
-                  title={title}
-                  editing={editing}
-                  listIndex={listIndex}
-                  onClickEditTitle={this.clickEditTitle}
-                />
-              )}
-            </Content>
-            <Droppable droppableId={String(listIndex)} key={listIndex} direction='horizontal'>
-              {(provided, snapshot) => {
-                return (
-                  <List
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    isDraggingOver={snapshot.isDraggingOver}
-                  >
-                    {items.map(
-          (
-            { id, goodsName, url, place, price, img, editing },
-            itemIndex
-          ) => {
-            return (
-                    <InnerList 
-                      provided={provided} 
-                      snapshot={snapshot} 
-                      id={id} 
-                      goodsName={goodsName} 
-                      url={url} place={place} 
-                      price={price} 
-                      img={img} 
-                      editing={editing} 
-                      itemIndex={itemIndex}
-                    />
-            );
-          }
-        )
-      }
-                    {provided.placeholder}
-                  </List>
-                );
-              }}
-            </Droppable>
-          </Section>
-        ))}
+            {this.state.lists.map(
+              (
+                { title, items, editing },
+                listIndex
+              ) => {
+                return( 
+                  <OuterLine 
+                    title={title}
+                    items={items} 
+                    editing={editing} 
+                    listIndex={listIndex} 
+                    totalPrice={this.state.totalPrice}
+                  />
+                )
+            })}
           </DragDropContext>
         </Wrap>
         <button onClick={this.allDelete}>全消去</button>
