@@ -87,19 +87,19 @@ class App extends React.Component {
     };
 
     class InList extends React.Component{
-      shouldComponentUpdate(nextState) {
-        if (nextState.list === this.state.list) {
+      shouldComponentUpdate(nextProps) {
+        if (nextProps.lists === this.props.lists) {
           return false;
         }
         return true; 
       }
       render() {
-        return this.state.lists.map(({ title, items, editing }, listIndex) => (
+        return this.props.lists.map(({ title, items, editing }, listIndex) => (
           <Section key={listIndex}>
             <Content>
               {listIndex === 0 ? (
                 <TotalPrice>
-                  総額 ¥{this.state.totalPrice.toLocaleString()}
+                  総額 ¥{this.props.totalPrice.toLocaleString()}
                 </TotalPrice>
               ) : (
                 ""
@@ -120,7 +120,7 @@ class App extends React.Component {
                 />
               )}
             </Content>
-            <Droppable droppableId={String(listIndex)} key={listIndex}>
+            <Droppable droppableId={String(listIndex)} key={listIndex} direction='horizontal'>
               {(provided, snapshot) => {
                 return (
                   <List
@@ -138,6 +138,7 @@ class App extends React.Component {
         ))}
       
     }
+
 
     class InnerList extends React.Component {
       shouldComponentUpdate(nextProps) {
@@ -301,7 +302,7 @@ class App extends React.Component {
             onDragStart={handleDragStart}
             onDragUpdate={handleDragUpdate}
           >
-            <InList />
+            <InList lists={this.state.lists} totalPrice={this.state.totalPrice}/>
           </DragDropContext>
         </Wrap>
         <button onClick={this.allDelete}>全消去</button>
