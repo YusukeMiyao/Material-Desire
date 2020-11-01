@@ -90,42 +90,61 @@ class App extends React.Component {
     class OuterLine extends React.Component {
       shouldComponentUpdate(nextProps) {
         console.log(nextProps)
-        if(this.props.items.length !== nextProps.length) {
+        if(nextProps.listIndex === this.props.listIndex &&
+          nextProps.items.length === this.props.items.length) {
           console.log('こっち')
-          return true;
+          return false;
         }
         console.log('イエス')
-        return false;
+        return true;
       }
       render() {
         const {title, items, editing, listIndex, totalPrice}=this.props;
-        return <Section key={listIndex}>
-          <Content>
-            {console.log('あ')}
-            {listIndex === 0 ? (
-              <TotalPrice>
-                総額 ¥{totalPrice.toLocaleString()}
-              </TotalPrice>
-            ) : (
-              ""
-            )}
-            {editing ? (
-              <EditTitle
-                title={title}
-                listIndex={listIndex}
-                onCancel={this.clickEditTitle}
-                onSubmit={this.editTitle}
-              />
-            ) : (
-              <Title
-                title={title}
-                editing={editing}
-                listIndex={listIndex}
-                onClickEditTitle={this.clickEditTitle}
-              />
-            )}
-          </Content>
-          <Droppable droppableId={String(listIndex)} key={listIndex} direction='horizontal'>
+        return (
+          <Section key={listIndex}>
+            <Content>
+              {listIndex === 0 ? (
+                <TotalPrice>
+                  総額 ¥{totalPrice.toLocaleString()}
+                </TotalPrice>
+              ) : (
+                ""
+              )}
+              {editing ? (
+                <EditTitle
+                  title={title}
+                  listIndex={listIndex}
+                  onCancel={this.clickEditTitle}
+                  onSubmit={this.editTitle}
+                />
+              ) : (
+                <Title
+                  title={title}
+                  editing={editing}
+                  listIndex={listIndex}
+                  onClickEditTitle={this.clickEditTitle}
+                />
+              )}
+            </Content>
+            <InList listIndex={listIndex} items={items} />
+          </Section>
+        )
+      }
+    }
+
+    class InList extends React.Component {
+      shouldComponentUpdate(nextProps){
+        if (
+          nextProps.items === this.props.items) {
+            console.log('とまれ')
+            return false;
+          }
+        return true;
+      }
+
+      render() {
+        const {listIndex, items, } = this.props;
+        return <Droppable droppableId={String(listIndex)} key={listIndex} direction='horizontal'>
             {(provided, snapshot) => {
               return (
                 <List
@@ -139,26 +158,24 @@ class App extends React.Component {
                       itemIndex
                     ) => {
                     return (
-                            <InnerList 
-                              provided={provided} 
-                              snapshot={snapshot} 
-                              id={id} 
-                              goodsName={goodsName} 
-                              url={url} place={place} 
-                              price={price} 
-                              img={img} 
-                              editing={editing} 
-                              itemIndex={itemIndex}
-                            />
+                      <InnerList 
+                        key={itemIndex}
+                        id={id} 
+                        goodsName={goodsName} 
+                        url={url}
+                        place={place} 
+                        price={price} 
+                        img={img} 
+                        editing={editing} 
+                        itemIndex={itemIndex}
+                      />
                     );
-                  }
-                  )}
+                  })}
                   {provided.placeholder}
                 </List>
               );
             }}
           </Droppable>
-        </Section>
       }
     }
 
@@ -170,10 +187,11 @@ class App extends React.Component {
           console.log('これ')
           return false;
         }
+        console.log('やほ')
         return true;
       }
       render() {
-        const {provided, snapshot, id, goodsName, url, place, price, img, listIndex, itemIndex, editing, }= this.props
+        const { id, goodsName, url, place, price, img, listIndex, itemIndex, editing, }= this.props
         return <Draggable
         key={id}
         index={itemIndex}
@@ -324,14 +342,15 @@ class App extends React.Component {
                 listIndex
               ) => {
                 return( 
-                  <OuterLine 
+                  <OuterLine
+                    key={listIndex}
                     title={title}
                     items={items} 
                     editing={editing} 
                     listIndex={listIndex} 
                     totalPrice={this.state.totalPrice}
                   />
-                )
+                );
             })}
           </DragDropContext>
         </Wrap>
