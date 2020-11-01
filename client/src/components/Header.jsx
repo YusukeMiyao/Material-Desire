@@ -3,24 +3,18 @@ import styled from "styled-components";
 
 const HeaderWrap = styled.header`
   display: flex;
-  position: relative;
   width: 100%;
   background-color: black;
-  justify-content: center;
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 1;
   :hover span {
-    transform: translate(855%, 0);
+    transform: translateX(calc(100vw - 150px));
   }
 `;
 const HoverItem = styled.span`
   width: 150px;
   height: 86px;
-  transition: all 1s;
-  position: absolute;
-  left: 0;
-  top: 0;
   clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
   background: linear-gradient(
     113deg,
@@ -29,10 +23,15 @@ const HoverItem = styled.span`
     #34d0a6 50%,
     #34d0a6 100%
   );
+  transition: all 1s;
 `;
 const TitleWrap = styled.div`
   text-align: center;
   font-family: "Baskerville";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
 `;
 const EngTitle = styled.h1`
   color: #ffffff;

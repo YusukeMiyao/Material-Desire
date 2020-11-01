@@ -1,45 +1,98 @@
 import React from "react";
 import styled from "styled-components";
 
-const Wrap = styled.div`
+const WantWrap = styled.div`
   width: 100%;
   padding: 20px;
 `;
 
-const WantImage = styled.div`
+const WantImages = styled.div`
   display: flex;
   overflow: auto;
   img {
-    width: 100%;
-    height: 160px;
+    width: calc(100% - 2px);
+    height: 180px;
+    object-fit: cover;
+    // 画像の位置を把握するため
     border: solid 1px black;
-    /* margin-right: 20px; */
+    // 画像の位置を把握するため
+    :nth-child(n + 2) {
+      margin-left: 20px;
+    }
   }
 `;
+const WantTitle = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  p {
+    width: 4em;
+    display: flex;
+    justify-content: space-between;
+    margin: 0;
+  }
+`;
+const ButtonArea = styled.div`
+  text-align: right;
+`;
+const DeleteButton = styled.button`
+  margin-right: 10px;
+`;
+const EditButton = styled.button``;
 
 class Want extends React.Component {
   render() {
     const { goodsName, url, img, price, place } = this.props;
-
     return (
-      <Wrap>
-        <WantImage>
+      <WantWrap>
+        <WantImages>
           <img src={img} alt="" height={100} width={100} />
           {/* <img src={img} alt="" height={100} width={100} /> */}
-        </WantImage>
-        <p>欲しいもの：{goodsName}</p>
-        URL：
-        <a target="_blank" rel="noopener noreferrer" href={url}>
-          {url}
-        </a>
-        <p>場所：{place}</p>
-        <p>
-          値段：{price !== "" ? "¥" : null}
-          {price}
-        </p>
-        <button onClick={this.ClickEdit}>編集</button>
-        <button onClick={this.ClickDelete}>削除</button>
-      </Wrap>
+        </WantImages>
+        <WantTitle>
+          <p>
+            <span>タ</span>
+            <span>イ</span>
+            <span>ト</span>
+            <span>ル</span>
+          </p>
+          <span>：{goodsName}</span>
+        </WantTitle>
+        <WantTitle>
+          <p>
+            <span>U</span>
+            <span>R</span>
+            <span>L</span>
+          </p>
+          <span>
+            ：
+            <a target="_blank" rel="noopener noreferrer" href={url}>
+              {url}
+            </a>
+          </span>
+        </WantTitle>
+        <WantTitle>
+          <p>
+            <span>場</span>
+            <span>所</span>
+          </p>
+          <span>：{place}</span>
+        </WantTitle>
+        <WantTitle>
+          <p>
+            <span>値</span>
+            <span>段</span>
+          </p>
+          <span>
+            ：{price !== "" ? "¥" : null}
+            {price}
+          </span>
+        </WantTitle>
+        <ButtonArea>
+          <DeleteButton onClick={this.ClickDelete}>Delete</DeleteButton>
+          <EditButton onClick={this.ClickEdit}>Edit</EditButton>
+        </ButtonArea>
+      </WantWrap>
     );
   }
 

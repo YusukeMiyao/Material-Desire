@@ -12,11 +12,13 @@ const ModalBg = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 2;
 `;
 const ModalContent = styled.div`
   background-color: #ffffff;
   width: 30%;
   height: 70%;
+  min-height: 500px;
   border: solid 5px #000000;
   border-radius: 40px;
   overflow: auto;
@@ -30,8 +32,11 @@ const ModalItem = styled.div`
   img {
     width: 100%;
     height: auto;
-    max-height: 160px;
+    max-height: 180px;
+    object-fit: cover;
+    // 画像の位置を把握するため
     border: solid 1px;
+    // 画像の位置を把握するため
   }
 `;
 const InputArea = styled.div`
@@ -53,7 +58,7 @@ const InputArea = styled.div`
       border: none;
       border-bottom: solid 1px #000000;
       width: 100%;
-      :focus{
+      :focus {
         outline: none;
       }
     }
