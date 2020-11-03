@@ -165,15 +165,23 @@ class EditWant extends React.Component {
             this.state.data.img.splice(0, 1);
           }
           for (const file of files) {
-            data.img.splice(1, 0, URL.createObjectURL(file));
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+              const data = reader.result;
+              this.state.data.img.splice(1, 0, {
+                name: file.name,
+                data: data,
+              });
+            };
           }
           break;
         } else {
-          data.img = [];
+          data.img = { name: "", data: "" };
         }
         break;
       case "delete":
-        data.img = [];
+        data.img = { name: "", data: "" };
         break;
       default:
         break;
@@ -188,6 +196,7 @@ class EditWant extends React.Component {
     const { onCancel, listIndex, itemIndex } = this.props;
     onCancel(listIndex, itemIndex, false);
   };
+
   selectImages = (e) => {
     const src = e.target.src;
     const data = this.state.data;
@@ -206,6 +215,7 @@ class EditWant extends React.Component {
     });
     this.setState({ data: this.state.data });
   };
+  
   handleSubmit = () => {
     const { listIndex, itemIndex } = this.props;
     if (

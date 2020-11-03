@@ -1,6 +1,5 @@
 import React from "react";
 import Icon from "../assets/images/Icon.png";
-import DB from "../db/db.jsx";
 
 class Form extends React.Component {
   constructor(props) {
@@ -203,14 +202,6 @@ class Form extends React.Component {
     });
   };
 
-  addImages = async () => {
-    const image = Object.assign({}, this.state.data.img);
-    const id = await DB.add(image);
-    image.id = id;
-    // this.state.rows.push(image);
-    // this.setState({ rows: this.state.rows });
-  };
-
   handleSubmit = (e) => {
     e.preventDefault();
     const data = this.state.data;
@@ -228,7 +219,6 @@ class Form extends React.Component {
       return;
     } else {
       this.setState({ submitError: false });
-      this.addImages();
       this.props.onSubmit(data);
       this.setState({
         data: {
