@@ -194,7 +194,7 @@ class Form extends React.Component {
         };
       }
     } else {
-      this.state.data.img = { name: "icon", data: Icon };
+      this.state.data.img = [{ name: "icon", data: Icon }];
     }
     this.setState({
       data: this.state.data,
@@ -205,13 +205,10 @@ class Form extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const data = this.state.data;
-    // if (data.img.length > 1) {
-    //   data.img.splice(0, 1);
-    // }
     if (
       data.goodsName === "" &&
       data.url === "" &&
-      data.img[0] === { name: "icon", data: Icon }
+      data.img[0].name === "icon"
     ) {
       this.setState({ submitError: true });
       return;
