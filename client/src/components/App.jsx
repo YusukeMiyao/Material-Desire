@@ -89,61 +89,75 @@ class App extends React.Component {
 
     class InnerList extends React.Component {
       shouldComponentUpdate(nextProps) {
-        if (nextProps.itemIndex === this.props.itemIndex &&
-            nextProps.listIndex === this.listIndex) {
-          console.log('これ')
+        if (
+          nextProps.itemIndex === this.props.itemIndex &&
+          nextProps.listIndex === this.listIndex
+        ) {
+          console.log("これ");
           return false;
         }
-        console.log('やほ')
+        console.log("やほ");
         return true;
       }
       render() {
-        const { id, goodsName, url, place, price, img, listIndex, itemIndex, editing, }= this.props
-        return <Draggable
-        key={id}
-        index={itemIndex}
-        draggableId={String(id)}
-        >
-          {(provided,snapshot) => {
-          return(
-          <Item
-        ref={provided.innerRef}
-        {...provided.draggableProps}
-        {...provided.dragHandleProps}
-        isDragging={snapshot.isDragging}
-        >
-        {editing ? (
-          <EditWant
-            id={id}
-            goodsName={goodsName}
-            url={url}
-            place={place}
-            price={price}
-            img={img}
-            listIndex={listIndex}
-            itemIndex={itemIndex}
-            onCancel={this.clickEdit}
-            onSubmit={this.editListItem}
-          />
-        ) : (
-          <Want
-            id={id}
-            goodsName={goodsName}
-            url={url}
-            place={place}
-            price={price}
-            img={img}
-            listIndex={this.props.listIndex}
-            itemIndex={itemIndex}
-            onClickEdit={this.clickEdit}
-            onDelete={this.clickDelete}
-          />
-        )}
-         {provided.placeholder}
-      </Item>
-        )
-      }}
-      </Draggable>
+        const {
+          id,
+          goodsName,
+          url,
+          place,
+          price,
+          img,
+          listIndex,
+          itemIndex,
+          editing,
+          onClickEdit,
+          onDelete,
+          onSubmit,
+          onCancel,
+        } = this.props;
+        return (
+          <Draggable key={id} index={itemIndex} draggableId={String(id)}>
+            {(provided, snapshot) => {
+              return (
+                <Item
+                  ref={provided.innerRef}
+                  {...provided.draggableProps}
+                  {...provided.dragHandleProps}
+                  isDragging={snapshot.isDragging}
+                >
+                  {editing ? (
+                    <EditWant
+                      id={id}
+                      goodsName={goodsName}
+                      url={url}
+                      place={place}
+                      price={price}
+                      img={img}
+                      listIndex={listIndex}
+                      itemIndex={itemIndex}
+                      onCancel={onCancel}
+                      onSubmit={onSubmit}
+                    />
+                  ) : (
+                    <Want
+                      id={id}
+                      goodsName={goodsName}
+                      url={url}
+                      place={place}
+                      price={price}
+                      img={img}
+                      listIndex={listIndex}
+                      itemIndex={itemIndex}
+                      onClickEdit={onClickEdit}
+                      onDelete={onDelete}
+                    />
+                  )}
+                  {provided.placeholder}
+                </Item>
+              );
+            }}
+          </Draggable>
+        );
       }
     }
 
@@ -243,71 +257,85 @@ class App extends React.Component {
             onDragStart={handleDragStart}
             onDragUpdate={handleDragUpdate}
           >
-            {this.state.lists.map(
-              (
-                { title, items, editing },
-                listIndex
-              ) => {
-                return( 
-                 <Section key={listIndex}>
-            <Content>
-              {listIndex === 0 ? (
-                <TotalPrice>
-                  総額 ¥{this.state.totalPrice.toLocaleString()}
-                </TotalPrice>
-              ) : (
-                ""
-              )}
-              {editing ? (
-                <EditTitle
-                  title={title}
-                  listIndex={listIndex}
-                  onCancel={this.clickEditTitle}
-                  onSubmit={this.editTitle}
-                />
-              ) : (
-                <Title
-                  title={title}
-                  editing={editing}
-                  listIndex={listIndex}
-                  onClickEditTitle={this.clickEditTitle}
-                />
-              )}
-            </Content>
-            <Droppable droppableId={String(listIndex)} key={listIndex} direction='horizontal'>
-            {(provided, snapshot) => {
+            {this.state.lists.map(({ title, items, editing }, listIndex) => {
               return (
-                <List
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                  isDraggingOver={snapshot.isDraggingOver}
-                >
-                  {items.map(
-                    (
-                      { id, goodsName, url, place, price, img, editing },
-                      itemIndex
-                    ) => {
-                    return (
-                      <InnerList 
-                        key={itemIndex}
-                        id={id} 
-                        goodsName={goodsName} 
-                        url={url}
-                        place={place} 
-                        price={price} 
-                        img={img} 
-                        editing={editing} 
-                        itemIndex={itemIndex}
+                <Section key={listIndex}>
+                  <Content>
+                    {listIndex === 0 ? (
+                      <TotalPrice>
+                        総額 ¥{this.state.totalPrice.toLocaleString()}
+                      </TotalPrice>
+                    ) : (
+                      ""
+                    )}
+                    {editing ? (
+                      <EditTitle
+                        title={title}
+                        listIndex={listIndex}
+                        onCancel={this.clickEditTitle}
+                        onSubmit={this.editTitle}
                       />
-                    );
-                  })}
-                  {provided.placeholder}
-                </List>
+                    ) : (
+                      <Title
+                        title={title}
+                        editing={editing}
+                        listIndex={listIndex}
+                        onClickEditTitle={this.clickEditTitle}
+                      />
+                    )}
+                  </Content>
+                  <Droppable
+                    droppableId={String(listIndex)}
+                    key={listIndex}
+                    direction="horizontal"
+                  >
+                    {(provided, snapshot) => {
+                      return (
+                        <List
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                          isDraggingOver={snapshot.isDraggingOver}
+                        >
+                          {items.map(
+                            (
+                              {
+                                id,
+                                goodsName,
+                                url,
+                                place,
+                                price,
+                                img,
+                                editing,
+                              },
+                              itemIndex
+                            ) => {
+                              return (
+                                <InnerList
+                                  key={itemIndex}
+                                  id={id}
+                                  goodsName={goodsName}
+                                  url={url}
+                                  place={place}
+                                  price={price}
+                                  img={img}
+                                  editing={editing}
+                                  itemIndex={itemIndex}
+                                  listIndex={listIndex}
+                                  onClickEdit={this.clickEdit}
+                                  onDelete={this.clickDelete}
+                                  onSubmit={this.editListItem}
+                                  onCancel={this.clickEdit}
+                                />
+                              );
+                            }
+                          )}
+                          {provided.placeholder}
+                        </List>
+                      );
+                    }}
+                  </Droppable>
+                </Section>
               );
-            }}
-          </Droppable>
-          </Section>
-                );
             })}
           </DragDropContext>
         </Wrap>
