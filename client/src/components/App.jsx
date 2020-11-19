@@ -253,7 +253,7 @@ class App extends React.Component {
             <Content>
               {listIndex === 0 ? (
                 <TotalPrice>
-                  総額 ¥{totalPrice.toLocaleString()}
+                  総額 ¥{this.state.totalPrice.toLocaleString()}
                 </TotalPrice>
               ) : (
                 ""
