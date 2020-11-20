@@ -11,6 +11,7 @@ import Footer from "./Footer.jsx";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { PureComponent } from "react";
+import firebase from "../utils/firebase";
 
 class App extends React.Component {
   constructor(props) {
@@ -245,6 +246,7 @@ class App extends React.Component {
         <Header />
         <Concept />
         <Wrap>
+          <div id="firebaseui-auth-container"></div>
           <FormOpenButton onClick={this.clickFormOpen}>ADD WISH</FormOpenButton>
           {this.state.formOpen ? (
             <Form onCancel={this.cancelAdd} onSubmit={this.handleSubmit} />
