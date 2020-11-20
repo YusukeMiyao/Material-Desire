@@ -328,11 +328,13 @@ class App extends React.Component {
       localStorage.clear();
     }
   };
+
   clickEditTitle = (listIndex, editing) => {
     const lists = Array.from(this.state.lists);
     lists[listIndex].editing = editing;
     this.setState({ lists: lists });
   };
+  
   editTitle = async (listIndex, title) => {
     const lists = Array.from(this.state.lists);
     lists[listIndex].title = title;

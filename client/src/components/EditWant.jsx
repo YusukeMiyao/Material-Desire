@@ -16,6 +16,7 @@ class EditWant extends React.Component {
       priceError: false,
       submitError: false,
       urlError: false,
+      selectedImages: [],
     };
   }
 
@@ -66,8 +67,20 @@ class EditWant extends React.Component {
             e.target.value = null;
           }}
         />
-        <img src={this.state.data.img} alt="" height={200} width={200} />
-        <button name="delete" onClick={this.handleChange}>
+        {this.state.data.img.map((el, index) => {
+          return (
+            <img
+              key={index}
+              src={el.data}
+              height={100}
+              width={100}
+              alt={el.name}
+              onClick={this.selectImages}
+            />
+          );
+        })}
+        <button onClick={this.deleteImages}>選択画像削除</button>
+        <button name="delete" onClick={this.resetImages}>
           画像リセット
         </button>
         <button onClick={this.clickCancel}>キャンセル</button>
@@ -106,7 +119,6 @@ class EditWant extends React.Component {
   handleChange = (e) => {
     // ネストされたオブジェクトのdataまでアクセスしておく
     let data = this.state.data;
-
     // eventが発火したname属性名ごとに値を処理
     switch (e.target.name) {
       case "goodsName":
@@ -114,7 +126,6 @@ class EditWant extends React.Component {
         break;
       case "url":
         data.url = e.target.value;
-
         if (data.url.length >= 7) {
           if (this.state.data.url.match(/^(http|https):\/\/[^ "]+$/)) {
             this.checkUrlError();
@@ -148,14 +159,26 @@ class EditWant extends React.Component {
       case "img":
         let files = e.target.files;
         if (files.length > 0) {
-          // ②createObjectURLで、files[0]を読み込む
-          data.img = URL.createObjectURL(files[0]);
+          if (this.state.data.img[0].name === "icon") {
+            this.state.data.img.splice(0, 1);
+          }
+          for (const file of files) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+              this.state.data.img.splice(1, 0, {
+                name: file.name,
+                data: URL.createObjectURL(file),
+              });
+            };
+          }
+          break;
         } else {
-          data.img = null;
+          data.img = [{ name: "", data: "" }];
         }
         break;
       case "delete":
-        data.img = null;
+        data.img = [{ name: "", data: "" }];
         break;
       default:
         break;
@@ -166,19 +189,43 @@ class EditWant extends React.Component {
     });
   };
 
-  imageDelete = () => {};
-
   clickCancel = () => {
     const { onCancel, listIndex, itemIndex } = this.props;
     onCancel(listIndex, itemIndex, false);
   };
 
+  selectImages = (e) => {
+    const src = e.target.src;
+    const data = this.state.data;
+    const img = data.img;
+    const selectedImages = this.state.selectedImages;
+    img.map((el, index) => {
+      if (el.data === src) {
+        selectedImages.push(index);
+      }
+    });
+  };
+
+  deleteImages = () => {
+    const selectedImages = this.state.selectedImages;
+    selectedImages.map((el) => {
+      this.state.data.img.splice(el, 1);
+      if (this.state.data.img.length === 0) {
+        this.state.data.img = [{ name: "icon", data: Icon }];
+      }
+    });
+    this.setState({ data: this.state.data });
+  };
+  resetImages = () => {
+    this.state.data.img = [{ name: "icon", data: Icon }];
+    this.setState({ data: this.state.data });
+  };
   handleSubmit = () => {
     const { listIndex, itemIndex } = this.props;
     if (
       this.state.data.goodsName === "" &&
       this.state.data.url === "" &&
-      this.state.data.img === Icon
+      this.state.data.img[0].name === "icon"
     ) {
       this.setState({ submitError: true });
       return;
