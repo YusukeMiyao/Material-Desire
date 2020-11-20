@@ -1,4 +1,11 @@
 import React from "react";
+import styled from "styled-components";
+
+const EditTitleWrap = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 1em 0;
+`;
 
 class EditTitle extends React.Component {
   constructor(props) {
@@ -12,7 +19,7 @@ class EditTitle extends React.Component {
 
   render() {
     return (
-      <div>
+      <EditTitleWrap>
         <input
           type="text"
           name="title"
@@ -25,7 +32,7 @@ class EditTitle extends React.Component {
           更新
         </button>
         {this.state.blankError ? <p>何か入力してください。</p> : ""}
-      </div>
+      </EditTitleWrap>
     );
   }
 

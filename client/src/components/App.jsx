@@ -1,10 +1,13 @@
 import React from "react";
 import "../assets/css/App.css";
+import Header from "./Header.jsx";
+import Concept from "./Concept.jsx";
 import Form from "./Form.jsx";
 import Want from "./Want.jsx";
 import EditWant from "./EditWant.jsx";
 import Title from "./Title.jsx";
 import EditTitle from "./EditTitle.jsx";
+import Footer from "./Footer.jsx";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 
@@ -20,6 +23,7 @@ class App extends React.Component {
           lists: JSON.parse(localStorage.getItem("Lists")),
           totalPrice: JSON.parse(localStorage.getItem("TotalPrice")),
           count: JSON.parse(localStorage.getItem("Count")),
+          formOpen: false,
         }
       : {
           lists: [
@@ -41,6 +45,7 @@ class App extends React.Component {
           ],
           count: 0,
           totalPrice: 0,
+          formOpen: false,
         };
   }
   render() {
@@ -80,54 +85,128 @@ class App extends React.Component {
     const handleDragUpdate = (update, provided) => {
       // console.log(provided);
     };
-
+    const Main = styled.main``;
+    const Wrap = styled.div`
+      width: 70%;
+      max-width: 1200px;
+      margin: 90px auto;
+    `;
     const List = styled.div`
       background-color: ${(props) =>
-        props.isDraggingOver ? "lightblue" : "white"};
+        props.isDraggingOver ? "lightblue" : "#F0F0F0"};
       transition: background-color 0.2s ease;
       border: 1px solid lightgray;
-      width: 28%;
-      padding: 0 20px;
-      margin: 20px auto;
+      width: 100%;
+      height: auto;
+      min-height: 120px;
+      margin: 0 auto 20px;
+      padding: 20px 2% 0;
+      display: flex;
+      flex-wrap: wrap;
     `;
     const Item = styled.div`
       background-color: ${(props) =>
         props.isDragging ? "lightgreen" : "white"};
-      border: 1px solid lightgray;
-      width: 100%;
-      margin: 20px auto;
-    `;
-    const Wrap = styled.div`
+      width: 31%;
       display: flex;
+      border: solid 1px #707070;
+      border-radius: 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 30px 0 #b9b9b9;
+      height: 50%;
+      overflow: hidden;
+      transition: all 0.3s;
+      :hover {
+        height: 95%;
+      }
+      :nth-of-type(3n-1) {
+        margin: 0 3% 20px;
+      }
     `;
+    const Section = styled.div`
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      max-width: 1200px;
+      margin: auto;
+      font-family: "Hiragino Kaku Gothic ProN";
+    `;
+    const Content = styled.div`
+      width: 100%;
+      background: black;
+      color: white;
+      padding: 0 3em;
+    `;
+    const TotalPrice = styled.p`
+      width: fit-content;
+      border-bottom: solid 2px #707070;
+    `;
+    const FormOpenButton = styled.button`
+      padding: 10px 50px 10px 40px;
+      background-color: #ffffff;
+      border: solid 1px;
+      border-radius: 5px;
+      position: relative;
+      margin-bottom: 24px;
+      transition: all 0.3s;
+      cursor: pointer;
+      ::after {
+        content: "+";
+        position: absolute;
+        right: 10px;
+      }
+      :hover {
+        background-color: #000000;
+        color: #ffffff;
+      }
+      :focus {
+        outline: none;
+      }
+    `;
+
     return (
-      <div>
-        <h1>欲しいものリスト</h1>
-        <p>合計金額：¥{this.state.totalPrice.toLocaleString()}</p>
-        <Form onSubmit={this.handleSubmit} />
-        <DragDropContext
-          onDragEnd={handleDragEnd}
-          onDragStart={handleDragStart}
-          onDragUpdate={handleDragUpdate}
-        >
-          <Wrap>
+      <Main>
+        <Header />
+        <Concept />
+        <Wrap>
+          <FormOpenButton onClick={this.clickFormOpen}>ADD WISH</FormOpenButton>
+          {this.state.formOpen ? (
+            <Form onCancel={this.cancelAdd} onSubmit={this.handleSubmit} />
+          ) : (
+            ""
+          )}
+          {/* <Form onCancel={this.cancelAdd} onSubmit={this.handleSubmit} /> */}
+          <DragDropContext
+            onDragEnd={handleDragEnd}
+            onDragStart={handleDragStart}
+            onDragUpdate={handleDragUpdate}
+          >
             {this.state.lists.map(({ title, items, editing }, listIndex) => (
-              <div key={listIndex}>
-                {editing ? (
-                  <EditTitle
-                    title={title}
-                    listIndex={listIndex}
-                    onCancel={this.clickEditTitle}
-                    onSubmit={this.editTitle}
-                  />
-                ) : (
-                  <Title
-                    title={title}
-                    editing={editing}
-                    listIndex={listIndex}
-                    onClickEditTitle={this.clickEditTitle}
-                  />
-                )}
+              <Section key={listIndex}>
+                <Content>
+                  {listIndex === 0 ? (
+                    <TotalPrice>
+                      総額 ¥{this.state.totalPrice.toLocaleString()}
+                    </TotalPrice>
+                  ) : (
+                    ""
+                  )}
+                  {editing ? (
+                    <EditTitle
+                      title={title}
+                      listIndex={listIndex}
+                      onCancel={this.clickEditTitle}
+                      onSubmit={this.editTitle}
+                    />
+                  ) : (
+                    <Title
+                      title={title}
+                      editing={editing}
+                      listIndex={listIndex}
+                      onClickEditTitle={this.clickEditTitle}
+                    />
+                  )}
+                </Content>
                 <Droppable droppableId={String(listIndex)} key={listIndex}>
                   {(provided, snapshot) => {
                     return (
@@ -194,12 +273,13 @@ class App extends React.Component {
                     );
                   }}
                 </Droppable>
-              </div>
+              </Section>
             ))}
-          </Wrap>
-        </DragDropContext>
+          </DragDropContext>
+        </Wrap>
         <button onClick={this.allDelete}>全消去</button>
-      </div>
+        <Footer />
+      </Main>
     );
   }
   handleSubmit = async (e) => {
@@ -242,6 +322,7 @@ class App extends React.Component {
     localStorage.setItem("Count", currentId);
     this.calculatePrice();
     this.saveList();
+    this.setState({ formOpen: false });
   };
 
   editListItem = async (listIndex, itemIndex, data) => {
@@ -342,6 +423,13 @@ class App extends React.Component {
     await this.setState({ lists: lists });
     this.saveList();
     this.calculatePrice();
+  };
+
+  clickFormOpen = () => {
+    this.setState({ formOpen: true });
+  };
+  cancelAdd = () => {
+    this.setState({ formOpen: false });
   };
 }
 
