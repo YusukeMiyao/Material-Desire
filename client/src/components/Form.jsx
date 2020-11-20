@@ -186,10 +186,9 @@ class Form extends React.Component {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => {
-          const data = reader.result;
           this.state.data.img.splice(1, 0, {
             name: file.name,
-            data: data,
+            data: URL.createObjectURL(file),
           });
         };
       }
