@@ -106,9 +106,15 @@ class Form extends React.Component {
         goodsName: "",
         url: "",
         price: "",
-        img: Icon,
+        img: [
+          {
+            name: "icon",
+            data: Icon,
+          },
+        ],
         place: "",
       },
+      count: 0,
       priceError: false,
       submitError: false,
       urlError: false,
@@ -283,19 +289,9 @@ class Form extends React.Component {
           this.setState({ priceError: true });
         }
         break;
-      case "img":
-        let files = e.target.files;
-        if (files.length > 0) {
-          // ②createObjectURLで、files[0]を読み込む
-          data.img = URL.createObjectURL(files[0]);
-          break;
-        } else {
-          data.img = Icon;
-        }
-        break;
       case "delete":
         e.preventDefault();
-        data.img = Icon;
+        data.img = [{ name: "icon", data: Icon }];
         e.target.value = null;
         break;
       default:
@@ -307,10 +303,43 @@ class Form extends React.Component {
     });
   };
 
+  selectImages = async (e) => {
+    const files = e.target.files;
+    let count = this.state.count;
+    count++;
+    if (files.length > 0) {
+      // 初回追加時に初期画像を削除
+      if (count === 1) {
+        this.state.data.img.splice(0, 1);
+      }
+      // createObjectURLで、fileを読み込む
+      for (const file of files) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          this.state.data.img.splice(1, 0, {
+            name: file.name,
+            data: URL.createObjectURL(file),
+          });
+        };
+      }
+    } else {
+      this.state.data.img = [{ name: "icon", data: Icon }];
+    }
+    this.setState({
+      data: this.state.data,
+      count: count,
+    });
+  };
+
   handleSubmit = (e) => {
     e.preventDefault();
     const data = this.state.data;
-    if (data.goodsName === "" && data.url === "" && data.img === Icon) {
+    if (
+      data.goodsName === "" &&
+      data.url === "" &&
+      data.img[0].name === "icon"
+    ) {
       this.setState({ submitError: true });
       return;
     } else if (this.state.urlError) {
@@ -319,7 +348,14 @@ class Form extends React.Component {
       this.setState({ submitError: false });
       this.props.onSubmit(data);
       this.setState({
-        data: { goodsName: "", url: "", place: "", price: "", img: Icon },
+        data: {
+          goodsName: "",
+          url: "",
+          place: "",
+          price: "",
+          img: [{ name: "icon", data: Icon }],
+        },
+        count: 0,
       });
     }
   };
