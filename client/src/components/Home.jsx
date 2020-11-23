@@ -12,8 +12,9 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { PureComponent } from "react";
 import firebase from "../utils/firebase";
+import { Button } from "reactstrap";
 
-class App extends React.Component {
+class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = JSON.parse(
@@ -245,6 +246,7 @@ class App extends React.Component {
       <Main>
         <Header />
         <Concept />
+        <Button onClick={this.handleLogout}>ログアウト</Button>
         <Wrap>
           <div id="firebaseui-auth-container"></div>
           <FormOpenButton onClick={this.clickFormOpen}>ADD WISH</FormOpenButton>
@@ -493,6 +495,10 @@ class App extends React.Component {
   cancelAdd = () => {
     this.setState({ formOpen: false });
   };
+
+  handleLogout = () => {
+    firebase.auth().signOut();
+  };
 }
 
-export default App;
+export default Home;
