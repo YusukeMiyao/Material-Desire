@@ -559,11 +559,14 @@ class Home extends React.Component {
     firebase
       .database()
       .ref("Lists/")
-      .child("Lists")
+      .child("Lists/")
       .once("value", (snapshot) => {
-        this.setState({
-          lists: snapshot.val(),
-        });
+        let data = snapshot.val();
+        if (data !== null) {
+          this.setState({
+            lists: snapshot.val(),
+          });
+        } else return;
       });
   };
 }
