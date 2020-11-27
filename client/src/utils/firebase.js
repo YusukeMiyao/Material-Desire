@@ -1,5 +1,7 @@
 import firebase from 'firebase/app';
 import "firebase/auth";
+import "firebase/database";
+import "firebase/storage";
 const firebaseui = require("firebaseui");
 
 //修正必要箇所.envファイルみたいなのいる
@@ -24,5 +26,9 @@ ui.start("#firebaseui-auth-container", {
     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
   ],
 });
+
+var database = firebase.database();
+
+
 
 export default firebase;

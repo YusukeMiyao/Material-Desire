@@ -17,40 +17,63 @@ import { Button } from "reactstrap";
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    this.state = JSON.parse(
-      localStorage.getItem("Lists"),
-      localStorage.getItem("TotalPrice"),
-      localStorage.getItem("Count")
-    )
-      ? {
-          lists: JSON.parse(localStorage.getItem("Lists")),
-          totalPrice: JSON.parse(localStorage.getItem("TotalPrice")),
-          count: JSON.parse(localStorage.getItem("Count")),
-          formOpen: false,
-        }
-      : {
-          lists: [
-            {
-              title: "Todo",
-              items: [],
-              editing: false,
-            },
-            {
-              title: "InProgress",
-              items: [],
-              editing: false,
-            },
-            {
-              title: "Done",
-              items: [],
-              editing: false,
-            },
-          ],
-          count: 0,
-          totalPrice: 0,
-          formOpen: false,
-        };
+    this.state = {
+      lists: [
+        {
+          title: "Todo",
+          items: [],
+          editing: false,
+        },
+        {
+          title: "InProgress",
+          items: [],
+          editing: false,
+        },
+        {
+          title: "Done",
+          items: [],
+          editing: false,
+        },
+      ],
+      count: 0,
+      totalPrice: 0,
+      formOpen: false,
+    };
+    this.getFireDb();
   }
+  // this.state = JSON.parse(
+  //   localStorage.getItem("Lists"),
+  //   localStorage.getItem("TotalPrice"),
+  //   localStorage.getItem("Count")
+  // )
+  //   ? {
+  //       lists: JSON.parse(localStorage.getItem("Lists")),
+  //       totalPrice: JSON.parse(localStorage.getItem("TotalPrice")),
+  //       count: JSON.parse(localStorage.getItem("Count")),
+  //       formOpen: false,
+  //     }
+  //   : {
+  //       lists: [
+  //         {
+  //           title: "Todo",
+  //           items: [],
+  //           editing: false,
+  //         },
+  //         {
+  //           title: "InProgress",
+  //           items: [],
+  //           editing: false,
+  //         },
+  //         {
+  //           title: "Done",
+  //           items: [],
+  //           editing: false,
+  //         },
+  //       ],
+  //       count: 0,
+  //       totalPrice: 0,
+  //       formOpen: false,
+  //     };
   render() {
     const handleDragEnd = async (result) => {
       if (!result.destination) {
@@ -264,6 +287,15 @@ class Home extends React.Component {
             {this.state.lists.map(({ title, items, editing }, listIndex) => {
               return (
                 <Section key={listIndex}>
+                  {console.log(this.state)}
+                  {/* {firebase
+                    .database()
+                    .ref("Lists/")
+                    .child("Lists")
+                    .once("value", (snapshot) => {
+                      let db = snapshot.val();
+                      console.log(db);
+                    })} */}
                   <Content>
                     {listIndex === 0 ? (
                       <TotalPrice>
@@ -385,7 +417,9 @@ class Home extends React.Component {
         count: currentId,
       };
     });
+
     localStorage.setItem("Count", currentId);
+    // firebase.database().ref("Count")
     this.calculatePrice();
     this.saveList();
     this.setState({ formOpen: false });
@@ -439,10 +473,13 @@ class Home extends React.Component {
         count: prev.count,
       };
     });
-    localStorage.clear();
+    // localStorage.clear();
+    // localStorage.setItem("Count", this.state.count);
+    // localStorage.setItem("TotalPrice", this.state.totalPrice);
+    firebase.database().ref("TotalPrice/").set({
+      totalPrice: this.state.totalPrice,
+    });
     this.saveList();
-    localStorage.setItem("Count", this.state.count);
-    localStorage.setItem("TotalPrice", this.state.totalPrice);
   };
 
   clickEdit = (listIndex, itemIndex, editing) => {
@@ -465,16 +502,34 @@ class Home extends React.Component {
     await this.setState({
       totalPrice: total,
     });
-    localStorage.setItem("TotalPrice", total);
+    // localStorage.setItem("TotalPrice", total);
+    firebase.database().ref("TotalPrice/").set({
+      totalPrice: this.state.totalPrice,
+    });
   };
 
+  // saveList = () => {
+  //   const list = JSON.stringify(this.state.lists);
+  //   localStorage.setItem("Lists", list);
+  //   if (localStorage.getItem("Lists") === "[]") {
+  //     localStorage.clear();
+  //   }
+  // };
+
   saveList = () => {
-    const list = JSON.stringify(this.state.lists);
-    localStorage.setItem("Lists", list);
-    if (localStorage.getItem("Lists") === "[]") {
-      localStorage.clear();
-    }
+    firebase.database().ref("Lists/").set({
+      Lists: this.state.lists,
+    });
+    console.log(this.state);
+
+    firebase
+      .database()
+      .ref("Lists/")
+      .once("value", (obj) => {
+        console.log(obj.val());
+      });
   };
+
   clickEditTitle = (listIndex, editing) => {
     const lists = Array.from(this.state.lists);
     lists[listIndex].editing = editing;
@@ -498,6 +553,18 @@ class Home extends React.Component {
 
   handleLogout = () => {
     firebase.auth().signOut();
+  };
+
+  getFireDb = () => {
+    firebase
+      .database()
+      .ref("Lists/")
+      .child("Lists")
+      .once("value", (snapshot) => {
+        this.setState({
+          lists: snapshot.val(),
+        });
+      });
   };
 }
 
