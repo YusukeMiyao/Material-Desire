@@ -287,15 +287,6 @@ class Home extends React.Component {
             {this.state.lists.map(({ title, items, editing }, listIndex) => {
               return (
                 <Section key={listIndex}>
-                  {console.log(this.state)}
-                  {/* {firebase
-                    .database()
-                    .ref("Lists/")
-                    .child("Lists")
-                    .once("value", (snapshot) => {
-                      let db = snapshot.val();
-                      console.log(db);
-                    })} */}
                   <Content>
                     {listIndex === 0 ? (
                       <TotalPrice>
@@ -326,12 +317,16 @@ class Home extends React.Component {
                     direction="horizontal"
                   >
                     {(provided, snapshot) => {
+                      if (items === undefined) {
+                        return;
+                      }
                       return (
                         <List
                           {...provided.droppableProps}
                           ref={provided.innerRef}
                           isDraggingOver={snapshot.isDraggingOver}
                         >
+                          {console.log(items)}
                           {items.map(
                             (
                               {
@@ -417,8 +412,6 @@ class Home extends React.Component {
         count: currentId,
       };
     });
-
-    localStorage.setItem("Count", currentId);
     // firebase.database().ref("Count")
     this.calculatePrice();
     this.saveList();
@@ -508,26 +501,19 @@ class Home extends React.Component {
     });
   };
 
-  // saveList = () => {
-  //   const list = JSON.stringify(this.state.lists);
-  //   localStorage.setItem("Lists", list);
-  //   if (localStorage.getItem("Lists") === "[]") {
-  //     localStorage.clear();
-  //   }
-  // };
-
   saveList = () => {
     firebase.database().ref("Lists/").set({
+      count: this.state.count,
       Lists: this.state.lists,
     });
     console.log(this.state);
 
-    firebase
-      .database()
-      .ref("Lists/")
-      .once("value", (obj) => {
-        console.log(obj.val());
-      });
+    // firebase
+    //   .database()
+    //   .ref("Lists/")
+    //   .once("value", (obj) => {
+    //     console.log(obj.val());
+    //   });
   };
 
   clickEditTitle = (listIndex, editing) => {
@@ -555,17 +541,40 @@ class Home extends React.Component {
     firebase.auth().signOut();
   };
 
-  getFireDb = () => {
-    firebase
+  getFireDb = async () => {
+    await firebase
       .database()
       .ref("Lists/")
-      .child("Lists/")
       .once("value", (snapshot) => {
-        let data = snapshot.val();
-        if (data !== null) {
-          this.setState({
-            lists: snapshot.val(),
+        let prev = snapshot.val();
+        if (prev !== null) {
+          console.log(prev);
+          this.setState((prev) => {
+            return {
+              ...prev,
+              lists: [
+                {
+                  title: prev.lists[0].title,
+                  items: [...prev.lists[0].items],
+                  editing: false,
+                },
+                {
+                  title: prev.lists[1].title,
+                  items: [...prev.lists[1].items],
+                  editing: false,
+                },
+                {
+                  title: prev.lists[2].title,
+                  items: [...prev.lists[2].items],
+                  editing: false,
+                },
+              ],
+              count: prev.count,
+            };
           });
+
+          console.log("うあ");
+          console.log(this.state);
         } else return;
       });
   };
