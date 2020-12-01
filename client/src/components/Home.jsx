@@ -39,41 +39,83 @@ class Home extends React.Component {
       totalPrice: 0,
       formOpen: false,
     };
-    this.getFireDb();
+    // this.componentDidMount();
+
+    // this.getFireDb();
+
+    // this.state = JSON.parse(
+    //   localStorage.getItem("Lists"),
+    //   localStorage.getItem("TotalPrice"),
+    //   localStorage.getItem("Count")
+    // )
+    //   ? {
+    //       lists: JSON.parse(localStorage.getItem("Lists")),
+    //       totalPrice: JSON.parse(localStorage.getItem("TotalPrice")),
+    //       count: JSON.parse(localStorage.getItem("Count")),
+    //       formOpen: false,
+    //     }
+    //   : {
+    //       lists: [
+    //         {
+    //           title: "Todo",
+    //           items: [],
+    //           editing: false,
+    //         },
+    //         {
+    //           title: "InProgress",
+    //           items: [],
+    //           editing: false,
+    //         },
+    //         {
+    //           title: "Done",
+    //           items: [],
+    //           editing: false,
+    //         },
+    //       ],
+    //       count: 0,
+    //       totalPrice: 0,
+    //       formOpen: false,
+    //     };
   }
-  // this.state = JSON.parse(
-  //   localStorage.getItem("Lists"),
-  //   localStorage.getItem("TotalPrice"),
-  //   localStorage.getItem("Count")
-  // )
-  //   ? {
-  //       lists: JSON.parse(localStorage.getItem("Lists")),
-  //       totalPrice: JSON.parse(localStorage.getItem("TotalPrice")),
-  //       count: JSON.parse(localStorage.getItem("Count")),
-  //       formOpen: false,
-  //     }
-  //   : {
-  //       lists: [
-  //         {
-  //           title: "Todo",
-  //           items: [],
-  //           editing: false,
-  //         },
-  //         {
-  //           title: "InProgress",
-  //           items: [],
-  //           editing: false,
-  //         },
-  //         {
-  //           title: "Done",
-  //           items: [],
-  //           editing: false,
-  //         },
-  //       ],
-  //       count: 0,
-  //       totalPrice: 0,
-  //       formOpen: false,
-  //     };
+  componentDidMount() {
+    firebase
+      .database()
+      .ref("Lists/")
+      .once("value", (snapshot) => {
+        let prev = snapshot.val();
+        if (prev !== null) {
+          console.log(prev);
+          this.setState((prev) => {
+            return {
+              ...prev,
+              lists: [
+                {
+                  title: prev.lists[0].title,
+                  items: [...prev.lists[0].items],
+                  editing: false,
+                },
+                {
+                  title: prev.lists[1].title,
+                  items: [...prev.lists[1].items],
+                  editing: false,
+                },
+                {
+                  title: prev.lists[2].title,
+                  items: [...prev.lists[2].items],
+                  editing: false,
+                },
+              ],
+              count: prev.count,
+            };
+          });
+
+          console.log("うあ");
+          console.log(this.state);
+        } else console.log("ya");
+        return;
+      });
+  }
+
   render() {
     const handleDragEnd = async (result) => {
       if (!result.destination) {
@@ -317,9 +359,6 @@ class Home extends React.Component {
                     direction="horizontal"
                   >
                     {(provided, snapshot) => {
-                      if (items === undefined) {
-                        return;
-                      }
                       return (
                         <List
                           {...provided.droppableProps}
@@ -541,7 +580,7 @@ class Home extends React.Component {
     firebase.auth().signOut();
   };
 
-  getFireDb = async () => {
+  componentDidMount = async () => {
     await firebase
       .database()
       .ref("Lists/")
@@ -575,7 +614,8 @@ class Home extends React.Component {
 
           console.log("うあ");
           console.log(this.state);
-        } else return;
+        } else console.log("ya");
+        return;
       });
   };
 }
