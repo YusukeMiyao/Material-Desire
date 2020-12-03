@@ -605,10 +605,9 @@ class Home extends React.Component {
       .database()
       .ref("Lists/")
       .on("value", (snapshot) => {
-        let data = snapshot.val();
-        console.log(data);
-        this.setState(data);
+        return snapshot.val();
       });
+    console.log(this.state);
     // await firebase
     //   .database()
     //   .ref("Lists/")
