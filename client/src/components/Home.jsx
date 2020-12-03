@@ -13,35 +13,47 @@ import styled from "styled-components";
 import { PureComponent } from "react";
 import firebase from "../utils/firebase";
 import { Button } from "reactstrap";
+import "firebase/database";
 
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      lists: [
-        {
-          title: "Todo",
-          items: [],
-          editing: false,
-        },
-        {
-          title: "InProgress",
-          items: [],
-          editing: false,
-        },
-        {
-          title: "Done",
-          items: [],
-          editing: false,
-        },
-      ],
-      count: 0,
-      totalPrice: 0,
-      formOpen: false,
-    };
-    // this.componentDidMount();
+    this.state = [];
+    this.getData();
+    // let data = firebase.database().ref("Lists/");
 
-    // this.getFireDb();
+    // let kae = data.on("value", (snapshot) => {
+    //   this.setState(snapshot.val());
+    // });
+    // console.log(kae);
+
+    // getData = (data) => {
+    //   console.log(data);
+    //   this.setState({ data },(af) => {
+    //     return {
+    //       ...data,
+    //       lists: [
+    //         {
+    //           title: data.lists[0].title,
+    //           items: [...data.lists[0].items],
+    //           editing: false,
+    //         },
+    //         {
+    //           title: data.lists[1].title,
+    //           items: [...data.lists[1].items],
+    //           editing: false,
+    //         },
+    //         {
+    //           title: data.lists[2].title,
+    //           items: [...data.lists[2].items],
+    //           editing: data,
+    //         },
+    //       ],
+    //       count: data.count,
+    //     };
+    //     //
+    //   });
+    // };
 
     // this.state = JSON.parse(
     //   localStorage.getItem("Lists"),
@@ -55,66 +67,71 @@ class Home extends React.Component {
     //       formOpen: false,
     //     }
     //   : {
-    //       lists: [
-    //         {
-    //           title: "Todo",
-    //           items: [],
-    //           editing: false,
-    //         },
-    //         {
-    //           title: "InProgress",
-    //           items: [],
-    //           editing: false,
-    //         },
-    //         {
-    //           title: "Done",
-    //           items: [],
-    //           editing: false,
-    //         },
-    //       ],
-    //       count: 0,
-    //       totalPrice: 0,
-    //       formOpen: false,
+    // lists: [
+    //   {
+    //     title: "Todo",
+    //     items: [],
+    //     editing: false,
+    //   },
+    //   {
+    //     title: "InProgress",
+    //     items: [],
+    //     editing: false,
+    //   },
+    //   {
+    //     title: "Done",
+    //     items: [],
+    //     editing: false,
+    //   },
+    // ],
+    // count: 0,
+    // totalPrice: 0,
+    // formOpen: false,
     //     };
+    // this.getData();
   }
-  componentDidMount() {
-    firebase
-      .database()
-      .ref("Lists/")
-      .once("value", (snapshot) => {
-        let prev = snapshot.val();
-        if (prev !== null) {
-          console.log(prev);
-          this.setState((prev) => {
-            return {
-              ...prev,
-              lists: [
-                {
-                  title: prev.lists[0].title,
-                  items: [...prev.lists[0].items],
-                  editing: false,
-                },
-                {
-                  title: prev.lists[1].title,
-                  items: [...prev.lists[1].items],
-                  editing: false,
-                },
-                {
-                  title: prev.lists[2].title,
-                  items: [...prev.lists[2].items],
-                  editing: false,
-                },
-              ],
-              count: prev.count,
-            };
-          });
-
-          console.log("うあ");
-          console.log(this.state);
-        } else console.log("ya");
-        return;
-      });
-  }
+  // async getData() {
+  //   await firebase
+  //     .database()
+  //     .ref("Lists/")
+  //     .on("value", (snapshot) => {
+  //       console.log(snapshot.val());
+  //       this.setState(snapshot.val());
+  //     });
+  // getData = (data) => {
+  //   console.log(data);
+  //   this.setState({ data },(af) => {
+  //     return {
+  //       ...data,
+  //       lists: [
+  //         {
+  //           title: data.lists[0].title,
+  //           items: [...data.lists[0].items],
+  //           editing: false,
+  //         },
+  //         {
+  //           title: data.lists[1].title,
+  //           items: [...data.lists[1].items],
+  //           editing: false,
+  //         },
+  //         {
+  //           title: data.lists[2].title,
+  //           items: [...data.lists[2].items],
+  //           editing: data,
+  //         },
+  //       ],
+  //       count: data.count,
+  //     };
+  //     //
+  //   });
+  // };
+  // }
+  // componentDidMount() {
+  //   firebase
+  //     .database()
+  //     .ref("todos")
+  //     .on("value", (snapshot) => this.setState(snapshot.val()));
+  // }
 
   render() {
     const handleDragEnd = async (result) => {
@@ -315,12 +332,14 @@ class Home extends React.Component {
         <Wrap>
           <div id="firebaseui-auth-container"></div>
           <FormOpenButton onClick={this.clickFormOpen}>ADD WISH</FormOpenButton>
+          {console.log(this.state)}
           {this.state.formOpen ? (
             <Form onCancel={this.cancelAdd} onSubmit={this.handleSubmit} />
           ) : (
             ""
           )}
           {/* <Form onCancel={this.cancelAdd} onSubmit={this.handleSubmit} /> */}
+          {console.log(this.state)}
           <DragDropContext
             onDragEnd={handleDragEnd}
             onDragStart={handleDragStart}
@@ -365,6 +384,7 @@ class Home extends React.Component {
                           ref={provided.innerRef}
                           isDraggingOver={snapshot.isDraggingOver}
                         >
+                          {console.log(this.state)}
                           {console.log(items)}
                           {items.map(
                             (
@@ -580,43 +600,51 @@ class Home extends React.Component {
     firebase.auth().signOut();
   };
 
-  componentDidMount = async () => {
-    await firebase
+  getData = () => {
+    firebase
       .database()
       .ref("Lists/")
-      .once("value", (snapshot) => {
-        let prev = snapshot.val();
-        if (prev !== null) {
-          console.log(prev);
-          this.setState((prev) => {
-            return {
-              ...prev,
-              lists: [
-                {
-                  title: prev.lists[0].title,
-                  items: [...prev.lists[0].items],
-                  editing: false,
-                },
-                {
-                  title: prev.lists[1].title,
-                  items: [...prev.lists[1].items],
-                  editing: false,
-                },
-                {
-                  title: prev.lists[2].title,
-                  items: [...prev.lists[2].items],
-                  editing: false,
-                },
-              ],
-              count: prev.count,
-            };
-          });
-
-          console.log("うあ");
-          console.log(this.state);
-        } else console.log("ya");
-        return;
+      .on("value", (snapshot) => {
+        let data = snapshot.val();
+        console.log(data);
+        this.setState(data);
       });
+    // await firebase
+    //   .database()
+    //   .ref("Lists/")
+    //   .once("value", (snapshot) => {
+    //     let prev = snapshot.val();
+    //     if (prev !== null) {
+    //       console.log(prev);
+    //       this.setState((prev) => {
+    //         return {
+    //           ...prev,
+    //           lists: [
+    //             {
+    //               title: prev.lists[0].title,
+    //               items: [...prev.lists[0].items, , ,],
+    //               editing: false,
+    //             },
+    //             {
+    //               title: prev.lists[1].title,
+    //               items: [...prev.lists[1].items, , ,],
+    //               editing: false,
+    //             },
+    //             {
+    //               title: prev.lists[2].title,
+    //               items: [...prev.lists[2].items, , ,],
+    //               editing: false,
+    //             },
+    //           ],
+    //           count: prev.count,
+    //         };
+    //       });
+
+    //       console.log("うあ");
+    //       console.log(this.state);
+    //     } else console.log("ya");
+    //     return;
+    //   });
   };
 }
 
