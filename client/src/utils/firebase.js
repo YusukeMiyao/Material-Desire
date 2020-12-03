@@ -6,14 +6,14 @@ const firebaseui = require("firebaseui");
 
 //修正必要箇所.envファイルみたいなのいる
 const firebaseConfig = {
-  apiKey: "AIzaSyDOTINkVkbdl6xjTSp83TRfEa2AaIvXiL0",
-  authDomain: "material-desire.firebaseapp.com",
-  databaseURL: "https://material-desire.firebaseio.com",
-  projectId: "material-desire",
-  storageBucket: "material-desire.appspot.com",
-  messagingSenderId: "659221366357",
-  appId: "1:659221366357:web:3404a7fe0d9a8e59c2b6dc",
-  measurementId: "G-YKW3PWH4KD"
+  apiKey: process.env.REACT_APP_FIREBASE_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_DOMAIN,
+  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_MEASUREMENT_ID,
 };
 
 firebase.initializeApp(firebaseConfig);
