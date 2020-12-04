@@ -20,21 +20,21 @@ class Home extends React.Component {
     super(props);
     this.state = {
       lists: [
-        // {
-        //   title: "Todo",
-        //   items: [],
-        //   editing: false,
-        // },
-        // {
-        //   title: "InProgress",
-        //   items: [],
-        //   editing: false,
-        // },
-        // {
-        //   title: "Done",
-        //   items: [],
-        //   editing: false,
-        // },
+        {
+          title: "Todo",
+          items: [],
+          editing: false,
+        },
+        {
+          title: "InProgress",
+          items: [],
+          editing: false,
+        },
+        {
+          title: "Done",
+          items: [],
+          editing: false,
+        },
       ],
       count: 0,
       totalPrice: 0,
@@ -80,7 +80,7 @@ class Home extends React.Component {
   componentDidMount() {
     firebase
       .database()
-      .ref("Lists/")
+      .ref("/")
       .on("value", (snapshot) => {
         const prev = snapshot.val();
         if (prev !== null) {
@@ -88,22 +88,23 @@ class Home extends React.Component {
             return {
               lists: [
                 {
-                  title: prev.lists[0].title,
-                  items: [...(prev.lists[0].items || [])],
+                  title: prev.Lists.lists[0].title,
+                  items: [...(prev.Lists.lists[0].items || [])],
                   editing: false,
                 },
                 {
-                  title: prev.lists[1].title,
-                  items: [...(prev.lists[1].items || [])],
+                  title: prev.Lists.lists[1].title,
+                  items: [...(prev.Lists.lists[1].items || [])],
                   editing: false,
                 },
                 {
-                  title: prev.lists[2].title,
-                  items: [...(prev.lists[2].items || [])],
+                  title: prev.Lists.lists[2].title,
+                  items: [...(prev.Lists.lists[2].items || [])],
                   editing: false,
                 },
               ],
               count: prev.count,
+              totalPrice: prev.TotalPrice.totalPrice,
             };
           });
         } else return;
