@@ -290,7 +290,7 @@ class EditWant extends React.Component {
     this.setState({ data: this.state.data });
   };
   handleSubmit = () => {
-    const { listIndex, itemIndex } = this.props;
+    const { listIndex, itemIndex, onSubmit } = this.props;
     if (
       this.state.data.goodsName === "" &&
       this.state.data.url === "" &&
@@ -301,7 +301,7 @@ class EditWant extends React.Component {
     } else if (this.state.urlError) {
       return;
     } else {
-      this.props.onSubmit(listIndex, itemIndex, this.state.data);
+      onSubmit(listIndex, itemIndex, this.state.data);
     }
   };
 }
