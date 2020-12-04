@@ -489,7 +489,7 @@ class Home extends React.Component {
           },
         ],
         totalPrice: 0,
-        count: prev.count,
+        count: 0,
       };
     });
     // localStorage.clear();
@@ -524,7 +524,6 @@ class Home extends React.Component {
 
   saveList = () => {
     var user = firebase.auth().currentUser;
-
     if (user != null) {
       const uid = user.uid;
       firebase
