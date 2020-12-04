@@ -20,26 +20,27 @@ class Home extends React.Component {
     super(props);
     this.state = {
       lists: [
-        {
-          title: "Todo",
-          items: [],
-          editing: false,
-        },
-        {
-          title: "InProgress",
-          items: [],
-          editing: false,
-        },
-        {
-          title: "Done",
-          items: [],
-          editing: false,
-        },
+        // {
+        //   title: "Todo",
+        //   items: [],
+        //   editing: false,
+        // },
+        // {
+        //   title: "InProgress",
+        //   items: [],
+        //   editing: false,
+        // },
+        // {
+        //   title: "Done",
+        //   items: [],
+        //   editing: false,
+        // },
       ],
       count: 0,
       totalPrice: 0,
       formOpen: false,
     };
+    this.getData();
 
     // this.state = JSON.parse(
     //   localStorage.getItem("Lists"),
@@ -77,39 +78,68 @@ class Home extends React.Component {
     // this.getData();
   }
 
-  componentDidMount() {
-    firebase
-      .database()
-      .ref("/")
-      .on("value", (snapshot) => {
-        const prev = snapshot.val();
-        if (prev !== null) {
-          this.setState(() => {
-            return {
+  getData = () => {
+    var user = firebase.auth().currentUser;
+
+    if (user != null) {
+      const uid = user.uid;
+      firebase
+        .database()
+        .ref("/users/" + uid)
+        .on("value", (snapshot) => {
+          const prev = snapshot.val();
+          if (prev !== null) {
+            this.setState(() => {
+              return {
+                lists: [
+                  {
+                    title: prev.lists[0].title,
+                    items: [...(prev.lists[0].items || [])],
+                    editing: false,
+                  },
+                  {
+                    title: prev.lists[1].title,
+                    items: [...(prev.lists[1].items || [])],
+                    editing: false,
+                  },
+                  {
+                    title: prev.lists[2].title,
+                    items: [...(prev.lists[2].items || [])],
+                    editing: false,
+                  },
+                ],
+                count: prev.count,
+                totalPrice: prev.totalPrice,
+                formOpen: false,
+              };
+            });
+          } else {
+            this.setState({
               lists: [
                 {
-                  title: prev.Lists.lists[0].title,
-                  items: [...(prev.Lists.lists[0].items || [])],
+                  title: "Todo",
+                  items: [],
                   editing: false,
                 },
                 {
-                  title: prev.Lists.lists[1].title,
-                  items: [...(prev.Lists.lists[1].items || [])],
+                  title: "InProgress",
+                  items: [],
                   editing: false,
                 },
                 {
-                  title: prev.Lists.lists[2].title,
-                  items: [...(prev.Lists.lists[2].items || [])],
+                  title: "Done",
+                  items: [],
                   editing: false,
                 },
               ],
-              count: prev.count,
-              totalPrice: prev.TotalPrice.totalPrice,
-            };
-          });
-        } else return;
-      });
-  }
+              count: 0,
+              totalPrice: 0,
+              formOpen: false,
+            });
+          }
+        });
+    }
+  };
 
   render() {
     const handleDragEnd = async (result) => {
@@ -138,7 +168,7 @@ class Home extends React.Component {
         reoderedItem
       );
       await this.setState({ lists: lists });
-      this.saveList();
+      // this.saveList();
       this.calculatePrice();
     };
 
@@ -310,7 +340,7 @@ class Home extends React.Component {
         <Wrap>
           <div id="firebaseui-auth-container"></div>
           <FormOpenButton onClick={this.clickFormOpen}>ADD WISH</FormOpenButton>
-          {/* {console.log(this.state)} */}
+          {console.log(this.state)}
           {this.state.formOpen ? (
             <Form onCancel={this.cancelAdd} onSubmit={this.handleSubmit} />
           ) : (
@@ -448,8 +478,8 @@ class Home extends React.Component {
       };
     });
     // firebase.database().ref("Count")
+    // this.saveList();
     this.calculatePrice();
-    this.saveList();
     this.setState({ formOpen: false });
   };
 
@@ -531,16 +561,39 @@ class Home extends React.Component {
       totalPrice: total,
     });
     // localStorage.setItem("TotalPrice", total);
-    firebase.database().ref("TotalPrice/").set({
-      totalPrice: this.state.totalPrice,
-    });
+    // var user = firebase.auth().currentUser;
+
+    // if (user != null) {
+    //   const uid = user.uid;
+    //   firebase
+    //     .database()
+    //     .ref("/users/" + uid)
+    //     .child("/totalPrice")
+    //     .update({
+    //       totalPrice: this.state.totalPrice,
+    //     });
+    // }
+    this.saveList();
   };
 
   saveList = () => {
-    firebase.database().ref("Lists/").set({
-      count: this.state.count,
-      lists: this.state.lists,
-    });
+    var user = firebase.auth().currentUser;
+
+    if (user != null) {
+      const uid = user.uid;
+      firebase
+        .database()
+        .ref("/users/" + uid)
+        .update({
+          count: this.state.count,
+          lists: this.state.lists,
+          totalPrice: this.state.totalPrice,
+        });
+    }
+    // firebase.database().ref("Lists/").set({
+    //   count: this.state.count,
+    //   lists: this.state.lists,
+    // });
     // console.log(this.state);
 
     // firebase
