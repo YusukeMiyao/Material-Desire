@@ -40,41 +40,6 @@ class Home extends React.Component {
       totalPrice: 0,
       formOpen: false,
     };
-
-    // this.state = JSON.parse(
-    //   localStorage.getItem("Lists"),
-    //   localStorage.getItem("TotalPrice"),
-    //   localStorage.getItem("Count")
-    // )
-    //   ? {
-    //       lists: JSON.parse(localStorage.getItem("Lists")),
-    //       totalPrice: JSON.parse(localStorage.getItem("TotalPrice")),
-    //       count: JSON.parse(localStorage.getItem("Count")),
-    //       formOpen: false,
-    //     }
-    //   : {
-    // lists: [
-    //   {
-    //     title: "Todo",
-    //     items: [],
-    //     editing: false,
-    //   },
-    //   {
-    //     title: "InProgress",
-    //     items: [],
-    //     editing: false,
-    //   },
-    //   {
-    //     title: "Done",
-    //     items: [],
-    //     editing: false,
-    //   },
-    // ],
-    // count: 0,
-    // totalPrice: 0,
-    // formOpen: false,
-    //     };
-    // this.getData();
   }
 
   componentDidMount() {
@@ -339,13 +304,11 @@ class Home extends React.Component {
         <Wrap>
           <div id="firebaseui-auth-container"></div>
           <FormOpenButton onClick={this.clickFormOpen}>ADD WISH</FormOpenButton>
-          {console.log(this.state)}
           {this.state.formOpen ? (
             <Form onCancel={this.cancelAdd} onSubmit={this.handleSubmit} />
           ) : (
             ""
           )}
-          {/* <Form onCancel={this.cancelAdd} onSubmit={this.handleSubmit} /> */}
           {/* {console.log(this.state)} */}
           <DragDropContext
             onDragEnd={handleDragEnd}
@@ -476,7 +439,6 @@ class Home extends React.Component {
         count: currentId,
       };
     });
-    // firebase.database().ref("Count")
     // this.saveList();
     this.calculatePrice();
     this.setState({ formOpen: false });
@@ -531,8 +493,6 @@ class Home extends React.Component {
       };
     });
     // localStorage.clear();
-    // localStorage.setItem("Count", this.state.count);
-    // localStorage.setItem("TotalPrice", this.state.totalPrice);
     firebase.database().ref("TotalPrice/").set({
       totalPrice: this.state.totalPrice,
     });
@@ -559,19 +519,6 @@ class Home extends React.Component {
     await this.setState({
       totalPrice: total,
     });
-    // localStorage.setItem("TotalPrice", total);
-    // var user = firebase.auth().currentUser;
-
-    // if (user != null) {
-    //   const uid = user.uid;
-    //   firebase
-    //     .database()
-    //     .ref("/users/" + uid)
-    //     .child("/totalPrice")
-    //     .update({
-    //       totalPrice: this.state.totalPrice,
-    //     });
-    // }
     this.saveList();
   };
 
@@ -589,18 +536,6 @@ class Home extends React.Component {
           totalPrice: this.state.totalPrice,
         });
     }
-    // firebase.database().ref("Lists/").set({
-    //   count: this.state.count,
-    //   lists: this.state.lists,
-    // });
-    // console.log(this.state);
-
-    // firebase
-    //   .database()
-    //   .ref("Lists/")
-    //   .once("value", (obj) => {
-    //     console.log(obj.val());
-    //   });
   };
 
   clickEditTitle = (listIndex, editing) => {
