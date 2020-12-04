@@ -40,7 +40,6 @@ class Home extends React.Component {
       totalPrice: 0,
       formOpen: false,
     };
-    this.getData();
 
     // this.state = JSON.parse(
     //   localStorage.getItem("Lists"),
@@ -78,7 +77,7 @@ class Home extends React.Component {
     // this.getData();
   }
 
-  getData = () => {
+  componentDidMount() {
     var user = firebase.auth().currentUser;
 
     if (user != null) {
@@ -139,7 +138,7 @@ class Home extends React.Component {
           }
         });
     }
-  };
+  }
 
   render() {
     const handleDragEnd = async (result) => {
