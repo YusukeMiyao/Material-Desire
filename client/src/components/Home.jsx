@@ -569,13 +569,16 @@ class Home extends React.Component {
     firebase.database().ref("/users/" + uid);
 
     if (user != null) {
-      const storageRef = firebase.storage().ref("/users/" + uid);
+      const storageRef = firebase
+        .storage()
+        .ref("/users/" + uid)
+        .child(e.name);
       await storageRef.put(e.imgSub, (snapshot) => {
         e.imgSub = snapshot.ref.getDownloadURL();
+        console.log(e.imgSub);
         this.handleSubmit(e);
       });
     }
   };
 }
-
 export default Home;
