@@ -112,6 +112,7 @@ class Form extends React.Component {
             data: Icon,
           },
         ],
+        imgSub: "",
         place: "",
       },
       count: 0,
@@ -137,12 +138,12 @@ class Form extends React.Component {
               name="img"
               accept="image/*"
               multiple
-              onChange={this.handleChange}
+              onChange={this.selectImages}
               onClick={(e) => {
                 e.target.value = null;
               }}
             />
-            <button name="delete" onClick={this.handleChange}>
+            <button name="delete" onClick={this.selectImages}>
               画像リセット
             </button>
             <InputArea>
@@ -314,17 +315,19 @@ class Form extends React.Component {
       }
       // createObjectURLで、fileを読み込む
       for (const file of files) {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-          this.state.data.img.splice(1, 0, {
-            name: file.name,
-            data: URL.createObjectURL(file),
-          });
-        };
+        // const reader = new FileReader();
+        // reader.readAsDataURL(file);
+        // reader.onload = () => {
+        this.state.data.img.splice(1, 0, {
+          name: file.name,
+          data: URL.createObjectURL(file),
+        });
+        // };
       }
+      this.state.imgSub = files;
     } else {
       this.state.data.img = [{ name: "icon", data: Icon }];
+      this.state.imgSub = "";
     }
     this.setState({
       data: this.state.data,
@@ -354,6 +357,7 @@ class Form extends React.Component {
           place: "",
           price: "",
           img: [{ name: "icon", data: Icon }],
+          imgSub: "",
         },
         count: 0,
       });

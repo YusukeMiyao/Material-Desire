@@ -418,7 +418,7 @@ class Home extends React.Component {
                 url: e.url,
                 place: e.place,
                 price: e.price,
-                img: e.img,
+                img: e.imgSub,
                 editing: false,
               },
               ...prev.lists[0].items,
@@ -570,8 +570,8 @@ class Home extends React.Component {
 
     if (user != null) {
       const storageRef = firebase.storage().ref("/users/" + uid);
-      await storageRef.put(e.imgSub[0], (snapshot) => {
-        e.img = snapshot.ref.getDownloadURL();
+      await storageRef.put(e.imgSub, (snapshot) => {
+        e.imgSub = snapshot.ref.getDownloadURL();
         this.handleSubmit(e);
       });
     }
