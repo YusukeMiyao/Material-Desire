@@ -4,7 +4,7 @@ import "firebase/database";
 import "firebase/storage";
 const firebaseui = require("firebaseui");
 
-//修正必要箇所.envファイルみたいなのいる
+
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_DOMAIN,
