@@ -574,7 +574,13 @@ class Home extends React.Component {
       files.map((data) => {
         storageRef
           .child("images/" + this.state.count + data.name)
-          .put(data);
+          .put(data)
+          .then((snapshot) => {
+            snapshot.ref.getDownloadURL().then(function (downloadURL) {
+              const url = downloadURL;
+              console.log(url);
+            });
+          });
       });
       this.handleSubmit(e);
     }
