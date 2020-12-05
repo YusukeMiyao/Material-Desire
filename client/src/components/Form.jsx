@@ -1,6 +1,8 @@
 import React from "react";
 import Icon from "../assets/images/Icon.png";
 import styled from "styled-components";
+import { ref } from "yup";
+import firebase from "../utils/firebase";
 
 const ModalBg = styled.div`
   position: fixed;
@@ -53,7 +55,7 @@ const InputArea = styled.div`
       border: none;
       border-bottom: solid 1px #000000;
       width: 100%;
-      :focus{
+      :focus {
         outline: none;
       }
     }
@@ -93,6 +95,10 @@ const AddButton = styled(CommonButton)`
     border-bottom: solid 1px #ffffff;
   }
 `;
+var user = firebase.auth().currentUser;
+
+const storageRef = firebase.storage().ref("/users/");
+
 class Form extends React.Component {
   constructor(props) {
     super(props);
@@ -101,6 +107,7 @@ class Form extends React.Component {
         goodsName: "",
         url: "",
         price: "",
+        imgSub: "",
         img: Icon,
         place: "",
       },
@@ -283,14 +290,21 @@ class Form extends React.Component {
         if (files.length > 0) {
           // ②createObjectURLで、files[0]を読み込む
           data.img = URL.createObjectURL(files[0]);
+          // storageRef.put(files[0], (snapshot) => {
+          //   data.img = snapshot.ref.getDownloadURL();
+          //   console.log(data.img);
+          // });
+          data.imgSub = files;
           break;
         } else {
           data.img = Icon;
         }
         break;
+
       case "delete":
         e.preventDefault();
         data.img = Icon;
+
         e.target.value = null;
         break;
       default:
@@ -313,9 +327,18 @@ class Form extends React.Component {
     } else {
       this.setState({ submitError: false });
       this.props.onSubmit(data);
+      console.log("submit");
       this.setState({
-        data: { goodsName: "", url: "", place: "", price: "", img: Icon },
+        data: {
+          goodsName: "",
+          url: "",
+          place: "",
+          price: "",
+          img: Icon,
+          imgSub: "",
+        },
       });
+      console.log("reset");
     }
   };
   clickCancel = () => {

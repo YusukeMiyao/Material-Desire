@@ -25,7 +25,6 @@ class Want extends React.Component {
       <Wrap>
         <WantImage>
           <img src={img} alt="" height={100} width={100} />
-          {/* <img src={img} alt="" height={100} width={100} /> */}
         </WantImage>
         <p>欲しいもの：{goodsName}</p>
         URL：
