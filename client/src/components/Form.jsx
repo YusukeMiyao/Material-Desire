@@ -128,7 +128,7 @@ class Form extends React.Component {
         <ModalContent onClick={this.stopPropagation}>
           <ModalItem>
             <img
-              src={this.state.data.img}
+              src={this.state.data.img.data}
               height={100}
               width={100}
               alt="画像"
