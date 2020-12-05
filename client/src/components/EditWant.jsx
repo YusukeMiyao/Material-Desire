@@ -73,7 +73,18 @@ class EditWant extends React.Component {
       <EditWrap>
         <EditArea>
           <EditImages>
-            <img src={this.state.data.img} alt="" height={200} width={200} />
+            {this.state.data.img.map((el, index) => {
+              return (
+                <img
+                  key={index}
+                  src={el.data}
+                  height={100}
+                  width={100}
+                  alt={el.name}
+                  onClick={this.selectImages}
+                />
+              );
+            })}
             <input
               type="file"
               name="img"
@@ -84,6 +95,7 @@ class EditWant extends React.Component {
                 e.target.value = null;
               }}
             />
+            <button onClick={this.deleteImages}>選択画像削除</button>
             <button name="delete" onClick={this.handleChange}>
               画像リセット
             </button>
@@ -232,14 +244,10 @@ class EditWant extends React.Component {
             this.state.data.img.splice(0, 1);
           }
           for (const file of files) {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-              this.state.data.img.splice(1, 0, {
-                name: file.name,
-                data: URL.createObjectURL(file),
-              });
-            };
+            this.state.data.img.splice(1, 0, {
+              name: file.name,
+              data: URL.createObjectURL(file),
+            });
           }
           break;
         } else {
@@ -264,27 +272,15 @@ class EditWant extends React.Component {
   };
 
   selectImages = (e) => {
-    const src = e.target.src;
-    const data = this.state.data;
-    const img = data.img;
-    const selectedImages = this.state.selectedImages;
-    img.map((el, index) => {
-      if (el.data === src) {
-        selectedImages.push(index);
-      }
-    });
+    // TODO
+    console.log(e);
   };
 
-  deleteImages = () => {
-    const selectedImages = this.state.selectedImages;
-    selectedImages.map((el) => {
-      this.state.data.img.splice(el, 1);
-      if (this.state.data.img.length === 0) {
-        this.state.data.img = [{ name: "icon", data: Icon }];
-      }
-    });
-    this.setState({ data: this.state.data });
+  deleteImages = (e) => {
+    // TODO
+    console.log(e);
   };
+
   resetImages = () => {
     this.state.data.img = [{ name: "icon", data: Icon }];
     this.setState({ data: this.state.data });
