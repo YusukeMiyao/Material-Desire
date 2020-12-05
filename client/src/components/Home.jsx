@@ -522,9 +522,9 @@ class Home extends React.Component {
     this.saveList();
   };
 
-  saveList = () => {
-    var user = firebase.auth().currentUser;
-    if (user != null) {
+  saveList = async () => {
+    const user = firebase.auth().currentUser;
+    if (user !== null) {
       const uid = user.uid;
       firebase
         .database()
@@ -563,7 +563,6 @@ class Home extends React.Component {
   };
 
   imgUp = async (e) => {
-    console.log("come");
     var user = firebase.auth().currentUser;
     const uid = user.uid;
     firebase.database().ref("/users/" + uid);
@@ -579,12 +578,10 @@ class Home extends React.Component {
             snapshot.ref.getDownloadURL().then((downloadURL) => {
               const url = downloadURL;
               e.img[index].data = url;
-              console.log(e.img[index].data);
             });
           });
       });
       this.handleSubmit(e);
-      console.log(e.img);
     }
   };
 }

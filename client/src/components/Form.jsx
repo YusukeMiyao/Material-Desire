@@ -1,6 +1,7 @@
 import React from "react";
 import Icon from "../assets/images/Icon.png";
 import styled from "styled-components";
+import firebase from "../utils/firebase";
 
 const ModalBg = styled.div`
   position: fixed;
@@ -313,12 +314,14 @@ class Form extends React.Component {
     const files = e.target.files;
     let count = this.state.count;
     count++;
+    var user = firebase.auth().currentUser;
+    const uid = user.uid;
+    firebase.database().ref("/users/" + uid);
     if (files.length > 0) {
       // 初回追加時に初期画像を削除
       if (count === 1) {
         this.state.data.img.splice(0, 1);
       }
-      // createObjectURLで、fileを読み込む
       for (const file of files) {
         this.state.data.img.splice(1, 0, {
           name: file.name,
@@ -326,6 +329,22 @@ class Form extends React.Component {
         });
       }
       this.state.data.imgSub = files;
+      if (user != null) {
+        const storageRef = firebase.storage().ref("/users/" + uid);
+        const files = Array.from(this.state.data.imgSub);
+        files.map((data, index) => {
+          storageRef
+            .child("images/" + this.state.count + data.name)
+            .put(data)
+            .then((snapshot) => {
+              snapshot.ref.getDownloadURL().then((downloadURL) => {
+                const url = downloadURL;
+                this.state.data.img[index].data = url;
+              });
+            });
+        });
+      }
+      // createObjectURLで、fileを読み込む
     } else {
       this.state.data.img = [{ name: "icon", data: Icon }];
       this.state.data.imgSub = "";
