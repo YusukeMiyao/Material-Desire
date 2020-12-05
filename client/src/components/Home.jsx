@@ -13,7 +13,7 @@ import styled from "styled-components";
 import { PureComponent } from "react";
 import firebase from "../utils/firebase";
 import { Button } from "reactstrap";
-import "firebase/database";
+import { array } from "yup";
 
 class Home extends React.Component {
   constructor(props) {
@@ -305,7 +305,7 @@ class Home extends React.Component {
           <div id="firebaseui-auth-container"></div>
           <FormOpenButton onClick={this.clickFormOpen}>ADD WISH</FormOpenButton>
           {this.state.formOpen ? (
-            <Form onCancel={this.cancelAdd} onSubmit={this.handleSubmit} />
+            <Form onCancel={this.cancelAdd} onSubmit={this.imgUp} />
           ) : (
             ""
           )}
@@ -560,6 +560,21 @@ class Home extends React.Component {
 
   handleLogout = () => {
     firebase.auth().signOut();
+  };
+
+  imgUp = async (e) => {
+    console.log("come");
+    var user = firebase.auth().currentUser;
+    const uid = user.uid;
+    firebase.database().ref("/users/" + uid);
+
+    if (user != null) {
+      const storageRef = firebase.storage().ref("/users/" + uid);
+      await storageRef.put(e.imgSub[0], (snapshot) => {
+        e.img = snapshot.ref.getDownloadURL();
+        this.handleSubmit(e);
+      });
+    }
   };
 }
 
