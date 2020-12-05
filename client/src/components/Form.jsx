@@ -126,23 +126,28 @@ class Form extends React.Component {
       <ModalBg onClick={this.clickCancel}>
         <ModalContent onClick={this.stopPropagation}>
           <ModalItem>
-            <img
-              src={this.state.data.img}
-              height={100}
-              width={100}
-              alt="画像"
-            />
+            {this.state.data.img.map((el, index) => {
+              return (
+                <img
+                  key={index}
+                  src={el.data}
+                  height={100}
+                  width={100}
+                  alt={el.name}
+                />
+              );
+            })}
             <input
               type="file"
               name="img"
               accept="image/*"
               multiple
-              onChange={this.handleChange}
+              onChange={this.selectImages}
               onClick={(e) => {
                 e.target.value = null;
               }}
             />
-            <button name="delete" onClick={this.handleChange}>
+            <button name="delete" onClick={this.selectImages}>
               画像リセット
             </button>
             <InputArea>
@@ -314,14 +319,10 @@ class Form extends React.Component {
       }
       // createObjectURLで、fileを読み込む
       for (const file of files) {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-          this.state.data.img.splice(1, 0, {
-            name: file.name,
-            data: URL.createObjectURL(file),
-          });
-        };
+        this.state.data.img.splice(1, 0, {
+          name: file.name,
+          data: URL.createObjectURL(file),
+        });
       }
     } else {
       this.state.data.img = [{ name: "icon", data: Icon }];
