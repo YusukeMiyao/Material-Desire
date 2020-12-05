@@ -1,8 +1,6 @@
 import React from "react";
 import Icon from "../assets/images/Icon.png";
 import styled from "styled-components";
-import { ref } from "yup";
-import firebase from "../utils/firebase";
 
 const ModalBg = styled.div`
   position: fixed;
@@ -14,11 +12,13 @@ const ModalBg = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 2;
 `;
 const ModalContent = styled.div`
   background-color: #ffffff;
   width: 30%;
   height: 70%;
+  min-height: 500px;
   border: solid 5px #000000;
   border-radius: 40px;
   overflow: auto;
@@ -32,8 +32,11 @@ const ModalItem = styled.div`
   img {
     width: 100%;
     height: auto;
-    max-height: 160px;
+    max-height: 180px;
+    object-fit: cover;
+    // 画像の位置を把握するため
     border: solid 1px;
+    // 画像の位置を把握するため
   }
 `;
 const InputArea = styled.div`
@@ -95,10 +98,6 @@ const AddButton = styled(CommonButton)`
     border-bottom: solid 1px #ffffff;
   }
 `;
-var user = firebase.auth().currentUser;
-
-const storageRef = firebase.storage().ref("/users/");
-
 class Form extends React.Component {
   constructor(props) {
     super(props);
@@ -107,10 +106,15 @@ class Form extends React.Component {
         goodsName: "",
         url: "",
         price: "",
-        imgSub: "",
-        img: Icon,
+        img: [
+          {
+            name: "icon",
+            data: Icon,
+          },
+        ],
         place: "",
       },
+      count: 0,
       priceError: false,
       submitError: false,
       urlError: false,
@@ -285,26 +289,9 @@ class Form extends React.Component {
           this.setState({ priceError: true });
         }
         break;
-      case "img":
-        let files = e.target.files;
-        if (files.length > 0) {
-          // ②createObjectURLで、files[0]を読み込む
-          data.img = URL.createObjectURL(files[0]);
-          // storageRef.put(files[0], (snapshot) => {
-          //   data.img = snapshot.ref.getDownloadURL();
-          //   console.log(data.img);
-          // });
-          data.imgSub = files;
-          break;
-        } else {
-          data.img = Icon;
-        }
-        break;
-
       case "delete":
         e.preventDefault();
-        data.img = Icon;
-
+        data.img = [{ name: "icon", data: Icon }];
         e.target.value = null;
         break;
       default:
@@ -316,10 +303,43 @@ class Form extends React.Component {
     });
   };
 
+  selectImages = async (e) => {
+    const files = e.target.files;
+    let count = this.state.count;
+    count++;
+    if (files.length > 0) {
+      // 初回追加時に初期画像を削除
+      if (count === 1) {
+        this.state.data.img.splice(0, 1);
+      }
+      // createObjectURLで、fileを読み込む
+      for (const file of files) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          this.state.data.img.splice(1, 0, {
+            name: file.name,
+            data: URL.createObjectURL(file),
+          });
+        };
+      }
+    } else {
+      this.state.data.img = [{ name: "icon", data: Icon }];
+    }
+    this.setState({
+      data: this.state.data,
+      count: count,
+    });
+  };
+
   handleSubmit = (e) => {
     e.preventDefault();
     const data = this.state.data;
-    if (data.goodsName === "" && data.url === "" && data.img === Icon) {
+    if (
+      data.goodsName === "" &&
+      data.url === "" &&
+      data.img[0].name === "icon"
+    ) {
       this.setState({ submitError: true });
       return;
     } else if (this.state.urlError) {
@@ -327,18 +347,16 @@ class Form extends React.Component {
     } else {
       this.setState({ submitError: false });
       this.props.onSubmit(data);
-      console.log("submit");
       this.setState({
         data: {
           goodsName: "",
           url: "",
           place: "",
           price: "",
-          img: Icon,
-          imgSub: "",
+          img: [{ name: "icon", data: Icon }],
         },
+        count: 0,
       });
-      console.log("reset");
     }
   };
   clickCancel = () => {
