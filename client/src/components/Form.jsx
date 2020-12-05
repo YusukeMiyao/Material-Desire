@@ -325,10 +325,10 @@ class Form extends React.Component {
           data: URL.createObjectURL(file),
         });
       }
-      this.state.imgSub = files;
+      this.state.data.imgSub = files;
     } else {
       this.state.data.img = [{ name: "icon", data: Icon }];
-      this.state.imgSub = "";
+      this.state.data.imgSub = "";
     }
     this.setState({
       data: this.state.data,
