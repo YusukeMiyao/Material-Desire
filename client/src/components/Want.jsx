@@ -46,7 +46,17 @@ class Want extends React.Component {
     return (
       <WantWrap>
         <WantImages>
-          <img src={img} alt="" height={100} width={100} />
+          {img.map((el, index) => {
+            return (
+              <img
+                key={index}
+                src={el.data}
+                alt={el.name}
+                height={100}
+                width={100}
+              />
+            );
+          })}
           {/* <img src={img} alt="" height={100} width={100} /> */}
         </WantImages>
         <WantTitle>

@@ -572,7 +572,7 @@ class Home extends React.Component {
       const storageRef = firebase
         .storage()
         .ref("/users/" + uid)
-        .child(e.name);
+        .child("a");
       await storageRef.put(e.imgSub, (snapshot) => {
         e.imgSub = snapshot.ref.getDownloadURL();
         console.log(e.imgSub);
