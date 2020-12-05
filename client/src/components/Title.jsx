@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const Wrap = styled.div`
+const TitleWrap = styled.div`
   display: flex;
   align-items: center;
   margin: 1em 0;
@@ -18,10 +18,10 @@ class Title extends React.Component {
     const { title } = this.props;
 
     return (
-      <Wrap>
+      <TitleWrap>
         <ListTitle>{title}</ListTitle>
         <EditButton onClick={this.clickEdit}>編集</EditButton>
-      </Wrap>
+      </TitleWrap>
     );
   }
 
