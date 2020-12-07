@@ -418,7 +418,12 @@ class Home extends React.Component {
                 url: e.url,
                 place: e.place,
                 price: e.price,
-                img: e.img,
+                img: [
+                  {
+                    name: e.img.name,
+                    data: prev.image,
+                  },
+                ],
                 editing: false,
               },
               ...prev.lists[0].items,
@@ -569,23 +574,23 @@ class Home extends React.Component {
 
     if (user != null) {
       const storageRef = firebase.storage().ref("/users/" + uid);
+
       let files = Object.entries(e);
       console.log(e);
       console.log(files);
-      let fielesMap = files.map((FileList, index) => {
+      files.map((FileList, index) => {
         console.log(FileList);
-        return storageRef
+        storageRef
           .child("images/" + this.state.count + FileList.name)
           .put(FileList)
           .then((snapshot) => {
-            return snapshot.ref.getDownloadURL().then((downloadURL) => {
-              return (FileList = downloadURL);
-              // return (imgSub = url);
+            snapshot.ref.getDownloadURL().then((downloadURL) => {
+              this.setState({ image: { ...({ downloadURL } || []) } });
+              console.log(this.state);
             });
           });
       });
-      this.handleSubmit(fielesMap);
-      console.log(fielesMap);
+      this.handleSubmit(e);
     }
   };
 }
