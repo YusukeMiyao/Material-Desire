@@ -569,19 +569,23 @@ class Home extends React.Component {
 
     if (user != null) {
       const storageRef = firebase.storage().ref("/users/" + uid);
-      const files = Array.from(e.imgSub);
-      files.map((data, index) => {
-        storageRef
-          .child("images/" + this.state.count + data.name)
-          .put(data)
+      let files = Object.entries(e);
+      console.log(e);
+      console.log(files);
+      let fielesMap = files.map((FileList, index) => {
+        console.log(FileList);
+        return storageRef
+          .child("images/" + this.state.count + FileList.name)
+          .put(FileList)
           .then((snapshot) => {
-            snapshot.ref.getDownloadURL().then((downloadURL) => {
-              const url = downloadURL;
-              e.img[index].data = url;
+            return snapshot.ref.getDownloadURL().then((downloadURL) => {
+              return (FileList = downloadURL);
+              // return (imgSub = url);
             });
           });
       });
-      this.handleSubmit(e);
+      this.handleSubmit(fielesMap);
+      console.log(fielesMap);
     }
   };
 }

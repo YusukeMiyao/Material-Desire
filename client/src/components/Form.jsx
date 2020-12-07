@@ -329,21 +329,21 @@ class Form extends React.Component {
         });
       }
       this.state.data.imgSub = files;
-      if (user != null) {
-        const storageRef = firebase.storage().ref("/users/" + uid);
-        const files = Array.from(this.state.data.imgSub);
-        files.map((data, index) => {
-          storageRef
-            .child("images/" + this.state.count + data.name)
-            .put(data)
-            .then((snapshot) => {
-              snapshot.ref.getDownloadURL().then((downloadURL) => {
-                const url = downloadURL;
-                this.state.data.img[index].data = url;
-              });
-            });
-        });
-      }
+      // if (user != null) {
+      //   const storageRef = firebase.storage().ref("/users/" + uid);
+      //   const files = Array.from(this.state.data.imgSub);
+      //   files.map((data, index) => {
+      //     storageRef
+      //       .child("images/" + this.state.count + data.name)
+      //       .put(data)
+      //       .then((snapshot) => {
+      //         snapshot.ref.getDownloadURL().then((downloadURL) => {
+      //           const url = downloadURL;
+      //           this.state.data.img[index].data = url;
+      //         });
+      //       });
+      //   });
+      // }
       // createObjectURLで、fileを読み込む
     } else {
       this.state.data.img = [{ name: "icon", data: Icon }];
