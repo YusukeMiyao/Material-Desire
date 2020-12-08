@@ -582,7 +582,8 @@ class Home extends React.Component {
       let files = Object.entries(e.imgSub);
       console.log(e);
       console.log(files);
-      files.map(async (FileList, index) => {
+
+      files.map((FileList, index) => {
         console.log(FileList);
         storageRef
           .child("images/" + this.state.count + FileList.name)
@@ -594,6 +595,7 @@ class Home extends React.Component {
             });
           });
       });
+
       setTimeout(() => {
         console.log(this.state);
         this.handleSubmit(e);
