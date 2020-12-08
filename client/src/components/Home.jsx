@@ -18,6 +18,7 @@ import { array } from "yup";
 class Home extends React.Component {
   constructor(props) {
     super(props);
+    // this.imgSetState = this.imgSetState.bind(this);
     this.state = {
       lists: [
         // {
@@ -99,6 +100,7 @@ class Home extends React.Component {
               count: 0,
               totalPrice: 0,
               formOpen: false,
+              // image: [],
             });
           }
         });
@@ -405,6 +407,7 @@ class Home extends React.Component {
   handleSubmit = async (e) => {
     let currentId = this.state.count;
     currentId++;
+    console.log(e, this.state.image);
     await this.setState((prev) => {
       return {
         ...prev,
@@ -420,10 +423,11 @@ class Home extends React.Component {
                 price: e.price,
                 img: [
                   {
-                    name: e.img.name,
+                    name: e.img[0].name,
                     data: prev.image,
                   },
                 ],
+
                 editing: false,
               },
               ...prev.lists[0].items,
@@ -575,22 +579,25 @@ class Home extends React.Component {
     if (user != null) {
       const storageRef = firebase.storage().ref("/users/" + uid);
 
-      let files = Object.entries(e);
+      let files = Object.entries(e.imgSub);
       console.log(e);
       console.log(files);
-      files.map((FileList, index) => {
+      files.map(async (FileList, index) => {
         console.log(FileList);
         storageRef
           .child("images/" + this.state.count + FileList.name)
           .put(FileList)
           .then((snapshot) => {
             snapshot.ref.getDownloadURL().then((downloadURL) => {
-              this.setState({ image: { ...({ downloadURL } || []) } });
-              console.log(this.state);
+              this.setState({ image: downloadURL });
+              // console.log(this.state);
             });
           });
       });
-      this.handleSubmit(e);
+      setTimeout(() => {
+        console.log(this.state);
+        this.handleSubmit(e);
+      }, 3000);
     }
   };
 }
