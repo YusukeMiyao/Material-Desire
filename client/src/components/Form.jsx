@@ -114,6 +114,7 @@ class Form extends React.Component {
           },
         ],
         imgSub: "",
+        imgSubName: "",
         place: "",
       },
       count: 0,
@@ -314,9 +315,9 @@ class Form extends React.Component {
     const files = e.target.files;
     let count = this.state.count;
     count++;
-    var user = firebase.auth().currentUser;
-    const uid = user.uid;
-    firebase.database().ref("/users/" + uid);
+    // var user = firebase.auth().currentUser;
+    // const uid = user.uid;
+    // firebase.database().ref("/users/" + uid);
     if (files.length > 0) {
       // 初回追加時に初期画像を削除
       if (count === 1) {
@@ -327,7 +328,9 @@ class Form extends React.Component {
           name: file.name,
           data: URL.createObjectURL(file),
         });
+        this.state.data.imgSubName = [...this.state.data.imgSubName, file.name];
       }
+
       this.state.data.imgSub = files;
       // if (user != null) {
       //   const storageRef = firebase.storage().ref("/users/" + uid);

@@ -311,7 +311,7 @@ class Home extends React.Component {
           ) : (
             ""
           )}
-          {/* {console.log(this.state)} */}
+          {console.log(this.state)}
           <DragDropContext
             onDragEnd={handleDragEnd}
             onDragStart={handleDragStart}
@@ -408,6 +408,7 @@ class Home extends React.Component {
     let currentId = this.state.count;
     currentId++;
     console.log(e, this.state.image);
+
     await this.setState((prev) => {
       return {
         ...prev,
@@ -423,7 +424,7 @@ class Home extends React.Component {
                 price: e.price,
                 img: [
                   {
-                    name: e.img[0].name,
+                    name: e.imgSubName,
                     data: prev.image,
                   },
                 ],
@@ -446,9 +447,11 @@ class Home extends React.Component {
           },
         ],
         count: currentId,
+        image: [],
       };
     });
     // this.saveList();
+    console.log(this.state.image);
     this.calculatePrice();
     this.setState({ formOpen: false });
   };
@@ -583,6 +586,10 @@ class Home extends React.Component {
       console.log(e);
       console.log(files);
 
+      // let FilesMap = new Promise(function (resolve, reject) {
+
+      // })
+
       files.map((File, index) => {
         console.log(File);
         storageRef
@@ -590,7 +597,9 @@ class Home extends React.Component {
           .put(File)
           .then((snapshot) => {
             snapshot.ref.getDownloadURL().then((downloadURL) => {
-              this.setState({ image: downloadURL });
+              this.setState({
+                image: [...(this.state.image || []), downloadURL],
+              });
             });
           });
       });
@@ -599,6 +608,10 @@ class Home extends React.Component {
         console.log(this.state);
         this.handleSubmit(e);
       }, 3000);
+      // Promise.all(FilesMap).then(() => {
+      //   this.handleSubmit(e)
+      //   console.log('promiseall')
+      // })
     }
   };
 }
