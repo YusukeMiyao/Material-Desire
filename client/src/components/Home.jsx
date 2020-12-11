@@ -311,7 +311,7 @@ class Home extends React.Component {
           ) : (
             ""
           )}
-          {/* {console.log(this.state)} */}
+          {/* {console.log(this.state)a} */}
           <DragDropContext
             onDragEnd={handleDragEnd}
             onDragStart={handleDragStart}
