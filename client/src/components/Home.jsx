@@ -311,7 +311,7 @@ class Home extends React.Component {
           ) : (
             ""
           )}
-          {console.log(this.state)}
+          {/* {console.log(this.state)} */}
           <DragDropContext
             onDragEnd={handleDragEnd}
             onDragStart={handleDragStart}
@@ -407,7 +407,6 @@ class Home extends React.Component {
   handleSubmit = async (e) => {
     let currentId = this.state.count;
     currentId++;
-    console.log(e, this.state.image);
 
     await this.setState((prev) => {
       return {
@@ -451,7 +450,6 @@ class Home extends React.Component {
       };
     });
     // this.saveList();
-    console.log(this.state.image);
     this.calculatePrice();
     this.setState({ formOpen: false });
   };
@@ -583,13 +581,6 @@ class Home extends React.Component {
       const storageRef = firebase.storage().ref("/users/" + uid);
 
       let files = Array.from(e.imgSub);
-      console.log(e);
-      console.log(files);
-
-      // let FilesMap = new Promise(function (resolve, reject) {
-
-      // })
-
       files.map((File, index) => {
         console.log(File);
         storageRef
