@@ -4,7 +4,7 @@ import styled from "styled-components";
 const TitleWrap = styled.div`
   display: flex;
   align-items: center;
-  margin: 1em 0;
+  margin: 0;
 `;
 
 const ListTitle = styled.p`

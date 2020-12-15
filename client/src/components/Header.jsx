@@ -2,68 +2,68 @@ import React from "react";
 import styled from "styled-components";
 
 const HeaderWrap = styled.header`
+  font-family: "Roboto";
   display: flex;
-  width: 100%;
-  background-color: black;
+  align-items: center;
+  width: calc(100% - 16px);
+  background-color: white;
+  margin: 8px;
+  box-shadow: 2px 2px 10px gray;
   position: sticky;
-  top: 0;
+  top: 8px;
   z-index: 1;
   :hover span {
-    transform: translateX(calc(100vw - 150px));
+    transform: translateX(calc(100vw - 86px));
   }
 `;
 const HoverItem = styled.span`
-  width: 150px;
-  height: 86px;
-  clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
+  width: 70px;
+  height: 56px;
+  clip-path: polygon(20% 0%, 100% 0%, 80% 100%, 0% 100%);
   background: linear-gradient(
-    113deg,
-    #707070 0%,
-    #707070 50%,
-    #34d0a6 50%,
-    #34d0a6 100%
+    104deg,
+    #f2e7fe 0%,
+    #f2e7fe 50%,
+    #6100ed 50%,
+    #6100ed 100%
   );
   transition: all 1s;
 `;
 const TitleWrap = styled.div`
-  text-align: center;
-  font-family: "Baskerville";
   position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translate(-50%, 0);
+  left: 16px;
 `;
 const EngTitle = styled.h1`
-  color: #ffffff;
-  font-size: 24px;
-  font-weight: normal;
-  margin: 12px auto 6px;
-  padding: 0 6px;
-  border: solid 2px #ffffff;
-  border-right: none;
-  border-left: none;
-  span {
-    color: #34d0a6;
-    -webkit-text-stroke: 1px #fff;
-  }
+  color: #000000;
+  font-size: 18px;
+  text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, -1px 1px 0 #fff,
+    1px -1px 0 #fff, 0px 1px 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff, 1px 0 0 #fff;
 `;
 
-const SubTitle = styled.p`
-  color: #ffffff;
-  margin: 0 auto 12px;
+const SignInButton = styled.button`
+  color: #6200ee;
+  font-size: 14px;
+  padding: 4px 16px;
+  border: solid 1px lightgray;
+  border-radius: 4px;
+  background-color: #fff;
+  position: absolute;
+  right: 8px;
 `;
 
+const LogoutButton = styled(SignInButton)`
+  color: #000000;
+`;
 class Header extends React.Component {
   render() {
     return (
       <HeaderWrap>
         <HoverItem />
         <TitleWrap>
-          <EngTitle>
-            Material <span>D</span>esire
-          </EngTitle>
-          <SubTitle>ー悩むを楽しむー</SubTitle>
+          <EngTitle>Material Desire</EngTitle>
         </TitleWrap>
+        <SignInButton>新規登録/ログイン</SignInButton>
+        {/* <LogoutButton>ログアウト</LogoutButton> */}
       </HeaderWrap>
     );
   }

@@ -4,8 +4,7 @@ import firebase from "./utils/firebase";
 
 //components
 import Home from "./components/Home";
-import SignInOrUp from "./components/SignInOrUp";
-import SignUp from "./components/SignUp";
+import Index from "./components/index.jsx";
 
 import Auth from "./Auth";
 
@@ -14,12 +13,11 @@ class App extends React.Component {
     return (
       <Router>
         <Switch>
-          <Route exact path="/signin" component={SignInOrUp} />
-          <Route exact path="/signup" component={SignUp} />
+          <Route exact path="/" component={Index} />
           {/* 以下認証のみ */}
           <Auth>
             <Switch>
-              <Route exact path="/" component={Home} />
+              <Route exact path="/home" component={Home} />
               <Route render={() => <p>not found.</p>} />
             </Switch>
           </Auth>

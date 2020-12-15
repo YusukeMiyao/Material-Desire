@@ -219,15 +219,16 @@ class Home extends React.Component {
 
     const Main = styled.main``;
     const Wrap = styled.div`
-      width: 70%;
+      width: calc(100% - 16px);
       max-width: 1200px;
-      margin: 90px auto;
+      margin: 20px auto;
+      padding: 0 8px;
     `;
     const List = styled.div`
       background-color: ${(props) =>
-        props.isDraggingOver ? "lightblue" : "#F0F0F0"};
+        props.isDraggingOver ? "lightblue" : "#fff"};
       transition: background-color 0.2s ease;
-      border: 1px solid lightgray;
+      border-bottom: 1px solid gray;
       width: 100%;
       height: auto;
       min-height: 120px;
@@ -265,32 +266,28 @@ class Home extends React.Component {
     `;
     const Content = styled.div`
       width: 100%;
-      background: black;
-      color: white;
-      padding: 0 3em;
+      color: black;
     `;
     const TotalPrice = styled.p`
       width: fit-content;
-      border-bottom: solid 2px #707070;
+      color: #1d1d1ddd;
+      font-weight: bold;
+      margin-bottom: 0;
     `;
     const FormOpenButton = styled.button`
-      padding: 10px 50px 10px 40px;
-      background-color: #ffffff;
-      border: solid 1px;
-      border-radius: 5px;
-      position: relative;
-      margin-bottom: 24px;
-      transition: all 0.3s;
+      padding: 10px 30px;
+      background-color: #04d9c5;
+      border: solid 1px #04d9c5;
+      border-radius: 50px;
+      position: fixed;
+      bottom: 8px;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: bold;
       cursor: pointer;
-      ::after {
-        content: "+";
-        position: absolute;
-        right: 10px;
-      }
-      :hover {
-        background-color: #000000;
-        color: #ffffff;
-      }
+      box-shadow: 2px 2px 10px gray;
       :focus {
         outline: none;
       }
@@ -299,11 +296,15 @@ class Home extends React.Component {
     return (
       <Main>
         <Header />
-        <Concept />
-        <Button onClick={this.handleLogout}>ログアウト</Button>
+        {/* <Button onClick={this.handleLogout}>ログアウト</Button> */}
+        <FormOpenButton onClick={this.clickFormOpen}>
+          ＋ ADD WISH
+        </FormOpenButton>
         <Wrap>
+          <TotalPrice>
+            総額 ¥{this.state.totalPrice.toLocaleString()}
+          </TotalPrice>
           <div id="firebaseui-auth-container"></div>
-          <FormOpenButton onClick={this.clickFormOpen}>ADD WISH</FormOpenButton>
           {this.state.formOpen ? (
             <Form onCancel={this.cancelAdd} onSubmit={this.imgUp} />
           ) : (
@@ -319,13 +320,6 @@ class Home extends React.Component {
               return (
                 <Section key={listIndex}>
                   <Content>
-                    {listIndex === 0 ? (
-                      <TotalPrice>
-                        総額 ¥{this.state.totalPrice.toLocaleString()}
-                      </TotalPrice>
-                    ) : (
-                      ""
-                    )}
                     {editing ? (
                       <EditTitle
                         title={title}
