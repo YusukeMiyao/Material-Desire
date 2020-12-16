@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import Button from "@material-ui/core/Button";
 
 const HeaderWrap = styled.header`
   font-family: "Roboto";
@@ -40,13 +41,11 @@ const EngTitle = styled.h1`
     1px -1px 0 #fff, 0px 1px 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff, 1px 0 0 #fff;
 `;
 
-const SignInButton = styled.button`
-  color: #6200ee;
+const SignInButton = styled(Button)`
+  color: #fff;
   font-size: 14px;
   padding: 4px 16px;
-  border: solid 1px lightgray;
-  border-radius: 4px;
-  background-color: #fff;
+  background-color: #03dac5;
   position: absolute;
   right: 8px;
 `;

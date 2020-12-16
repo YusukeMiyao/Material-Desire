@@ -1,15 +1,16 @@
 import React from "react";
 import styled from "styled-components";
+import Revenue from "../assets/images/revenue.svg";
 
 const Wrap = styled.div`
   font-family: "Roboto";
   text-align: center;
-  margin-bottom: 48px;
+  margin-bottom: 24px;
 `;
 const Content = styled.div`
   width: auto;
   margin: auto;
-  margin-bottom: 48px;
+  margin-bottom: 24px;
 `;
 const Message = styled.p`
   font-size: 48px;
@@ -17,6 +18,7 @@ const Message = styled.p`
   line-height: 1.4;
   display: inline-block;
   text-align: left;
+  margin: 0;
 `;
 
 const Image = styled.img`
@@ -37,7 +39,7 @@ class Fv extends React.Component {
             Choice
           </Message>
         </Content>
-        <Image />
+        <Image src={Revenue} />
       </Wrap>
     );
   }

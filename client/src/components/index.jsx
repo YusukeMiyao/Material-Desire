@@ -13,7 +13,7 @@ class Index extends React.Component {
   render() {
     return (
       <Wrap>
-        <Header />
+        {/* <Header /> */}
         <Fv />
         <Concept />
         <SignUp />

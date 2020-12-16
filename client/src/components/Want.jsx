@@ -1,5 +1,12 @@
 import React from "react";
 import styled from "styled-components";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 
 const WantWrap = styled.div`
   width: 100%;
@@ -7,30 +14,24 @@ const WantWrap = styled.div`
 `;
 
 const WantImages = styled.div`
-  display: flex;
+  /* display: flex;
   overflow: auto;
   img {
     width: calc(100% - 2px);
     height: 180px;
-    object-fit: cover;
-    // 画像の位置を把握するため
-    /* border: solid 1px black; */
-    // 画像の位置を把握するため
-    :nth-child(n + 2) {
+    object-fit: cover; */
+  // 画像の位置を把握するため
+  /* border: solid 1px black; */
+  // 画像の位置を把握するため
+  /* :nth-child(n + 2) {
       margin-left: 20px;
     }
-  }
+  } */
 `;
-const WantTitle = styled.div`
-  display: flex;
-  align-items: center;
-  margin: 10px 0;
-  p {
-    width: 4em;
-    display: flex;
-    justify-content: space-between;
-    margin: 0;
-  }
+const WantTitle = styled(Typography)``;
+const Price = styled(Typography)`
+  color: #00000099;
+  font-size: 14px;
 `;
 const ButtonArea = styled.div`
   text-align: right;
@@ -44,64 +45,34 @@ class Want extends React.Component {
   render() {
     const { goodsName, url, img, price, place } = this.props;
     return (
-      <WantWrap>
-        <WantImages>
-          {img.map((el, index) => {
-            return (
-              <img
-                key={index}
-                src={el.data}
-                alt={el.name}
-                height={100}
-                width={100}
-              />
-            );
-          })}
-        </WantImages>
-        <WantTitle>
-          <p>
-            <span>タ</span>
-            <span>イ</span>
-            <span>ト</span>
-            <span>ル</span>
-          </p>
-          <span>：{goodsName}</span>
-        </WantTitle>
-        <WantTitle>
-          <p>
-            <span>U</span>
-            <span>R</span>
-            <span>L</span>
-          </p>
-          <span>
-            ：
-            <a target="_blank" rel="noopener noreferrer" href={url}>
-              {url}
-            </a>
-          </span>
-        </WantTitle>
-        <WantTitle>
-          <p>
-            <span>場</span>
-            <span>所</span>
-          </p>
-          <span>：{place}</span>
-        </WantTitle>
-        <WantTitle>
-          <p>
-            <span>値</span>
-            <span>段</span>
-          </p>
-          <span>
-            ：{price !== "" ? "¥" : null}
-            {price}
-          </span>
-        </WantTitle>
-        <ButtonArea>
-          <DeleteButton onClick={this.ClickDelete}>Delete</DeleteButton>
-          <EditButton onClick={this.ClickEdit}>Edit</EditButton>
-        </ButtonArea>
-      </WantWrap>
+      <div>
+        <CardActionArea>
+          <WantImages>
+            {img.map((el, index) => {
+              return (
+                <CardMedia
+                  component="img"
+                  key={index}
+                  image={el.data}
+                  title={el.name}
+                />
+              );
+            })}
+          </WantImages>
+          <CardContent>
+            <WantTitle>{goodsName}</WantTitle>
+            <Price>
+              {price !== "" ? "¥" : "¥ - "}
+              {price}
+            </Price>
+          </CardContent>
+        </CardActionArea>
+        <CardActions>
+          <Button>
+            <ArrowForwardIosIcon />
+          </Button>
+        </CardActions>
+      </div>
     );
   }
 

@@ -14,6 +14,8 @@ import { PureComponent } from "react";
 import firebase from "../utils/firebase";
 import { Button } from "reactstrap";
 import { array } from "yup";
+import Fab from "@material-ui/core/Fab";
+import Card from "@material-ui/core/Card";
 
 class Home extends React.Component {
   constructor(props) {
@@ -231,26 +233,23 @@ class Home extends React.Component {
       border-bottom: 1px solid gray;
       width: 100%;
       height: auto;
-      min-height: 120px;
+      /* min-height: 120px; */
       margin: 0 auto 20px;
       padding: 20px 0;
       display: flex;
       flex-wrap: wrap;
     `;
-    const Item = styled.div`
+    const Item = styled(Card)`
       background-color: ${(props) =>
         props.isDragging ? "lightgreen" : "white"};
-      width: 30%;
+      width: calc(100% / 3 - 5px);
       display: flex;
-      border: solid 1px #707070;
-      border-radius: 15px;
-      margin-bottom: 20px;
-      box-shadow: 0 0 30px 0 #b9b9b9;
+      border-radius: 10px;
       height: 100%;
       overflow: hidden;
       transition: all 0.3s;
       :nth-of-type(3n-1) {
-        margin: 0 4px 20px;
+        margin: 0 4px;
       }
     `;
     const Section = styled.div`
@@ -271,30 +270,23 @@ class Home extends React.Component {
       font-weight: bold;
       margin-bottom: 0;
     `;
-    const FormOpenButton = styled.button`
-      padding: 10px 30px;
-      background-color: #04d9c5;
-      border: solid 1px #04d9c5;
-      border-radius: 50px;
+    const FormOpenButton = styled(Fab)`
       position: fixed;
       bottom: 8px;
       left: 50%;
       transform: translate(-50%, -50%);
-      color: #ffffff;
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
-      box-shadow: 2px 2px 10px gray;
-      :focus {
-        outline: none;
-      }
+      background-color: #03dac5;
+      color: white;
+      z-index: 2;
     `;
 
     return (
       <Main>
-        <Header />
-        {/* <Button onClick={this.handleLogout}>ログアウト</Button> */}
-        <FormOpenButton onClick={this.clickFormOpen}>
+        <Button onClick={this.handleLogout}>ログアウト</Button>
+        <FormOpenButton variant="extended" onClick={this.clickFormOpen}>
           ＋ ADD WISH
         </FormOpenButton>
         <Wrap>
@@ -562,8 +554,8 @@ class Home extends React.Component {
     if (user != null) {
       const storageRef = firebase.storage().ref("/users/" + uid);
       // await storageRef.put(e.imgSub[0], (snapshot) => {
-        // e.img = snapshot.ref.getDownloadURL();
-        this.handleSubmit(e);
+      // e.img = snapshot.ref.getDownloadURL();
+      this.handleSubmit(e);
       // });
     }
   };

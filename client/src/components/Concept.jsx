@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import OnlineShopping from "../assets/images/online_shopping.svg";
 
 const Wrap = styled.div``;
 const Content = styled.div`
@@ -41,7 +42,7 @@ class Concept extends React.Component {
           </Desc>
         </Content>
         <Content>
-          <Image />
+          <Image src={OnlineShopping} />
           <Desc>
             あなたが追加した欲しいものは
             <br />

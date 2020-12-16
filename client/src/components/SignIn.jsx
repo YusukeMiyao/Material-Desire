@@ -29,7 +29,7 @@ class SignInOrUp extends React.Component {
       .signInWithEmailAndPassword(values.email, values.password)
       .then((res) => {
         //正常終了時
-        this.props.history.push("/");
+        this.props.history.push("/home");
         if (this._isMounted) this.setState({ loading: false });
       })
       .catch((error) => {
