@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const WantWrap = styled.div`
   width: 100%;
-  padding: 20px;
+  /* padding: 20px; */
 `;
 
 const WantImages = styled.div`
@@ -14,7 +14,7 @@ const WantImages = styled.div`
     height: 180px;
     object-fit: cover;
     // 画像の位置を把握するため
-    border: solid 1px black;
+    /* border: solid 1px black; */
     // 画像の位置を把握するため
     :nth-child(n + 2) {
       margin-left: 20px;

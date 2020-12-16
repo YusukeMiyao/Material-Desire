@@ -233,27 +233,24 @@ class Home extends React.Component {
       height: auto;
       min-height: 120px;
       margin: 0 auto 20px;
-      padding: 20px 2% 0;
+      padding: 20px 0;
       display: flex;
       flex-wrap: wrap;
     `;
     const Item = styled.div`
       background-color: ${(props) =>
         props.isDragging ? "lightgreen" : "white"};
-      width: 31%;
+      width: 30%;
       display: flex;
       border: solid 1px #707070;
-      border-radius: 30px;
+      border-radius: 15px;
       margin-bottom: 20px;
       box-shadow: 0 0 30px 0 #b9b9b9;
-      height: 50%;
+      height: 100%;
       overflow: hidden;
       transition: all 0.3s;
-      :hover {
-        height: 95%;
-      }
       :nth-of-type(3n-1) {
-        margin: 0 3% 20px;
+        margin: 0 4px 20px;
       }
     `;
     const Section = styled.div`
@@ -564,10 +561,10 @@ class Home extends React.Component {
 
     if (user != null) {
       const storageRef = firebase.storage().ref("/users/" + uid);
-      await storageRef.put(e.imgSub[0], (snapshot) => {
-        e.img = snapshot.ref.getDownloadURL();
+      // await storageRef.put(e.imgSub[0], (snapshot) => {
+        // e.img = snapshot.ref.getDownloadURL();
         this.handleSubmit(e);
-      });
+      // });
     }
   };
 }
