@@ -18,6 +18,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import styled from "styled-components";
+
 const WantTitle = styled(Typography)``;
 const Price = styled(Typography)`
   color: #00000099;
@@ -42,8 +43,6 @@ const WantImages = styled.div`
 
 const WantList = styled.div`
   display: flex;
-  hight: 228px;
-  width: 100%;
 `;
 
 const ButtonArea = styled.div`
@@ -107,34 +106,38 @@ export default function TemporaryDrawer(props) {
 
       <WantTitle>{goodsName}</WantTitle>
       <WantList>
-        <Price>
-          {price !== "" ? "¥" : "¥ - "}
-          {price}
-        </Price>
-        <WantTitle>
-          <p>
-            <span>U</span>
-            <span>R</span>
-            <span>L</span>
-          </p>
-          <span>
-            <a target="_blank" rel="noopener noreferrer" href={url}>
-              {url}
-            </a>
-          </span>
-        </WantTitle>
-        <WantTitle>
-          <p>
-            <span>場</span>
-            <span>所</span>
-          </p>
-          <span>{place}</span>
-        </WantTitle>
-        <ButtonArea>
-          {/* <DeleteButton onClick={this.ClickDelete}>Delete</DeleteButton> */}
-          {/* <EditButton onClick={this.ClickEdit}>Edit</EditButton> */}
-        </ButtonArea>
+        <tr>
+          <th>値段</th>
+          <td>
+            <Price>
+              {price !== "" ? "¥" : "¥ - "}
+              {price}
+            </Price>
+          </td>
+        </tr>
+        <tr>
+          <WantTitle>
+            <th>URL</th>
+            <td>
+              {url === "" ? "-" : ""}
+              <a target="_blank" rel="noopener noreferrer" href={url}>
+                {url}
+              </a>
+            </td>
+          </WantTitle>
+        </tr>
+        <tr>
+          <WantTitle>
+            <th>場所</th>
+            <td>
+              {place === "" ? "-" : ""}
+              {place}
+            </td>
+          </WantTitle>
+        </tr>
       </WantList>
+      {/* <DeleteButton onClick={this.ClickDelete}>Delete</DeleteButton> */}
+      {/* <EditButton onClick={this.ClickEdit}>Edit</EditButton> */}
     </div>
   );
 

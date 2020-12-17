@@ -69,16 +69,13 @@ class Want extends React.Component {
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button>
-            {/* <ArrowForwardIosIcon onClick={} /> */}
-            <TemporaryDrawer
-              goodsName={goodsName}
-              url={url}
-              img={img}
-              price={price}
-              place={place}
-            />
-          </Button>
+          <TemporaryDrawer
+            goodsName={goodsName}
+            url={url}
+            img={img}
+            price={price}
+            place={place}
+          />
         </CardActions>
       </div>
     );
