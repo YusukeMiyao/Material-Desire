@@ -7,6 +7,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import TemporaryDrawer from "./TemporaryDrawer";
 
 const WantWrap = styled.div`
   width: 100%;
@@ -69,7 +70,14 @@ class Want extends React.Component {
         </CardActionArea>
         <CardActions>
           <Button>
-            <ArrowForwardIosIcon />
+            {/* <ArrowForwardIosIcon onClick={} /> */}
+            <TemporaryDrawer
+              goodsName={goodsName}
+              url={url}
+              img={img}
+              price={price}
+              place={place}
+            />
           </Button>
         </CardActions>
       </div>
