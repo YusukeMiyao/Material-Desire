@@ -106,35 +106,35 @@ export default function TemporaryDrawer(props) {
 
       <WantTitle>{goodsName}</WantTitle>
       <WantList>
-        <tr>
-          <th>値段</th>
-          <td>
-            <Price>
-              {price !== "" ? "¥" : "¥ - "}
-              {price}
-            </Price>
-          </td>
-        </tr>
-        <tr>
-          <WantTitle>
-            <th>URL</th>
-            <td>
-              {url === "" ? "-" : ""}
-              <a target="_blank" rel="noopener noreferrer" href={url}>
-                {url}
-              </a>
-            </td>
-          </WantTitle>
-        </tr>
-        <tr>
-          <WantTitle>
-            <th>場所</th>
-            <td>
-              {place === "" ? "-" : ""}
-              {place}
-            </td>
-          </WantTitle>
-        </tr>
+        <table>
+          <tbody>
+            <tr>
+              <th>値段</th>
+              <td>
+                <Price>
+                  {price !== "" ? "¥" : "¥ - "}
+                  {price}
+                </Price>
+              </td>
+            </tr>
+            <tr>
+              <th>URL</th>
+              <td>
+                {url === "" ? "-" : ""}
+                <a target="_blank" rel="noopener noreferrer" href={url}>
+                  {url}
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <th>場所</th>
+              <td>
+                {place === "" ? "-" : ""}
+                {place}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </WantList>
       {/* <DeleteButton onClick={this.ClickDelete}>Delete</DeleteButton> */}
       {/* <EditButton onClick={this.ClickEdit}>Edit</EditButton> */}
