@@ -281,6 +281,10 @@ class Home extends React.Component {
       background-color: #03dac5;
       color: white;
       z-index: 2;
+      transition: 0.2s;
+      :hover {
+        background-color: #96d4ce;
+      }
     `;
 
     return (

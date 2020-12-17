@@ -13,7 +13,7 @@ const HeaderWrap = styled.header`
   position: sticky;
   top: 8px;
   z-index: 1;
-  :hover span {
+  :hover > span {
     transform: translateX(calc(100vw - 86px));
   }
 `;
@@ -48,6 +48,10 @@ const SignInButton = styled(Button)`
   background-color: #03dac5;
   position: absolute;
   right: 8px;
+  transition: 0.2s;
+  :hover {
+    background-color: #96d4ce;
+  }
 `;
 
 const LogoutButton = styled(SignInButton)`
