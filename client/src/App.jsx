@@ -7,6 +7,7 @@ import Header from "./components/Header.jsx";
 import Home from "./components/Home";
 import Index from "./components/index.jsx";
 import Detail from "./components/Detail.jsx";
+import Form from "./components/Form.jsx";
 
 import Auth from "./Auth";
 
@@ -22,6 +23,7 @@ class App extends React.Component {
               <Switch>
                 <Route exact path="/home" component={Home} />
                 <Route exact path="/detail" component={Detail} />
+                <Route exact path="/form" component={Form} />
                 <Route render={() => <p>not found.</p>} />
               </Switch>
             </Auth>

@@ -45,6 +45,7 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
+    // console.log(this.props.location.state.data);
     var user = firebase.auth().currentUser;
 
     if (user != null) {
@@ -539,6 +540,7 @@ class Home extends React.Component {
   };
 
   clickFormOpen = () => {
+    // this.props.history.push("/form");
     this.setState({ formOpen: true });
   };
   cancelAdd = () => {

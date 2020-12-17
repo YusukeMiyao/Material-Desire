@@ -358,6 +358,7 @@ class Form extends React.Component {
         },
         count: 0,
       });
+      // this.props.history.push({ pathname: "/home", state: { data: data } });
     }
   };
   clickCancel = () => {
