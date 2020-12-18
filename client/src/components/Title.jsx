@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import EditIcon from "@material-ui/icons/Edit";
 
 const TitleWrap = styled.div`
   display: flex;
@@ -8,10 +9,8 @@ const TitleWrap = styled.div`
 `;
 
 const ListTitle = styled.p`
-  margin: 0 1em 0 0;
+  margin: 8px 1em 8px 0;
 `;
-
-const EditButton = styled.button``;
 
 class Title extends React.Component {
   render() {
@@ -20,7 +19,7 @@ class Title extends React.Component {
     return (
       <TitleWrap>
         <ListTitle>{title}</ListTitle>
-        <EditButton onClick={this.clickEdit}>編集</EditButton>
+        <EditIcon fontSize="small" onClick={this.clickEdit} />
       </TitleWrap>
     );
   }

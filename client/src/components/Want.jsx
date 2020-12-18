@@ -1,18 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
-import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import TemporaryDrawer from "./TemporaryDrawer";
-
-const WantWrap = styled.div`
-  width: 100%;
-  /* padding: 20px; */
-`;
 
 const WantImages = styled.div`
   /* display: flex;
@@ -34,14 +26,6 @@ const Price = styled(Typography)`
   color: #00000099;
   font-size: 14px;
 `;
-const ButtonArea = styled.div`
-  text-align: right;
-`;
-const DeleteButton = styled.button`
-  margin-right: 10px;
-`;
-const EditButton = styled.button``;
-
 class Want extends React.Component {
   render() {
     const {
@@ -58,27 +42,25 @@ class Want extends React.Component {
     } = this.props;
     return (
       <div>
-        <CardActionArea>
-          <WantImages>
-            {img.map((el, index) => {
-              return (
-                <CardMedia
-                  component="img"
-                  key={index}
-                  image={el.data}
-                  title={el.name}
-                />
-              );
-            })}
-          </WantImages>
-          <CardContent>
-            <WantTitle>{goodsName}</WantTitle>
-            <Price>
-              {price !== "" ? "¥" : "¥ - "}
-              {price}
-            </Price>
-          </CardContent>
-        </CardActionArea>
+        <WantImages>
+          {img.map((el, index) => {
+            return (
+              <CardMedia
+                component="img"
+                key={index}
+                image={el.data}
+                title={el.name}
+              />
+            );
+          })}
+        </WantImages>
+        <CardContent>
+          <WantTitle>{goodsName}</WantTitle>
+          <Price>
+            {price !== "" ? "¥" : "¥ - "}
+            {price}
+          </Price>
+        </CardContent>
         <CardActions>
           <TemporaryDrawer
             id={id}

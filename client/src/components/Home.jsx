@@ -15,6 +15,7 @@ import { Button } from "reactstrap";
 import { array } from "yup";
 import Fab from "@material-ui/core/Fab";
 import Card from "@material-ui/core/Card";
+import AddIcon from "@material-ui/icons/Add";
 
 class Home extends React.Component {
   constructor(props) {
@@ -291,7 +292,7 @@ class Home extends React.Component {
       <Main>
         <Button onClick={this.handleLogout}>ログアウト</Button>
         <FormOpenButton variant="extended" onClick={this.clickFormOpen}>
-          ＋ ADD WISH
+          <AddIcon /> ADD WISH
         </FormOpenButton>
         <Wrap>
           <TotalPrice>

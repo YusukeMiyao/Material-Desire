@@ -6,6 +6,8 @@ import Button from "@material-ui/core/Button";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import Card from "@material-ui/core/Card";
+import CardMedia from "@material-ui/core/CardMedia";
 
 const ModalBg = styled.div`
   position: fixed;
@@ -16,39 +18,36 @@ const ModalBg = styled.div`
   right: 0;
   bottom: 0;
   left: 0;
-  overflow: auto;
+  overflow-y: auto;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 2;
 `;
 const ModalContent = styled.div`
-  background-color: #ffffff;
   width: 100%;
   max-width: 600px;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  height: auto;
+  position: absolute;
+  top: 0;
 `;
 const ModalItem = styled.form`
   margin: 20px 8px;
   width: calc(100% - 16px);
   position: relative;
+`;
+const ImageArea = styled.div`
+  > p {
+    font-size: 14px;
+    color: #00000099;
+  }
   img {
     width: 100%;
-    height: auto;
-    max-height: 180px;
+    height: 128px;
     object-fit: cover;
     // 画像の位置を把握するため
     border: solid 1px #0000000a;
     // 画像の位置を把握するため
-  }
-`;
-const ImageArea = styled.div`
-  p {
-    font-size: 14px;
-    color: #00000099;
   }
 `;
 const InputArea = styled.div`
@@ -102,17 +101,45 @@ const CancelButton = styled(Fab)`
   background-color: #fff;
   transform: 0.2s;
   :hover {
-    background-color: #96d4ce;
+    background-color: #03dac5;
+    border: #03dac5;
+    svg {
+      color: #fff;
+    }
   }
 `;
 const AddButton = styled(Button)`
   background-color: #03dac5;
   color: #ffffff;
+  :hover {
+    background-color: #96d4ce;
+  }
 `;
 const ErrorMessage = styled.p`
   margin: 0;
   font-size: 14px;
   color: red;
+`;
+const CardWrap = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+`;
+const CardItem = styled(Card)`
+  width: calc(100% / 3 - 5px);
+  border-radius: 10px;
+  height: auto;
+  transition: all 0.3s;
+  margin-bottom: 8px;
+  :nth-of-type(3n-1) {
+    margin: 0 4px 8px;
+  }
+`;
+const DeleteButton = styled.p`
+  text-align: center;
+  color: #284ff0de;
+  font-size: 16px;
+  margin: 10px;
 `;
 class Form extends React.Component {
   constructor(props) {
@@ -144,17 +171,21 @@ class Form extends React.Component {
           <ModalItem>
             <ImageArea>
               <p>欲しい物の画像</p>
-              {this.state.data.img.map((el, index) => {
-                return (
-                  <img
-                    key={index}
-                    src={el.data}
-                    height={100}
-                    width={100}
-                    alt={el.name}
-                  />
-                );
-              })}
+              <CardWrap>
+                {this.state.data.img.map((el, index) => {
+                  return (
+                    <CardItem>
+                      <CardMedia
+                        component="img"
+                        key={index}
+                        image={el.data}
+                        title={el.name}
+                      />
+                      <DeleteButton>削除</DeleteButton>
+                    </CardItem>
+                  );
+                })}
+              </CardWrap>
               <input
                 type="file"
                 name="img"
@@ -221,6 +252,7 @@ class Form extends React.Component {
                     type="url"
                     name="url"
                     helperText="URLが正しくありません"
+                    placeholder="40文字まで"
                     value={this.state.data.url}
                     onChange={this.handleChange}
                     onBlur={this.checkUrlError}
@@ -257,6 +289,7 @@ class Form extends React.Component {
                   size="small"
                   type="text"
                   name="other"
+                  multiline
                   placeholder="1000文字まで"
                   value={this.state.data.place}
                   onChange={this.handleChange}
