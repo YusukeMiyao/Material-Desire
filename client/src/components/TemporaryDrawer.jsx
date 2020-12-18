@@ -16,10 +16,17 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
-import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import styled from "styled-components";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
 
-const WantTitle = styled(Typography)``;
+const WantTitle = styled(Typography)`
+  font-size: 24px;
+  text-align: center;
+  line-height: 1.4;
+  display: block;
+  font-weight: Medium;
+`;
 const Price = styled(Typography)`
   color: #00000099;
   font-size: 14px;
@@ -39,6 +46,8 @@ const WantImages = styled.div`
       margin-left: 20px;
     }
   } */
+  transform: translate(-90.4167px, -108.5px) scale(1.48222, 1.48222);
+  transform-origin: 0px 0px;
 `;
 
 const WantList = styled.div`
@@ -48,10 +57,83 @@ const WantList = styled.div`
 const ButtonArea = styled.div`
   text-align: right;
 `;
-const DeleteButton = styled.button`
-  margin-right: 10px;
+
+const ItemTable = styled.table`
+  display: table;
+  width: 100%;
+  max-width: 360px;
+  margin: 8px auto 0;
+  border-collapse: collapse;
+  border: 1px solid #f5f5f5;
+    border-collapse: separate;
+    box-sizing: border-box;
+    text-indent: initial;
+    border-spacing: 2px;
+    
+}
 `;
-const EditButton = styled.button``;
+
+const ItemTableTbody = styled.tbody`
+  display: table-row-group;
+  vertical-align: middle;
+`;
+
+const ItemTableTr = styled.tr`
+      display: table-row;
+    vertical-align: inherit;
+    border-color: inherit;
+}
+
+`;
+
+const ItemTableTh = styled.th`
+  width: 39%;
+  text-align: left;
+  font-weight: 400;
+  background: #fafafa;
+  border-collapse: collapse;
+    border: 1px solid #f5f5f5;
+    padding: 16px 8px;
+    display: table-cell;
+    vertical-align: inherit;
+}
+`;
+
+const ItemTableTd = styled.td`
+  width: 61%;
+  background: #fff;
+  border-collapse: collapse;
+  border: 1px solid #f5f5f5;
+  padding: 16px 8px;
+  display: table-cell;
+  vertical-align: inherit;
+`;
+
+const EditButton = styled(Button)`
+  color: #fff;
+  font-size: 14px;
+  padding: 4px 16px;
+  background-color: #03dac5;
+  position: absolute;
+  right: 8px;
+  transition: 0.2s;
+  :hover {
+    background-color: #96d4ce;
+  }
+`;
+
+const DeleteButton = styled(Button)`
+  color: #03dac5;
+  font-size: 14px;
+  padding: 4px 16px;
+  background-color: #fff;
+  position: absolute;
+  right: 8px;
+  transition: 0.2s;
+  :hover {
+    background-color: #96d4ce;
+  }
+`;
 
 const useStyles = makeStyles({
   list: {
@@ -82,6 +164,16 @@ export default function TemporaryDrawer(props) {
     setState({ ...state, [anchor]: open });
   };
 
+  const ClickEdit = () => {
+    const { onClickEdit, editing, listIndex, itemIndex } = props;
+    onClickEdit(listIndex, itemIndex, !editing);
+  };
+
+  const ClickDelete = () => {
+    const { onDelete, listIndex, itemIndex } = props;
+    onDelete(listIndex, itemIndex);
+  };
+
   const list = (anchor) => (
     <div
       className={clsx(classes.list, {
@@ -106,38 +198,40 @@ export default function TemporaryDrawer(props) {
 
       <WantTitle>{goodsName}</WantTitle>
       <WantList>
-        <table>
-          <tbody>
-            <tr>
-              <th>値段</th>
-              <td>
-                <Price>
-                  {price !== "" ? "¥" : "¥ - "}
-                  {price}
-                </Price>
-              </td>
-            </tr>
-            <tr>
-              <th>URL</th>
-              <td>
+        <ItemTable>
+          <ItemTableTbody>
+            <ItemTableTr>
+              <ItemTableTh>値段</ItemTableTh>
+              <ItemTableTd>
+                {price !== "" ? "¥" : "¥ - "}
+                {price}
+              </ItemTableTd>
+            </ItemTableTr>
+            <ItemTableTr>
+              <ItemTableTh>URL</ItemTableTh>
+              <ItemTableTd>
                 {url === "" ? "-" : ""}
                 <a target="_blank" rel="noopener noreferrer" href={url}>
                   {url}
                 </a>
-              </td>
-            </tr>
-            <tr>
-              <th>場所</th>
-              <td>
+              </ItemTableTd>
+            </ItemTableTr>
+            <ItemTableTr>
+              <ItemTableTh>場所</ItemTableTh>
+              <ItemTableTd>
                 {place === "" ? "-" : ""}
                 {place}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </ItemTableTd>
+            </ItemTableTr>
+          </ItemTableTbody>
+        </ItemTable>
       </WantList>
-      {/* <DeleteButton onClick={this.ClickDelete}>Delete</DeleteButton> */}
-      {/* <EditButton onClick={this.ClickEdit}>Edit</EditButton> */}
+      <DeleteButton startIcon={<DeleteIcon />} onClick={ClickDelete}>
+        Delete
+      </DeleteButton>
+      <EditButton startIcon={<EditIcon />} onClick={ClickEdit}>
+        Edit
+      </EditButton>
     </div>
   );
 

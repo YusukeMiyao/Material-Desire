@@ -44,7 +44,18 @@ const EditButton = styled.button``;
 
 class Want extends React.Component {
   render() {
-    const { goodsName, url, img, price, place } = this.props;
+    const {
+      id,
+      goodsName,
+      img,
+      price,
+      url,
+      place,
+      itemIndex,
+      listIndex,
+      onClickEdit,
+      onDelete,
+    } = this.props;
     return (
       <div>
         <CardActionArea>
@@ -70,11 +81,16 @@ class Want extends React.Component {
         </CardActionArea>
         <CardActions>
           <TemporaryDrawer
+            id={id}
             goodsName={goodsName}
             url={url}
-            img={img}
-            price={price}
             place={place}
+            price={price}
+            img={img}
+            listIndex={listIndex}
+            itemIndex={itemIndex}
+            onClickEdit={onClickEdit}
+            onDelete={onDelete}
           />
         </CardActions>
       </div>

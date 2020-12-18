@@ -45,7 +45,7 @@ class SignUp extends React.Component {
         //spinner表示終了
         if (this._isMounted) this.setState({ loading: false });
         //Homeに移動
-        this.props.history.push("/"); //history.pushを使うためwithRouterしている
+        this.props.history.push("/home"); //history.pushを使うためwithRouterしている
       })
       .catch((error) => {
         //異常終了時
