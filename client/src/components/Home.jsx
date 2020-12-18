@@ -7,7 +7,6 @@ import Want from "./Want.jsx";
 import EditWant from "./EditWant.jsx";
 import Title from "./Title.jsx";
 import EditTitle from "./EditTitle.jsx";
-import Footer from "./Footer.jsx";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { PureComponent } from "react";
@@ -386,7 +385,6 @@ class Home extends React.Component {
           </DragDropContext>
         </Wrap>
         <button onClick={this.allDelete}>全消去</button>
-        <Footer />
       </Main>
     );
   }
@@ -540,7 +538,6 @@ class Home extends React.Component {
   };
 
   clickFormOpen = () => {
-    // this.props.history.push("/form");
     this.setState({ formOpen: true });
   };
   cancelAdd = () => {

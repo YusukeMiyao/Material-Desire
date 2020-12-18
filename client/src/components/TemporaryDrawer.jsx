@@ -56,6 +56,7 @@ const WantList = styled.div`
 
 const ButtonArea = styled.div`
   text-align: right;
+  margin: 16px;
 `;
 
 const ItemTable = styled.table`
@@ -65,12 +66,10 @@ const ItemTable = styled.table`
   margin: 8px auto 0;
   border-collapse: collapse;
   border: 1px solid #f5f5f5;
-    border-collapse: separate;
-    box-sizing: border-box;
-    text-indent: initial;
-    border-spacing: 2px;
-    
-}
+  border-collapse: separate;
+  box-sizing: border-box;
+  text-indent: initial;
+  border-spacing: 2px;
 `;
 
 const ItemTableTbody = styled.tbody`
@@ -79,11 +78,9 @@ const ItemTableTbody = styled.tbody`
 `;
 
 const ItemTableTr = styled.tr`
-      display: table-row;
-    vertical-align: inherit;
-    border-color: inherit;
-}
-
+  display: table-row;
+  vertical-align: inherit;
+  border-color: inherit;
 `;
 
 const ItemTableTh = styled.th`
@@ -92,11 +89,10 @@ const ItemTableTh = styled.th`
   font-weight: 400;
   background: #fafafa;
   border-collapse: collapse;
-    border: 1px solid #f5f5f5;
-    padding: 16px 8px;
-    display: table-cell;
-    vertical-align: inherit;
-}
+  border: 1px solid #f5f5f5;
+  padding: 16px 8px;
+  display: table-cell;
+  vertical-align: inherit;
 `;
 
 const ItemTableTd = styled.td`
@@ -114,8 +110,6 @@ const EditButton = styled(Button)`
   font-size: 14px;
   padding: 4px 16px;
   background-color: #03dac5;
-  position: absolute;
-  right: 8px;
   transition: 0.2s;
   :hover {
     background-color: #96d4ce;
@@ -127,8 +121,6 @@ const DeleteButton = styled(Button)`
   font-size: 14px;
   padding: 4px 16px;
   background-color: #fff;
-  position: absolute;
-  right: 8px;
   transition: 0.2s;
   :hover {
     background-color: #96d4ce;
@@ -195,7 +187,6 @@ export default function TemporaryDrawer(props) {
           );
         })}
       </WantImages>
-
       <WantTitle>{goodsName}</WantTitle>
       <WantList>
         <ItemTable>
@@ -226,12 +217,14 @@ export default function TemporaryDrawer(props) {
           </ItemTableTbody>
         </ItemTable>
       </WantList>
-      <DeleteButton startIcon={<DeleteIcon />} onClick={ClickDelete}>
-        Delete
-      </DeleteButton>
-      <EditButton startIcon={<EditIcon />} onClick={ClickEdit}>
-        Edit
-      </EditButton>
+      <ButtonArea>
+        <DeleteButton startIcon={<DeleteIcon />} onClick={ClickDelete}>
+          Delete
+        </DeleteButton>
+        <EditButton startIcon={<EditIcon />} onClick={ClickEdit}>
+          Edit
+        </EditButton>
+      </ButtonArea>
     </div>
   );
 

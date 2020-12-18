@@ -1,14 +1,22 @@
 import React from "react";
 import Icon from "../assets/images/Icon.png";
 import styled from "styled-components";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
 const ModalBg = styled.div`
   position: fixed;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: #ffffff;
   width: 100%;
   height: 100%;
   top: 0;
+  right: 0;
+  bottom: 0;
   left: 0;
+  overflow: auto;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,47 +24,64 @@ const ModalBg = styled.div`
 `;
 const ModalContent = styled.div`
   background-color: #ffffff;
-  width: 30%;
-  height: 70%;
-  min-height: 500px;
-  border: solid 5px #000000;
-  border-radius: 40px;
-  overflow: auto;
+  width: 100%;
+  max-width: 600px;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
-const ModalItem = styled.div`
-  margin: 20px auto;
-  width: 70%;
+const ModalItem = styled.form`
+  margin: 20px 8px;
+  width: calc(100% - 16px);
+  position: relative;
   img {
     width: 100%;
     height: auto;
     max-height: 180px;
     object-fit: cover;
     // 画像の位置を把握するため
-    border: solid 1px;
+    border: solid 1px #0000000a;
     // 画像の位置を把握するため
+  }
+`;
+const ImageArea = styled.div`
+  p {
+    font-size: 14px;
+    color: #00000099;
   }
 `;
 const InputArea = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 10px;
-  label {
+  margin-top: 16px;
+  > label {
     width: 100%;
     display: flex;
     align-items: center;
-    p {
-      width: 8em;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    ::before {
+      content: "";
+      border-top: solid 1px #0000001f;
+      width: 100vw;
+      margin: 0 -8px;
+    }
+    div {
+      width: 100%;
+      p {
+        margin: 8px 0 0 0;
+      }
+    }
+    > p {
+      width: 100%;
       display: flex;
       justify-content: space-between;
       margin: 10px 1em 10px 0;
+      font-size: 14px;
+      color: #00000099;
     }
     input {
-      margin-left: 1em;
-      border: none;
-      border-bottom: solid 1px #000000;
       width: 100%;
       :focus {
         outline: none;
@@ -66,37 +91,28 @@ const InputArea = styled.div`
 `;
 const ButtonArea = styled.div`
   text-align: right;
-  height: 30px;
+  margin-bottom: 20px;
 `;
-
-const CommonButton = styled.button`
-  min-width: 50px;
-  width: auto;
-  border: solid 1px #707070;
-  cursor: pointer;
+const CancelButton = styled(Fab)`
+  position: fixed;
+  bottom: 8px;
+  border: solid 1px #0000001f;
+  color: #03dac5;
   font-weight: bold;
-  padding: 5px;
-  p {
-    transition: all 0.3s;
-    margin: 0;
+  background-color: #fff;
+  transform: 0.2s;
+  :hover {
+    background-color: #96d4ce;
   }
 `;
-const CancelButton = styled(CommonButton)`
-  margin-right: 10px;
-  color: #34d0a6;
-  background-color: #ffffff;
-  :hover p {
-    margin: 5px;
-    border-bottom: solid 1px #34d0a6;
-  }
-`;
-const AddButton = styled(CommonButton)`
-  background-color: #34d0a6;
+const AddButton = styled(Button)`
+  background-color: #03dac5;
   color: #ffffff;
-  :hover p {
-    margin: 5px 8px;
-    border-bottom: solid 1px #ffffff;
-  }
+`;
+const ErrorMessage = styled.p`
+  margin: 0;
+  font-size: 14px;
+  color: red;
 `;
 class Form extends React.Component {
   constructor(props) {
@@ -123,109 +139,146 @@ class Form extends React.Component {
 
   render() {
     return (
-      <ModalBg onClick={this.clickCancel}>
-        <ModalContent onClick={this.stopPropagation}>
+      <ModalBg>
+        <ModalContent>
           <ModalItem>
-            {this.state.data.img.map((el, index) => {
-              return (
-                <img
-                  key={index}
-                  src={el.data}
-                  height={100}
-                  width={100}
-                  alt={el.name}
-                />
-              );
-            })}
-            <input
-              type="file"
-              name="img"
-              accept="image/*"
-              multiple
-              onChange={this.selectImages}
-              onClick={(e) => {
-                e.target.value = null;
-              }}
-            />
-            <button name="delete" onClick={this.selectImages}>
-              画像リセット
-            </button>
+            <ImageArea>
+              <p>欲しい物の画像</p>
+              {this.state.data.img.map((el, index) => {
+                return (
+                  <img
+                    key={index}
+                    src={el.data}
+                    height={100}
+                    width={100}
+                    alt={el.name}
+                  />
+                );
+              })}
+              <input
+                type="file"
+                name="img"
+                accept="image/*"
+                multiple
+                onChange={this.selectImages}
+                onClick={(e) => {
+                  e.target.value = null;
+                }}
+              />
+              <button name="delete" onClick={this.selectImages}>
+                画像リセット
+              </button>
+            </ImageArea>
             <InputArea>
               <label>
-                <p>
-                  <span>タ</span>
-                  <span>イ</span>
-                  <span>ト</span>
-                  <span>ル</span>
-                </p>
-                <span>:</span>
-                <input
+                <p>欲しい物の名前</p>
+                <TextField
+                  variant="outlined"
+                  size="small"
                   type="text"
                   name="goodsName"
+                  placeholder="40文字まで"
                   value={this.state.data.goodsName}
                   onChange={this.handleChange}
                 />
               </label>
               <label>
-                <p>
-                  <span>U</span>
-                  <span>R</span>
-                  <span>L</span>
-                </p>
-                <span>:</span>
-                <input
-                  type="url"
-                  name="url"
-                  value={this.state.data.url}
-                  onChange={this.handleChange}
-                  onBlur={this.checkUrlError}
-                />
+                <p>欲しい物の金額</p>
+                {/* {this.state.data.price !== "" ? "¥" : null} */}
+                {this.state.priceError ? (
+                  <TextField
+                    error
+                    variant="outlined"
+                    size="small"
+                    type="tel"
+                    name="price"
+                    helperText="半角数字のみ入力して下さい"
+                    value={this.state.data.price}
+                    onChange={this.handleChange}
+                    placeholder="半角数字のみ"
+                    onBlur={this.resetErrors}
+                  />
+                ) : (
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    type="tel"
+                    name="price"
+                    value={this.state.data.price}
+                    onChange={this.handleChange}
+                    placeholder="半角数字のみ"
+                    onBlur={this.resetErrors}
+                  />
+                )}
               </label>
-              {this.state.urlError ? <p>URLが正しくありません</p> : ""}
               <label>
-                <p>
-                  <span>場</span>
-                  <span>所</span>
-                </p>
-                <span>:</span>
-                <input
+                <p>URL</p>
+                {this.state.urlError ? (
+                  <TextField
+                    error
+                    variant="outlined"
+                    size="small"
+                    type="url"
+                    name="url"
+                    helperText="URLが正しくありません"
+                    value={this.state.data.url}
+                    onChange={this.handleChange}
+                    onBlur={this.checkUrlError}
+                  />
+                ) : (
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    type="url"
+                    name="url"
+                    placeholder="40文字まで"
+                    value={this.state.data.url}
+                    onChange={this.handleChange}
+                    onBlur={this.checkUrlError}
+                  />
+                )}
+              </label>
+              <label>
+                <p>場所</p>
+                <TextField
+                  variant="outlined"
+                  size="small"
                   type="text"
                   name="place"
+                  placeholder="40文字まで"
                   value={this.state.data.place}
                   onChange={this.handleChange}
                 />
               </label>
               <label>
-                <p>
-                  <span>値</span>
-                  <span>段</span>
-                </p>
-                <span>:</span>
-                {this.state.data.price !== "" ? "¥" : null}
-                <input
-                  type="tel"
-                  name="price"
-                  value={this.state.data.price}
+                <p>その他</p>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  type="text"
+                  name="other"
+                  placeholder="1000文字まで"
+                  value={this.state.data.place}
                   onChange={this.handleChange}
-                  placeholder="半角数字のみ"
-                  onBlur={this.resetErrors}
                 />
               </label>
-              {this.state.priceError ? <p>半角数字のみ入力して下さい</p> : ""}
+              {this.state.submitError ? (
+                <ErrorMessage>
+                  欲しいもの、URL、画像のどれか一つは入力して下さい
+                </ErrorMessage>
+              ) : (
+                ""
+              )}
             </InputArea>
             <ButtonArea>
-              <CancelButton onClick={this.clickCancel}>
-                <p>Cancel</p>
-              </CancelButton>
               <AddButton onClick={this.handleSubmit}>
-                <p>ADD</p>
+                <AddIcon />
+                登録
               </AddButton>
             </ButtonArea>
-            {this.state.submitError ? (
-              <p>欲しいもの、URL、画像のどれか一つは入力して下さい</p>
-            ) : (
-              ""
-            )}
+            <CancelButton size="small" onClick={this.clickCancel}>
+              <ArrowBackIcon />
+            </CancelButton>
           </ModalItem>
         </ModalContent>
       </ModalBg>
@@ -358,15 +411,11 @@ class Form extends React.Component {
         },
         count: 0,
       });
-      // this.props.history.push({ pathname: "/home", state: { data: data } });
     }
   };
   clickCancel = () => {
     const { onCancel } = this.props;
     onCancel();
-  };
-  stopPropagation = (e) => {
-    e.stopPropagation();
   };
 }
 
