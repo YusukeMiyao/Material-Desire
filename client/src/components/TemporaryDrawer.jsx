@@ -19,6 +19,7 @@ import Typography from "@material-ui/core/Typography";
 import styled from "styled-components";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import Swiper, { Navigation, Pagination } from "swiper";
 
 const WantTitle = styled(Typography)`
   font-size: 24px;
