@@ -19,7 +19,23 @@ import Typography from "@material-ui/core/Typography";
 import styled from "styled-components";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import Swiper, { Navigation, Pagination } from "swiper";
+import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import { useTheme } from "@material-ui/core/styles";
+
+// import "swiper/swiper-bundle.css";
+import "swiper/swiper-bundle.min.css";
+// import "swiper/components/navigation/navigation.min.css";
+// import "swiper/components/pagination/pagination.min.css";
+// import "swiper/components/scrollbar/scrollbar.min.css";
+// import "swiper/components/zoom/zoom.min.css";
+import { number } from "yup";
+
+SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
 const WantTitle = styled(Typography)`
   font-size: 24px;
@@ -128,6 +144,17 @@ const DeleteButton = styled(Button)`
   }
 `;
 
+// const CardFullImg = styled(CardMedia)`
+//   height: auto;
+//   width: 100%;
+// `;
+
+// const CardImg = styled(CardMedia)`
+//   transform: translate${(props) => (props.isSlided ? '(-90.4167px, -108.5px)scale(1.48222, 1.48222':)};
+//   transform-origin: 0px 0px;
+//   hight: ${(props) => (props.set ? "" : "")};
+// `;
+
 const useStyles = makeStyles({
   list: {
     width: 250,
@@ -144,6 +171,9 @@ export default function TemporaryDrawer(props) {
   const [state, setState] = React.useState({
     bottom: false,
   });
+  const [open, setOpen] = React.useState(false);
+  // const theme = useTheme();
+
   const { goodsName, url, img, price, place } = props;
 
   const toggleDrawer = (anchor, open) => (event) => {
@@ -167,27 +197,92 @@ export default function TemporaryDrawer(props) {
     onDelete(listIndex, itemIndex);
   };
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const list = (anchor) => (
     <div
       className={clsx(classes.list, {
         [classes.fullList]: anchor === "top" || anchor === "bottom",
       })}
       role="presentation"
-      onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <WantImages>
+      <Button onClick={toggleDrawer(anchor, false)}>閉じる</Button>
+
+      <Dialog fullScreen open={open} onClose={handleClose}>
+        <Button onClick={handleClose}>閉じる</Button>
         {img.map((el, index) => {
           return (
-            <CardMedia
-              component="img"
-              key={index}
-              image={el.data}
-              title={el.name}
-            />
+            <Swiper
+              spaceBetween={50}
+              slidesPerView="auto"
+              navigation
+              pagination={{
+                clickable: true,
+                type: "fraction",
+                // formatFractionTotal
+                // formatFractionCurrent?: (number: number) => number;
+              }}
+              scrollbar={{ draggable: true }}
+              // onSwiper={(swiper) => console.log(swiper)}
+              // onSlideChange={() => console.log("slide change")}
+              loop={img.length === 1 ? false : true}
+              loopedSlides={img.length}
+            >
+              <SwiperSlide
+              // zoom={true}
+              >
+                <CardMedia
+                  component="img"
+                  key={index}
+                  image={el.data}
+                  title={el.name}
+                />
+              </SwiperSlide>
+            </Swiper>
           );
         })}
-      </WantImages>
+      </Dialog>
+      <Swiper
+        spaceBetween={50}
+        slidesPerView="auto"
+        navigation
+        pagination={{
+          clickable: true,
+          type: "fraction",
+          // formatFractionTotal
+          // formatFractionCurrent?: (number: number) => number;
+        }}
+        scrollbar={{ draggable: true }}
+        // onSwiper={(swiper) => console.log(swiper)}
+        // onSlideChange={() => console.log("slide change")}
+
+        loop={img.length === 1 ? false : true}
+        loopedSlides={img.length}
+      >
+        {/* <WantImages> */}
+        {img.map((el, index) => {
+          return (
+            <SwiperSlide zoom={true}>
+              <CardActionArea onClick={handleClickOpen}>
+                <CardMedia
+                  component="img"
+                  key={index}
+                  image={el.data}
+                  title={el.name}
+                />
+              </CardActionArea>
+            </SwiperSlide>
+          );
+        })}
+        {/* </WantImages> */}
+      </Swiper>
       <WantTitle>{goodsName}</WantTitle>
       <WantList>
         <ItemTable>
