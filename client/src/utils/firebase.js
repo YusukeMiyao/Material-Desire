@@ -18,7 +18,7 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-const ui = new firebaseui.auth.AuthUI(firebase.auth());
+export const ui = new firebaseui.auth.AuthUI(firebase.auth());
 
 ui.start("#firebaseui-auth-container", {
   signInOptions: [
@@ -26,6 +26,11 @@ ui.start("#firebaseui-auth-container", {
     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
   ],
 });
+
+export const providerGoogle = new firebase.auth.GoogleAuthProvider();
+export const providerFacebook = new firebase.auth.FacebookAuthProvider();
+export const providerTwitter = new firebase.auth.TwitterAuthProvider();
+export const language = firebase.auth().languageCode = "ja";
 
 var database = firebase.database();
 
