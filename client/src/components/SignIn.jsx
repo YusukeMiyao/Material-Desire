@@ -12,13 +12,15 @@ import { Link, withRouter } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import firebase, {
-  providerTwitter,
-  providerGoogle,
-  providerFacebook,
-  ui,
-  language,
+  // providerTwitter,
+  // providerGoogle,
+  // providerFacebook,
+  // ui,
+  // language,
+  uiConfig,
 } from "../utils/firebase";
 import Auth from "../Auth";
+import FirebaseUIAuth from "react-firebaseui/StyledFirebaseAuth";
 
 class SignInOrUp extends React.Component {
   state = {
@@ -46,98 +48,98 @@ class SignInOrUp extends React.Component {
       });
   };
 
-  loginWithTwitter = () => {
-    firebase.auth().languageCode = "ja";
+  // loginWithTwitter = () => {
+  //   firebase.auth().languageCode = "ja";
 
-    firebase
-      .auth()
-      .signInWithPopup(providerTwitter)
-      .then((result) => {
-        this.props.history.push("/home");
+  //   firebase
+  //     .auth()
+  //     .signInWithPopup(providerTwitter)
+  //     .then((result) => {
+  //       this.props.history.push("/home");
 
-        // if (this._isMounted)
-        // this.setState({ loading: false });
-      })
-      .catch((error) => {
-        console.log(error);
-        if (this._isMounted) this.setState({ loading: false });
-        alert(error);
-      });
-    // firebase
-    //   .auth()
-    //   .signInWithRedirect(providerTwitter)
-    //   .getRedirectResult()
-    //   .then((result) => {
-    //     this.props.history.push("/home");
-    //     if (this._isMounted) this.setState({ loading: false });
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     if (this._isMounted) this.setState({ loading: false });
-    //     alert(error);
-    //   });
-  };
+  //       // if (this._isMounted)
+  //       // this.setState({ loading: false });
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       if (this._isMounted) this.setState({ loading: false });
+  //       alert(error);
+  //     });
+  //   // firebase
+  //   //   .auth()
+  //   //   .signInWithRedirect(providerTwitter)
+  //   //   .getRedirectResult()
+  //   //   .then((result) => {
+  //   //     this.props.history.push("/home");
+  //   //     if (this._isMounted) this.setState({ loading: false });
+  //   //   })
+  //   //   .catch((error) => {
+  //   //     console.log(error);
+  //   //     if (this._isMounted) this.setState({ loading: false });
+  //   //     alert(error);
+  //   //   });
+  // };
 
-  loginWithFacebook = () => {
-    firebase.auth().languageCode = "ja";
+  // loginWithFacebook = () => {
+  //   firebase.auth().languageCode = "ja";
 
-    firebase
-      .auth()
-      .signInWithPopup(providerFacebook)
-      .then((result) => {
-        this.props.history.push("/home");
-      })
-      .catch((error) => {
-        console.log(error);
-        if (this._isMounted) this.setState({ loading: false });
-        alert(error);
-      });
-    // firebase.auth().signInWithRedirect(providerFacebook);
-    // firebase
-    //   .auth()
-    //   .getRedirectResult()
-    //   .then((result) => {
-    //     this.props.history.push("/home");
-    //     if (this._isMounted) this.setState({ loading: false });
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     if (this._isMounted) this.setState({ loading: false });
-    //     alert(error);
-    //   });
-  };
+  //   firebase
+  //     .auth()
+  //     .signInWithPopup(providerFacebook)
+  //     .then((result) => {
+  //       this.props.history.push("/home");
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       if (this._isMounted) this.setState({ loading: false });
+  //       alert(error);
+  //     });
+  //   // firebase.auth().signInWithRedirect(providerFacebook);
+  //   // firebase
+  //   //   .auth()
+  //   //   .getRedirectResult()
+  //   //   .then((result) => {
+  //   //     this.props.history.push("/home");
+  //   //     if (this._isMounted) this.setState({ loading: false });
+  //   //   })
+  //   //   .catch((error) => {
+  //   //     console.log(error);
+  //   //     if (this._isMounted) this.setState({ loading: false });
+  //   //     alert(error);
+  //   //   });
+  // };
 
-  loginWithGoogle = () => {
-    firebase.auth().languageCode = "ja";
-    firebase
-      .auth()
-      .signInWithPopup(providerGoogle)
-      .then((result) => {
-        this.props.history.push("/home");
+  // loginWithGoogle = () => {
+  //   firebase.auth().languageCode = "ja";
+  //   firebase
+  //     .auth()
+  //     .signInWithPopup(providerGoogle)
+  //     .then((result) => {
+  //       this.props.history.push("/home");
 
-        // if (this._isMounted)
-        // this.setState({ loading: false });
-      })
-      .catch((error) => {
-        console.log(error);
-        if (this._isMounted) this.setState({ loading: false });
-        alert(error);
-      });
-    // firebase
-    //   .auth()
-    //   .signInWithRedirect(providerGoogle)
-    //   .then((result) => {
-    //     this.props.history.push("/home");
+  //       // if (this._isMounted)
+  //       // this.setState({ loading: false });
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //       if (this._isMounted) this.setState({ loading: false });
+  //       alert(error);
+  //     });
+  //   // firebase
+  //   //   .auth()
+  //   //   .signInWithRedirect(providerGoogle)
+  //   //   .then((result) => {
+  //   //     this.props.history.push("/home");
 
-    //     // if (this._isMounted)
-    //     // this.setState({ loading: false });
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //     if (this._isMounted) this.setState({ loading: false });
-    //     alert(error);
-    //   });
-  };
+  //   //     // if (this._isMounted)
+  //   //     // this.setState({ loading: false });
+  //   //   })
+  //   //   .catch((error) => {
+  //   //     console.log(error);
+  //   //     if (this._isMounted) this.setState({ loading: false });
+  //   //     alert(error);
+  //   //   });
+  // };
 
   componentDidMount = () => {
     this._isMounted = true;
@@ -212,11 +214,10 @@ class SignInOrUp extends React.Component {
                     />
                     ログイン
                   </Button>
-                  <ui>
-                    <Button onClick={this.loginWithTwitter}>twitter</Button>
-                    <Button onClick={this.loginWithFacebook}>facebook</Button>
-                    <Button onClick={this.loginWithGoogle}>google</Button>
-                  </ui>
+                  <FirebaseUIAuth
+                    uiConfig={uiConfig}
+                    firebaseAuth={firebase.auth()}
+                  />
                 </div>
               </Form>
             )}
