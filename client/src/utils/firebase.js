@@ -1,11 +1,14 @@
 import { styled } from '@material-ui/core';
+
 import firebase from 'firebase/app';
 import "firebase/auth";
 import "firebase/database";
 import "firebase/storage";
+import { Redirect } from 'react-router-dom';
+import Home from '../components/Home';
+
 
 var firebaseui = require('firebaseui');
-
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_DOMAIN,
@@ -19,57 +22,29 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-
-// export const ui = new firebaseui.auth.AuthUI(firebase.auth());
-
-// ui.start("#firebaseui-auth-container", {
-//   signInOptions: [
-//     firebase.auth.EmailAuthProvider.PROVIDER_ID,
-//     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-//     firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-//     firebase.auth.TwitterAuthProvider.PROVIDER_ID,
-//   ],
-//    signInFlow: "redirect",
-//       signInSuccessUrl: "/home",
-// });
-
 export const uiConfig = {
-  // callbacks: {
-  //   signInSuccessWithAuthResult: function(authResult, redirectUrl) {
-  //     // User successfully signed in.
-  //     // Return type determines whether we continue the redirect automatically
-  //     // or whether we leave that to developer to handle.
-  //     return true;
-  //   },
-  //   uiShown: function() {
-  //     // The widget is rendered.
-  //     // Hide the loader.
-  //     document.getElementById('loader').style.display = 'none';
-  //   }
-  // },
-  // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
   signInFlow: 'redirect',
   signInSuccessUrl: '/home',
   signInOptions: [
-    // Leave the lines as is for the providers you want to offer your users.
     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
     firebase.auth.FacebookAuthProvider.PROVIDER_ID,
     firebase.auth.TwitterAuthProvider.PROVIDER_ID,
-    { provider: firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID }
-
+   firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
   ],
-  
-  // Terms of service url.
-  // tosUrl: '',
+  autoUpgradeAnonymousUsers:false,
 };
 
-// ui.start('#firebaseui-auth-container', uiConfig);
-
-// export const providerGoogle = new firebase.auth.GoogleAuthProvider();
-// export const providerFacebook = new firebase.auth.FacebookAuthProvider();
-// export const providerTwitter = new firebase.auth.TwitterAuthProvider();
-// export const language = firebase.auth().languageCode = "ja";
-
+export const uiConfigSecand = {
+  signInFlow: 'redirect',
+  signInSuccessUrl: '/home',
+  signInOptions: [
+    firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+    firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+    firebase.auth.TwitterAuthProvider.PROVIDER_ID,
+  ],
+  signInSuccessUrl: '/home',
+  autoUpgradeAnonymousUsers:false,
+}
 var database = firebase.database();
 
 

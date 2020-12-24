@@ -10,7 +10,8 @@ import EditTitle from "./EditTitle.jsx";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { PureComponent } from "react";
-import firebase from "../utils/firebase";
+import firebase, { uiConfigSecand } from "../utils/firebase";
+import FirebaseUIAuth from "react-firebaseui/StyledFirebaseAuth";
 import { Button } from "reactstrap";
 import { array } from "yup";
 import Fab from "@material-ui/core/Fab";
@@ -41,15 +42,17 @@ class Home extends React.Component {
       count: 0,
       totalPrice: 0,
       formOpen: false,
+      isAnonymous: false,
     };
   }
 
   componentDidMount() {
-    // console.log(this.props.location.state.data);
-    var user = firebase.auth().currentUser;
-
-    if (user != null) {
-      const uid = user.uid;
+    const user = firebase.auth().currentUser;
+    console.log(user.uid);
+    console.log(user.isAnonymous);
+    if (user.isAnonymous === false) {
+      let userName = user.displayName;
+      let uid = user.uid;
       firebase
         .database()
         .ref("/users/" + uid)
@@ -78,6 +81,8 @@ class Home extends React.Component {
                 count: prev.count,
                 totalPrice: prev.totalPrice,
                 formOpen: false,
+                isAnonymous: false,
+                userName: userName,
               };
             });
           } else {
@@ -102,10 +107,37 @@ class Home extends React.Component {
               count: 0,
               totalPrice: 0,
               formOpen: false,
+              isAnonymous: false,
+              userName: userName,
             });
           }
         });
+    } else {
     }
+    this.setState({
+      lists: [
+        {
+          title: "Todo",
+          items: [],
+          editing: false,
+        },
+        {
+          title: "InProgress",
+          items: [],
+          editing: false,
+        },
+        {
+          title: "Done",
+          items: [],
+          editing: false,
+        },
+      ],
+      count: 0,
+      totalPrice: 0,
+      formOpen: false,
+      isAnonymous: true,
+      userName: "ゲスト",
+    });
   }
 
   render() {
@@ -290,6 +322,12 @@ class Home extends React.Component {
 
     return (
       <Main>
+        <div>{this.state.userName}さん</div>
+        {this.state.isAnonymous ? (
+          <div>ゲストアカウントではデータは残りません。</div>
+        ) : (
+          ""
+        )}
         <Button onClick={this.handleLogout}>ログアウト</Button>
         <FormOpenButton variant="extended" onClick={this.clickFormOpen}>
           <AddIcon /> ADD WISH
@@ -298,7 +336,6 @@ class Home extends React.Component {
           <TotalPrice>
             総額 ¥{this.state.totalPrice.toLocaleString()}
           </TotalPrice>
-          <div id="firebaseui-auth-container"></div>
           {this.state.formOpen ? (
             <Form onCancel={this.cancelAdd} onSubmit={this.imgUp} />
           ) : (
@@ -386,6 +423,17 @@ class Home extends React.Component {
           </DragDropContext>
         </Wrap>
         <button onClick={this.allDelete}>全消去</button>
+        {this.state.isAnonymous ? (
+          <div>
+            データを残すには新規登録してください
+            <FirebaseUIAuth
+              uiConfig={uiConfigSecand}
+              firebaseAuth={firebase.auth()}
+            />
+          </div>
+        ) : (
+          ""
+        )}
       </Main>
     );
   }
@@ -441,7 +489,9 @@ class Home extends React.Component {
     item.img = data.img;
     item.editing = false;
     await this.setState({ lists: lists });
-    this.saveList();
+    if (this.state.isAnonymous) {
+      return;
+    } else this.saveList();
     this.calculatePrice();
   };
 
@@ -450,7 +500,9 @@ class Home extends React.Component {
     const items = lists[listIndex].items;
     items.splice(itemIndex, 1);
     await this.setState({ lists: lists });
-    this.saveList();
+    if (this.state.isAnonymous) {
+      return;
+    } else this.saveList();
     this.calculatePrice();
   };
 
@@ -483,7 +535,9 @@ class Home extends React.Component {
     firebase.database().ref("TotalPrice/").set({
       totalPrice: this.state.totalPrice,
     });
-    this.saveList();
+    if (this.state.isAnonymous) {
+      return;
+    } else this.saveList();
   };
 
   clickEdit = (listIndex, itemIndex, editing) => {
@@ -506,7 +560,9 @@ class Home extends React.Component {
     await this.setState({
       totalPrice: total,
     });
-    this.saveList();
+    if (this.state.isAnonymous) {
+      return;
+    } else this.saveList();
   };
 
   saveList = () => {
@@ -534,7 +590,9 @@ class Home extends React.Component {
     lists[listIndex].title = title;
     lists[listIndex].editing = false;
     await this.setState({ lists: lists });
-    this.saveList();
+    if (this.state.isAnonymous) {
+      return;
+    } else this.saveList();
     this.calculatePrice();
   };
 

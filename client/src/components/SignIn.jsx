@@ -48,99 +48,6 @@ class SignInOrUp extends React.Component {
       });
   };
 
-  // loginWithTwitter = () => {
-  //   firebase.auth().languageCode = "ja";
-
-  //   firebase
-  //     .auth()
-  //     .signInWithPopup(providerTwitter)
-  //     .then((result) => {
-  //       this.props.history.push("/home");
-
-  //       // if (this._isMounted)
-  //       // this.setState({ loading: false });
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       if (this._isMounted) this.setState({ loading: false });
-  //       alert(error);
-  //     });
-  //   // firebase
-  //   //   .auth()
-  //   //   .signInWithRedirect(providerTwitter)
-  //   //   .getRedirectResult()
-  //   //   .then((result) => {
-  //   //     this.props.history.push("/home");
-  //   //     if (this._isMounted) this.setState({ loading: false });
-  //   //   })
-  //   //   .catch((error) => {
-  //   //     console.log(error);
-  //   //     if (this._isMounted) this.setState({ loading: false });
-  //   //     alert(error);
-  //   //   });
-  // };
-
-  // loginWithFacebook = () => {
-  //   firebase.auth().languageCode = "ja";
-
-  //   firebase
-  //     .auth()
-  //     .signInWithPopup(providerFacebook)
-  //     .then((result) => {
-  //       this.props.history.push("/home");
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       if (this._isMounted) this.setState({ loading: false });
-  //       alert(error);
-  //     });
-  //   // firebase.auth().signInWithRedirect(providerFacebook);
-  //   // firebase
-  //   //   .auth()
-  //   //   .getRedirectResult()
-  //   //   .then((result) => {
-  //   //     this.props.history.push("/home");
-  //   //     if (this._isMounted) this.setState({ loading: false });
-  //   //   })
-  //   //   .catch((error) => {
-  //   //     console.log(error);
-  //   //     if (this._isMounted) this.setState({ loading: false });
-  //   //     alert(error);
-  //   //   });
-  // };
-
-  // loginWithGoogle = () => {
-  //   firebase.auth().languageCode = "ja";
-  //   firebase
-  //     .auth()
-  //     .signInWithPopup(providerGoogle)
-  //     .then((result) => {
-  //       this.props.history.push("/home");
-
-  //       // if (this._isMounted)
-  //       // this.setState({ loading: false });
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       if (this._isMounted) this.setState({ loading: false });
-  //       alert(error);
-  //     });
-  //   // firebase
-  //   //   .auth()
-  //   //   .signInWithRedirect(providerGoogle)
-  //   //   .then((result) => {
-  //   //     this.props.history.push("/home");
-
-  //   //     // if (this._isMounted)
-  //   //     // this.setState({ loading: false });
-  //   //   })
-  //   //   .catch((error) => {
-  //   //     console.log(error);
-  //   //     if (this._isMounted) this.setState({ loading: false });
-  //   //     alert(error);
-  //   //   });
-  // };
-
   componentDidMount = () => {
     this._isMounted = true;
   };
@@ -218,6 +125,7 @@ class SignInOrUp extends React.Component {
                     uiConfig={uiConfig}
                     firebaseAuth={firebase.auth()}
                   />
+                  （ログインせずに試すにはこちら）
                 </div>
               </Form>
             )}
