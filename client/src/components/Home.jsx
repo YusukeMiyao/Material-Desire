@@ -7,13 +7,16 @@ import Want from "./Want.jsx";
 import EditWant from "./EditWant.jsx";
 import Title from "./Title.jsx";
 import EditTitle from "./EditTitle.jsx";
-import Footer from "./Footer.jsx";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import { PureComponent } from "react";
-import firebase from "../utils/firebase";
+import firebase, { uiConfigSecand } from "../utils/firebase";
+import FirebaseUIAuth from "react-firebaseui/StyledFirebaseAuth";
 import { Button } from "reactstrap";
 import { array } from "yup";
+import Fab from "@material-ui/core/Fab";
+import Card from "@material-ui/core/Card";
+import AddIcon from "@material-ui/icons/Add";
 
 class Home extends React.Component {
   constructor(props) {
@@ -39,14 +42,17 @@ class Home extends React.Component {
       count: 0,
       totalPrice: 0,
       formOpen: false,
+      isAnonymous: false,
     };
   }
 
   componentDidMount() {
-    var user = firebase.auth().currentUser;
-
-    if (user != null) {
-      const uid = user.uid;
+    const user = firebase.auth().currentUser;
+    console.log(user.uid);
+    console.log(user.isAnonymous);
+    if (user.isAnonymous === false) {
+      let userName = user.displayName;
+      let uid = user.uid;
       firebase
         .database()
         .ref("/users/" + uid)
@@ -75,6 +81,8 @@ class Home extends React.Component {
                 count: prev.count,
                 totalPrice: prev.totalPrice,
                 formOpen: false,
+                isAnonymous: false,
+                userName: userName,
               };
             });
           } else {
@@ -99,10 +107,37 @@ class Home extends React.Component {
               count: 0,
               totalPrice: 0,
               formOpen: false,
+              isAnonymous: false,
+              userName: userName,
             });
           }
         });
+    } else {
     }
+    this.setState({
+      lists: [
+        {
+          title: "Todo",
+          items: [],
+          editing: false,
+        },
+        {
+          title: "InProgress",
+          items: [],
+          editing: false,
+        },
+        {
+          title: "Done",
+          items: [],
+          editing: false,
+        },
+      ],
+      count: 0,
+      totalPrice: 0,
+      formOpen: false,
+      isAnonymous: true,
+      userName: "ゲスト",
+    });
   }
 
   render() {
@@ -219,40 +254,35 @@ class Home extends React.Component {
 
     const Main = styled.main``;
     const Wrap = styled.div`
-      width: 70%;
+      width: calc(100% - 16px);
       max-width: 1200px;
-      margin: 90px auto;
+      margin: 20px auto;
+      padding: 0 8px;
     `;
     const List = styled.div`
       background-color: ${(props) =>
-        props.isDraggingOver ? "lightblue" : "#F0F0F0"};
+        props.isDraggingOver ? "lightblue" : "#fff"};
       transition: background-color 0.2s ease;
-      border: 1px solid lightgray;
+      border-bottom: 1px solid gray;
       width: 100%;
       height: auto;
-      min-height: 120px;
+      /* min-height: 120px; */
       margin: 0 auto 20px;
-      padding: 20px 2% 0;
+      padding: 20px 0;
       display: flex;
       flex-wrap: wrap;
     `;
-    const Item = styled.div`
+    const Item = styled(Card)`
       background-color: ${(props) =>
         props.isDragging ? "lightgreen" : "white"};
-      width: 31%;
+      width: calc(100% / 3 - 5px);
       display: flex;
-      border: solid 1px #707070;
-      border-radius: 30px;
-      margin-bottom: 20px;
-      box-shadow: 0 0 30px 0 #b9b9b9;
-      height: 50%;
+      border-radius: 10px;
+      height: 100%;
       overflow: hidden;
       transition: all 0.3s;
-      :hover {
-        height: 95%;
-      }
       :nth-of-type(3n-1) {
-        margin: 0 3% 20px;
+        margin: 0 4px;
       }
     `;
     const Section = styled.div`
@@ -265,45 +295,47 @@ class Home extends React.Component {
     `;
     const Content = styled.div`
       width: 100%;
-      background: black;
-      color: white;
-      padding: 0 3em;
+      color: black;
     `;
     const TotalPrice = styled.p`
       width: fit-content;
-      border-bottom: solid 2px #707070;
+      color: #1d1d1ddd;
+      font-weight: bold;
+      margin-bottom: 0;
     `;
-    const FormOpenButton = styled.button`
-      padding: 10px 50px 10px 40px;
-      background-color: #ffffff;
-      border: solid 1px;
-      border-radius: 5px;
-      position: relative;
-      margin-bottom: 24px;
-      transition: all 0.3s;
+    const FormOpenButton = styled(Fab)`
+      position: fixed;
+      bottom: 8px;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 16px;
+      font-weight: bold;
       cursor: pointer;
-      ::after {
-        content: "+";
-        position: absolute;
-        right: 10px;
-      }
+      background-color: #03dac5;
+      color: white;
+      z-index: 2;
+      transition: 0.2s;
       :hover {
-        background-color: #000000;
-        color: #ffffff;
-      }
-      :focus {
-        outline: none;
+        background-color: #96d4ce;
       }
     `;
 
     return (
       <Main>
-        <Header />
-        <Concept />
+        <div>{this.state.userName}さん</div>
+        {this.state.isAnonymous ? (
+          <div>ゲストアカウントではデータは残りません。</div>
+        ) : (
+          ""
+        )}
         <Button onClick={this.handleLogout}>ログアウト</Button>
+        <FormOpenButton variant="extended" onClick={this.clickFormOpen}>
+          <AddIcon /> ADD WISH
+        </FormOpenButton>
         <Wrap>
-          <div id="firebaseui-auth-container"></div>
-          <FormOpenButton onClick={this.clickFormOpen}>ADD WISH</FormOpenButton>
+          <TotalPrice>
+            総額 ¥{this.state.totalPrice.toLocaleString()}
+          </TotalPrice>
           {this.state.formOpen ? (
             <Form onCancel={this.cancelAdd} onSubmit={this.imgUp} />
           ) : (
@@ -319,13 +351,6 @@ class Home extends React.Component {
               return (
                 <Section key={listIndex}>
                   <Content>
-                    {listIndex === 0 ? (
-                      <TotalPrice>
-                        総額 ¥{this.state.totalPrice.toLocaleString()}
-                      </TotalPrice>
-                    ) : (
-                      ""
-                    )}
                     {editing ? (
                       <EditTitle
                         title={title}
@@ -398,7 +423,17 @@ class Home extends React.Component {
           </DragDropContext>
         </Wrap>
         <button onClick={this.allDelete}>全消去</button>
-        <Footer />
+        {this.state.isAnonymous ? (
+          <div>
+            データを残すには新規登録してください
+            <FirebaseUIAuth
+              uiConfig={uiConfigSecand}
+              firebaseAuth={firebase.auth()}
+            />
+          </div>
+        ) : (
+          ""
+        )}
       </Main>
     );
   }
@@ -454,7 +489,9 @@ class Home extends React.Component {
     item.img = data.img;
     item.editing = false;
     await this.setState({ lists: lists });
-    this.saveList();
+    if (this.state.isAnonymous) {
+      return;
+    } else this.saveList();
     this.calculatePrice();
   };
 
@@ -463,7 +500,9 @@ class Home extends React.Component {
     const items = lists[listIndex].items;
     items.splice(itemIndex, 1);
     await this.setState({ lists: lists });
-    this.saveList();
+    if (this.state.isAnonymous) {
+      return;
+    } else this.saveList();
     this.calculatePrice();
   };
 
@@ -496,7 +535,9 @@ class Home extends React.Component {
     firebase.database().ref("TotalPrice/").set({
       totalPrice: this.state.totalPrice,
     });
-    this.saveList();
+    if (this.state.isAnonymous) {
+      return;
+    } else this.saveList();
   };
 
   clickEdit = (listIndex, itemIndex, editing) => {
@@ -519,7 +560,9 @@ class Home extends React.Component {
     await this.setState({
       totalPrice: total,
     });
-    this.saveList();
+    if (this.state.isAnonymous) {
+      return;
+    } else this.saveList();
   };
 
   saveList = () => {
@@ -547,7 +590,9 @@ class Home extends React.Component {
     lists[listIndex].title = title;
     lists[listIndex].editing = false;
     await this.setState({ lists: lists });
-    this.saveList();
+    if (this.state.isAnonymous) {
+      return;
+    } else this.saveList();
     this.calculatePrice();
   };
 
@@ -570,10 +615,10 @@ class Home extends React.Component {
 
     if (user != null) {
       const storageRef = firebase.storage().ref("/users/" + uid);
-      await storageRef.put(e.imgSub[0], (snapshot) => {
-        e.img = snapshot.ref.getDownloadURL();
-        this.handleSubmit(e);
-      });
+      // await storageRef.put(e.imgSub[0], (snapshot) => {
+      // e.img = snapshot.ref.getDownloadURL();
+      this.handleSubmit(e);
+      // });
     }
   };
 }

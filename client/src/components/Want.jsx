@@ -1,107 +1,81 @@
 import React from "react";
 import styled from "styled-components";
-
-const WantWrap = styled.div`
-  width: 100%;
-  padding: 20px;
-`;
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
+import Typography from "@material-ui/core/Typography";
+import TemporaryDrawer from "./TemporaryDrawer";
 
 const WantImages = styled.div`
-  display: flex;
+  /* display: flex;
   overflow: auto;
   img {
     width: calc(100% - 2px);
     height: 180px;
-    object-fit: cover;
-    // 画像の位置を把握するため
-    border: solid 1px black;
-    // 画像の位置を把握するため
-    :nth-child(n + 2) {
+    object-fit: cover; */
+  // 画像の位置を把握するため
+  /* border: solid 1px black; */
+  // 画像の位置を把握するため
+  /* :nth-child(n + 2) {
       margin-left: 20px;
     }
-  }
+  } */
 `;
-const WantTitle = styled.div`
-  display: flex;
-  align-items: center;
-  margin: 10px 0;
-  p {
-    width: 4em;
-    display: flex;
-    justify-content: space-between;
-    margin: 0;
-  }
+const WantTitle = styled(Typography)``;
+const Price = styled(Typography)`
+  color: #00000099;
+  font-size: 14px;
 `;
-const ButtonArea = styled.div`
-  text-align: right;
-`;
-const DeleteButton = styled.button`
-  margin-right: 10px;
-`;
-const EditButton = styled.button``;
-
 class Want extends React.Component {
   render() {
-    const { goodsName, url, img, price, place } = this.props;
+    const {
+      id,
+      goodsName,
+      img,
+      price,
+      url,
+      place,
+      itemIndex,
+      listIndex,
+      onClickEdit,
+      onDelete,
+    } = this.props;
     return (
-      <WantWrap>
+      <div>
         <WantImages>
           {img.map((el, index) => {
             return (
-              <img
+              <CardMedia
+                component="img"
                 key={index}
-                src={el.data}
-                alt={el.name}
-                height={100}
-                width={100}
+                image={el.data}
+                title={el.name}
               />
             );
           })}
         </WantImages>
-        <WantTitle>
-          <p>
-            <span>タ</span>
-            <span>イ</span>
-            <span>ト</span>
-            <span>ル</span>
-          </p>
-          <span>：{goodsName}</span>
-        </WantTitle>
-        <WantTitle>
-          <p>
-            <span>U</span>
-            <span>R</span>
-            <span>L</span>
-          </p>
-          <span>
-            ：
-            <a target="_blank" rel="noopener noreferrer" href={url}>
-              {url}
-            </a>
-          </span>
-        </WantTitle>
-        <WantTitle>
-          <p>
-            <span>場</span>
-            <span>所</span>
-          </p>
-          <span>：{place}</span>
-        </WantTitle>
-        <WantTitle>
-          <p>
-            <span>値</span>
-            <span>段</span>
-          </p>
-          <span>
-            ：{price !== "" ? "¥" : null}
+        <CardContent>
+          <WantTitle>{goodsName}</WantTitle>
+          <Price>
+            {price !== "" ? "¥" : "¥ - "}
             {price}
-          </span>
-        </WantTitle>
-        <ButtonArea>
-          <DeleteButton onClick={this.ClickDelete}>Delete</DeleteButton>
-          <EditButton onClick={this.ClickEdit}>Edit</EditButton>
-        </ButtonArea>
-      </WantWrap>
+          </Price>
+        </CardContent>
+        <CardActions>
+          <TemporaryDrawer
+            id={id}
+            goodsName={goodsName}
+            url={url}
+            place={place}
+            price={price}
+            img={img}
+            listIndex={listIndex}
+            itemIndex={itemIndex}
+            onClickEdit={onClickEdit}
+            onDelete={onDelete}
+          />
+        </CardActions>
+      </div>
     );
   }
 

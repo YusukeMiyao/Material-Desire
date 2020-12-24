@@ -1,10 +1,16 @@
 import React from "react";
 import styled from "styled-components";
+import TextField from "@material-ui/core/TextField";
+import ClearIcon from "@material-ui/icons/Clear";
+import AddIcon from "@material-ui/icons/Add";
 
 const EditTitleWrap = styled.div`
   display: flex;
   align-items: center;
-  margin: 1em 0;
+  margin: 0;
+`;
+const Title = styled(TextField)`
+  margin-right: 0.5em;
 `;
 
 class EditTitle extends React.Component {
@@ -20,17 +26,17 @@ class EditTitle extends React.Component {
   render() {
     return (
       <EditTitleWrap>
-        <input
+        <Title
+          variant="outlined"
+          size="small"
           type="text"
           name="title"
           value={this.state.title}
           onChange={this.handleChange}
           onBlur={this.checkBlankError}
         />
-        <button onClick={this.clickCancel}>キャンセル</button>
-        <button onClick={this.handleSubmit} onBlur={this.resetErrors}>
-          更新
-        </button>
+        <ClearIcon onClick={this.clickCancel} />
+        <AddIcon onClick={this.handleSubmit} onBlur={this.resetErrors} />
         {this.state.blankError ? <p>何か入力してください。</p> : ""}
       </EditTitleWrap>
     );

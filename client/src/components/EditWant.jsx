@@ -1,40 +1,86 @@
 import React from "react";
 import Icon from "../assets/images/Icon.png";
 import styled from "styled-components";
+import TextField from "@material-ui/core/TextField";
+import Fab from "@material-ui/core/Fab";
+import Button from "@material-ui/core/Button";
+import AddIcon from "@material-ui/icons/Add";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import CardMedia from "@material-ui/core/CardMedia";
+import Card from "@material-ui/core/Card";
 
-const EditWrap = styled.div`
+const ModalBg = styled.div`
+  position: fixed;
+  background-color: #ffffff;
   width: 100%;
-  padding: 20px;
+  height: 100%;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
 `;
-const EditImages = styled.div`
+const ModalContent = styled.div`
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  position: absolute;
+  top: 0;
+`;
+const ModalItem = styled.form`
+  margin: 20px 8px;
+  width: calc(100% - 16px);
+  position: relative;
+`;
+const ImageArea = styled.div`
+  > p {
+    font-size: 14px;
+    color: #00000099;
+  }
   img {
     width: 100%;
-    height: auto;
-    max-height: 180px;
+    height: 128px;
     object-fit: cover;
     // 画像の位置を把握するため
-    border: solid 1px;
+    border: solid 1px #0000000a;
     // 画像の位置を把握するため
   }
 `;
-const EditArea = styled.div`
+const InputArea = styled.div`
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 10px;
-  label {
+  margin-top: 16px;
+  > label {
     width: 100%;
     display: flex;
     align-items: center;
-    p {
-      width: 8em;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    ::before {
+      content: "";
+      border-top: solid 1px #0000001f;
+      width: 100vw;
+      margin: 0 -8px;
+    }
+    div {
+      width: 100%;
+      p {
+        margin: 8px 0 0 0;
+      }
+    }
+    > p {
+      width: 100%;
       display: flex;
       justify-content: space-between;
       margin: 10px 1em 10px 0;
+      font-size: 14px;
+      color: #00000099;
     }
     input {
-      margin-left: 1em;
-      border: none;
-      border-bottom: solid 1px #000000;
       width: 100%;
       :focus {
         outline: none;
@@ -44,11 +90,58 @@ const EditArea = styled.div`
 `;
 const ButtonArea = styled.div`
   text-align: right;
+  margin-bottom: 20px;
 `;
-const CancelButton = styled.button`
-  margin-right: 10px;
+const CancelButton = styled(Fab)`
+  position: fixed;
+  bottom: 8px;
+  border: solid 1px #0000001f;
+  color: #03dac5;
+  font-weight: bold;
+  background-color: #fff;
+  transform: 0.2s;
+  :hover {
+    background-color: #03dac5;
+    border: #03dac5;
+    svg {
+      color: #fff;
+    }
+  }
 `;
-const UpdateButton = styled.button``;
+const AddButton = styled(Button)`
+  background-color: #03dac5;
+  color: #ffffff;
+  :hover {
+    background-color: #96d4ce;
+  }
+`;
+const ErrorMessage = styled.p`
+  margin: 0;
+  font-size: 14px;
+  color: red;
+`;
+const CardWrap = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+`;
+const CardItem = styled(Card)`
+  width: calc(100% / 3 - 5px);
+  border-radius: 10px;
+  height: auto;
+  transition: all 0.3s;
+  margin-bottom: 8px;
+  :nth-of-type(3n-1) {
+    margin: 0 4px 8px;
+  }
+`;
+const DeleteButton = styled.p`
+  text-align: center;
+  color: #284ff0de;
+  font-size: 16px;
+  margin: 10px;
+`;
+
 class EditWant extends React.Component {
   constructor(props) {
     super(props);
@@ -67,103 +160,158 @@ class EditWant extends React.Component {
       selectedImages: [],
     };
   }
-
   render() {
     return (
-      <EditWrap>
-        <EditArea>
-          <EditImages>
-            {this.state.data.img.map((el, index) => {
-              return (
-                <img
-                  key={index}
-                  src={el.data}
-                  height={100}
-                  width={100}
-                  alt={el.name}
-                  onClick={this.selectImages}
+      <ModalBg>
+        <ModalContent>
+          <ModalItem>
+            <ImageArea>
+              <p>欲しい物の画像</p>
+              <CardWrap>
+                {this.state.data.img.map((el, index) => {
+                  return (
+                    <CardItem>
+                      <CardMedia
+                        component="img"
+                        key={index}
+                        image={el.data}
+                        title={el.name}
+                      />
+                      <DeleteButton>削除</DeleteButton>
+                    </CardItem>
+                  );
+                })}
+              </CardWrap>
+              <input
+                type="file"
+                name="img"
+                accept="image/*"
+                multiple
+                onChange={this.handleChange}
+                onClick={(e) => {
+                  e.target.value = null;
+                }}
+              />
+              {/* <button onClick={this.deleteImages}>選択画像削除</button>
+              <button name="delete" onClick={this.handleChange}>
+                画像リセット
+              </button> */}
+            </ImageArea>
+            <InputArea>
+              <label>
+                <p>欲しい物の名前</p>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  type="text"
+                  name="goodsName"
+                  placeholder="40文字まで"
+                  value={this.state.data.goodsName}
+                  onChange={this.handleChange}
                 />
-              );
-            })}
-            <button onClick={this.deleteImages}>選択画像削除</button>
-            <button name="delete" onClick={this.handleChange}>
-              画像リセット
-            </button>
-          </EditImages>
-          <label>
-            <p>
-              <span>タ</span>
-              <span>イ</span>
-              <span>ト</span>
-              <span>ル</span>
-            </p>
-            <span>：</span>
-            <input
-              type="text"
-              name="goodsName"
-              value={this.state.data.goodsName}
-              onChange={this.handleChange}
-            />
-          </label>
-          <label>
-            <p>
-              <span>U</span>
-              <span>R</span>
-              <span>L</span>
-            </p>
-            <span>：</span>
-            <input
-              type="url"
-              name="url"
-              value={this.state.data.url}
-              onChange={this.handleChange}
-              onBlur={this.checkUrlError}
-            />
-            {this.state.urlError ? <p>URLが正しくありません</p> : ""}
-          </label>
-          <label>
-            <p>
-              <span>場</span>
-              <span>所</span>
-            </p>
-            <span>：</span>
-            <input
-              type="place"
-              name="place"
-              value={this.state.data.place}
-              onChange={this.handleChange}
-            />
-          </label>
-          <label>
-            <p>
-              <span>値</span>
-              <span>段</span>
-            </p>
-            <span>：</span>
-            {this.state.data.price !== "" ? "¥" : null}
-            <input
-              type="text"
-              name="price"
-              value={this.state.data.price}
-              onChange={this.handleChange}
-              placeholder="半角数字のみ"
-              onBlur={this.resetErrors}
-            />
-            {this.state.priceError ? <p>半角数字のみ入力して下さい</p> : ""}
-          </label>
-        </EditArea>
-        <ButtonArea>
-          <CancelButton onClick={this.clickCancel}>Cancel</CancelButton>
-          <UpdateButton onClick={this.handleSubmit} onBlur={this.resetErrors}>
-            Update
-          </UpdateButton>
-        </ButtonArea>
-        {this.state.submitError ? (
-          <p>欲しいもの、URL、画像のどれか一つは入力して下さい</p>
-        ) : (
-          ""
-        )}
-      </EditWrap>
+              </label>
+              <label>
+                <p>欲しい物の金額</p>
+                {/* {this.state.data.price !== "" ? "¥" : null} */}
+                {this.state.priceError ? (
+                  <TextField
+                    error
+                    variant="outlined"
+                    size="small"
+                    type="tel"
+                    name="price"
+                    helperText="半角数字のみ入力して下さい"
+                    value={this.state.data.price}
+                    onChange={this.handleChange}
+                    placeholder="半角数字のみ"
+                    onBlur={this.resetErrors}
+                  />
+                ) : (
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    type="tel"
+                    name="price"
+                    value={this.state.data.price}
+                    onChange={this.handleChange}
+                    placeholder="半角数字のみ"
+                    onBlur={this.resetErrors}
+                  />
+                )}
+              </label>
+              <label>
+                <p>URL</p>
+                {this.state.urlError ? (
+                  <TextField
+                    error
+                    variant="outlined"
+                    size="small"
+                    type="url"
+                    name="url"
+                    helperText="URLが正しくありません"
+                    placeholder="40文字まで"
+                    value={this.state.data.url}
+                    onChange={this.handleChange}
+                    onBlur={this.checkUrlError}
+                  />
+                ) : (
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    type="url"
+                    name="url"
+                    placeholder="40文字まで"
+                    value={this.state.data.url}
+                    onChange={this.handleChange}
+                    onBlur={this.checkUrlError}
+                  />
+                )}
+              </label>
+              <label>
+                <p>場所</p>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  type="text"
+                  name="place"
+                  placeholder="40文字まで"
+                  value={this.state.data.place}
+                  onChange={this.handleChange}
+                />
+              </label>
+              <label>
+                <p>その他</p>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  type="text"
+                  name="other"
+                  multiline
+                  placeholder="1000文字まで"
+                  value={this.state.data.place}
+                  onChange={this.handleChange}
+                />
+              </label>
+              {this.state.submitError ? (
+                <ErrorMessage>
+                  欲しいもの、URL、画像のどれか一つは入力して下さい
+                </ErrorMessage>
+              ) : (
+                ""
+              )}
+            </InputArea>
+            <ButtonArea>
+              <AddButton onClick={this.handleSubmit} onBlur={this.resetErrors}>
+                <AddIcon />
+                登録
+              </AddButton>
+            </ButtonArea>
+            <CancelButton size="small" onClick={this.clickCancel}>
+              <ArrowBackIcon />
+            </CancelButton>
+          </ModalItem>
+        </ModalContent>
+      </ModalBg>
     );
   }
 
@@ -274,12 +422,13 @@ class EditWant extends React.Component {
     // TODO
     console.log(e);
   };
-  
+
   resetImages = () => {
     this.state.data.img = [{ name: "icon", data: Icon }];
     this.setState({ data: this.state.data });
   };
-  handleSubmit = () => {
+  handleSubmit = (e) => {
+    e.preventDefault();
     const { listIndex, itemIndex, onSubmit } = this.props;
     if (
       this.state.data.goodsName === "" &&

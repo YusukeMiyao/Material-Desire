@@ -62,7 +62,7 @@ class Auth extends React.Component {
             return this.props.children;
         } else {
             //してないとき（ログイン画面にリダイレクト）
-            return <Redirect to="/signin" />
+            return <Redirect to="/" />
         }
     }
 }
