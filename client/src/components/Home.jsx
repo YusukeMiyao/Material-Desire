@@ -665,7 +665,7 @@ class Home extends React.Component {
 
   imgUp = async (e) => {
     if (this.state.isAnonymous) {
-      return this.handleSubmit(e);
+      this.handleSubmit(e);
     } else {
       var user = firebase.auth().currentUser;
       const uid = user.uid;
@@ -673,26 +673,6 @@ class Home extends React.Component {
 
       if (user != null) {
         const storageRef = firebase.storage().ref("/users/" + uid);
-
-        // let files = Array.from(e.imgSub);
-        // files.map((File, index) => {
-        //   console.log(File);
-        //   storageRef
-        //     .child("images/" + this.state.count + File.name)
-        //     .put(File)
-        //     .then((snapshot) => {
-        //       snapshot.ref.getDownloadURL().then((downloadURL) => {
-        //         this.setState({
-        //           image: [
-        //             {
-        //               ...(this.state.image[0].url || []),
-        //               downloadURL,
-        //             },
-        //           ],
-        //         });
-        //       });
-        //     });
-        // });
 
         let files = Array.from(e.imgSub);
         files.map((File, index) => {
@@ -707,11 +687,6 @@ class Home extends React.Component {
               });
             });
         });
-
-        //  this.setState({
-        //    image: { ...this.state.image[downloadURL, file.name] }
-
-        //  })
         setTimeout(() => {
           console.log(this.state);
           this.handleSubmit(e);

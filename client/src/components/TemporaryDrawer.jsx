@@ -256,13 +256,8 @@ export default function TemporaryDrawer(props) {
         pagination={{
           clickable: true,
           type: "fraction",
-          // formatFractionTotal
-          // formatFractionCurrent?: (number: number) => number;
         }}
         scrollbar={{ draggable: true }}
-        // onSwiper={(swiper) => console.log(swiper)}
-        // onSlideChange={() => console.log("slide change")}
-
         loop={img.length === 1 ? false : true}
         loopedSlides={img.length}
       >

@@ -9,6 +9,13 @@ import AddIcon from "@material-ui/icons/Add";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
+import FormControl from "@material-ui/core/FormControl";
+import Input from "@material-ui/core/Input";
+import InputLabel from "@material-ui/core/InputLabel";
+
+import ImageIcon from "@material-ui/icons/Image";
+import { CardActions } from "@material-ui/core";
+import { array } from "yup";
 
 const ModalBg = styled.div`
   position: fixed;
@@ -136,12 +143,22 @@ const CardItem = styled(Card)`
     margin: 0 4px 8px;
   }
 `;
-const DeleteButton = styled.p`
+const DeleteButton = styled(Button)`
   text-align: center;
-  color: #284ff0de;
+  // color: #284ff0de;
   font-size: 16px;
   margin: 10px;
 `;
+
+const ImgLabel = styled(InputLabel)`
+  padding: 15px;
+  max-width: 120px;
+  text-align: center;
+  display: block;
+  background-color: #f1f1f1;
+  color: #73a9ff;
+`;
+
 class Form extends React.Component {
   constructor(props) {
     super(props);
@@ -151,12 +168,14 @@ class Form extends React.Component {
         url: "",
         price: "",
         img: [
-          {
-            name: "icon",
-            data: Icon,
-          },
+          // {
+          //   // // name: "icon",
+          //   // // data: Icon,
+          //   // name: "",
+          //   // data: '',
+          // },
         ],
-        imgSub: "",
+        imgSub: [],
         imgSubName: "",
         place: "",
       },
@@ -164,6 +183,7 @@ class Form extends React.Component {
       priceError: false,
       submitError: false,
       urlError: false,
+      imgLimited: false,
     };
   }
 
@@ -184,28 +204,50 @@ class Form extends React.Component {
                         image={el.data}
                         title={el.name}
                       />
-                      <DeleteButton>削除</DeleteButton>
+                      <DeleteButton
+                        color="primary"
+                        name="delete"
+                        onClick={this.selectDelete}
+                      >
+                        削除
+                      </DeleteButton>
                     </CardItem>
                   );
                 })}
               </CardWrap>
-              <input
-                type="file"
-                name="img"
-                accept="image/*"
-                multiple
-                onChange={this.selectImages}
-                onClick={(e) => {
-                  e.target.value = null;
-                }}
-              />
-              <button name="delete" onClick={this.selectImages}>
+              {this.state.imgLimited ? (
+                ""
+              ) : (
+                <FormControl>
+                  <ImgLabel htmlFor="img-input">
+                    <CardMedia>
+                      <ImageIcon />
+                      <input
+                        id="img-input"
+                        hidden
+                        type="file"
+                        name="img"
+                        accept="image/*"
+                        multiple
+                        onChange={this.selectImages}
+                        onClick={(e) => {
+                          e.target.value = null;
+                        }}
+                      />
+                    </CardMedia>
+                  </ImgLabel>
+                </FormControl>
+              )}
+              {/* <button name="delete" onClick={this.selectImages}>
                 画像リセット
-              </button>
+              </button> */}
             </ImageArea>
             <InputArea>
               <label>
-                <p>欲しい物の名前</p>
+                <p>
+                  欲しい物の名前<a>必須</a>
+                </p>
+
                 <TextField
                   variant="outlined"
                   size="small"
@@ -299,9 +341,7 @@ class Form extends React.Component {
                 />
               </label>
               {this.state.submitError ? (
-                <ErrorMessage>
-                  欲しいもの、URL、画像のどれか一つは入力して下さい
-                </ErrorMessage>
+                <ErrorMessage>欲しい物の名前は必須です</ErrorMessage>
               ) : (
                 ""
               )}
@@ -349,6 +389,9 @@ class Form extends React.Component {
     switch (e.target.name) {
       case "goodsName":
         data.goodsName = e.target.value;
+        if (data.goodsName > 41) {
+          this.setState({ textLimitedError: true });
+        }
         break;
       case "url":
         data.url = e.target.value;
@@ -399,6 +442,10 @@ class Form extends React.Component {
 
   selectImages = async (e) => {
     const files = e.target.files;
+    let ArrayFiles = Array.from(files);
+    let newFiles = [...(this.state.data.imgSub || []), ...ArrayFiles];
+    let prevImg = [...(this.state.data.img || [])];
+    console.log(newFiles);
     let count = this.state.count;
     count++;
     // var user = firebase.auth().currentUser;
@@ -406,34 +453,26 @@ class Form extends React.Component {
     // firebase.database().ref("/users/" + uid);
     if (files.length > 0) {
       // 初回追加時に初期画像を削除
-      if (count === 1) {
-        this.state.data.img.splice(0, 1);
-      }
-      for (const file of files) {
-        this.state.data.img.splice(1, 0, {
+      // if (count === 1) {
+      //   this.state.data.img.splice(0, 1);
+      // }
+      for (const file of newFiles) {
+        prevImg.splice(1, 0, {
           name: file.name,
           data: URL.createObjectURL(file),
         });
-        this.state.data.imgSubName = [...this.state.data.imgSubName, file.name];
       }
-
-      this.state.data.imgSub = files;
-      // if (user != null) {
-      //   const storageRef = firebase.storage().ref("/users/" + uid);
-      //   const files = Array.from(this.state.data.imgSub);
-      //   files.map((data, index) => {
-      //     storageRef
-      //       .child("images/" + this.state.count + data.name)
-      //       .put(data)
-      //       .then((snapshot) => {
-      //         snapshot.ref.getDownloadURL().then((downloadURL) => {
-      //           const url = downloadURL;
-      //           this.state.data.img[index].data = url;
-      //         });
-      //       });
-      //   });
-      // }
-      // createObjectURLで、fileを読み込む
+      if (prevImg.length > 5) {
+        prevImg.splice(5);
+      }
+      if (newFiles.length > 5) {
+        newFiles.splice(5);
+      }
+      if (newFiles.length > 4) {
+        this.state.imgLimited = true;
+      }
+      this.state.data.imgSub = newFiles;
+      this.state.data.img = prevImg;
     } else {
       this.state.data.img = [{ name: "icon", data: Icon }];
       this.state.data.imgSub = "";
@@ -441,6 +480,22 @@ class Form extends React.Component {
     this.setState({
       data: this.state.data,
       count: count,
+      imgLimited: this.state.imgLimited,
+    });
+  };
+
+  selectDelete = (index) => {
+    this.state.data.img.splice(index, 1);
+    let newFiles = Array.from(this.state.data.imgSub);
+    newFiles.splice(index, 1);
+    this.state.data.imgSub = newFiles;
+    if (this.state.data.imgSub.length > 4) {
+      this.state.imgLimited = true;
+    } else {
+      this.state.imgLimited = false;
+    }
+    this.setState({
+      data: this.state.data,
     });
   };
 
@@ -467,6 +522,7 @@ class Form extends React.Component {
           price: "",
           img: [{ name: "icon", data: Icon }],
           imgSub: "",
+          imgLimited: false,
         },
         count: 0,
       });

@@ -43,7 +43,7 @@ class Want extends React.Component {
     return (
       <div>
         <WantImages>
-          {img[0].map((el, index) => {
+          {img[0].map((el,url,name, index) => {
             {
               console.log(img);
             }
