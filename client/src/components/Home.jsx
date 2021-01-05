@@ -120,31 +120,31 @@ class Home extends React.Component {
           }
         });
     } else {
+      this.setState({
+        lists: [
+          {
+            title: "Todo",
+            items: [],
+            editing: false,
+          },
+          {
+            title: "InProgress",
+            items: [],
+            editing: false,
+          },
+          {
+            title: "Done",
+            items: [],
+            editing: false,
+          },
+        ],
+        count: 0,
+        totalPrice: 0,
+        formOpen: false,
+        userName: "ゲスト",
+        isAnonymous: true,
+      });
     }
-    this.setState({
-      lists: [
-        {
-          title: "Todo",
-          items: [],
-          editing: false,
-        },
-        {
-          title: "InProgress",
-          items: [],
-          editing: false,
-        },
-        {
-          title: "Done",
-          items: [],
-          editing: false,
-        },
-      ],
-      count: 0,
-      totalPrice: 0,
-      formOpen: false,
-      isAnonymous: true,
-      userName: "ゲスト",
-    });
   }
 
   render() {
@@ -664,6 +664,8 @@ class Home extends React.Component {
   };
 
   imgUp = async (e) => {
+    let fileName = [];
+
     if (this.state.isAnonymous) {
       this.handleSubmit(e);
     } else {
@@ -675,22 +677,46 @@ class Home extends React.Component {
         const storageRef = firebase.storage().ref("/users/" + uid);
 
         let files = Array.from(e.imgSub);
+        // files.map((File, index) => {
+        //   console.log(File);
+        //   storageRef
+        //     .child("images/" + this.state.count + File.name)
+        //     .put(File)
+        //     .then((snapshot) => {
+        //       snapshot.ref.getDownloadURL().then((downloadURL) => {
+        //         let image = [{ name: File.name, url: downloadURL }];
+        //         this.state.image = [...(this.state.image || []), image];
+        //       });
+        //     });
+        // });
+
         files.map((File, index) => {
           console.log(File);
-          storageRef
-            .child("images/" + this.state.count + File.name)
-            .put(File)
-            .then((snapshot) => {
-              snapshot.ref.getDownloadURL().then((downloadURL) => {
-                let image = [{ name: File.name, url: downloadURL }];
-                this.state.image = [...(this.state.image || []), image];
-              });
-            });
+          storageRef.child("images/" + this.state.count + File.name).put(File);
+          let ext = File.name.split(".").pop();
+          let imgName = File.name.replace(`.${ext}`, "");
+          let newImgName = `${imgName}_200x200.${ext}`;
+          fileName = [...fileName, newImgName];
+          console.log(fileName);
         });
+        setTimeout(() => {
+          fileName.map((el) => {
+            console.log(el);
+            storageRef
+              .child("images/" + this.state.count + el)
+              .getDownloadURL()
+              .then((downloadURL) => {
+                let image = [{ name: el, url: downloadURL }];
+                this.state.image = [...(this.state.image || []), image];
+                console.log(image);
+              });
+          });
+        }, 10000);
+
         setTimeout(() => {
           console.log(this.state);
           this.handleSubmit(e);
-        }, 3000);
+        }, 11000);
         // Promise.all(FilesMap).then(() => {
         //   this.handleSubmit(e)
         //   console.log('promiseall')

@@ -453,9 +453,9 @@ class Form extends React.Component {
     // firebase.database().ref("/users/" + uid);
     if (files.length > 0) {
       // 初回追加時に初期画像を削除
-      // if (count === 1) {
-      //   this.state.data.img.splice(0, 1);
-      // }
+      if (count === 1) {
+        this.state.data.img.splice(0, 1);
+      }
       for (const file of newFiles) {
         prevImg.splice(1, 0, {
           name: file.name,
