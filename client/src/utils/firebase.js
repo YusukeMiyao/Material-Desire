@@ -1,14 +1,9 @@
-import { styled } from '@material-ui/core';
-
-import firebase from 'firebase/app';
+import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
 import "firebase/storage";
-import { Redirect } from 'react-router-dom';
-import Home from '../components/Home';
 
-
-var firebaseui = require('firebaseui');
+var firebaseui = require("firebaseui");
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_DOMAIN,
@@ -23,30 +18,27 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 export const uiConfig = {
-  signInFlow: 'redirect',
-  signInSuccessUrl: '/home',
+  signInFlow: "popup",
+  signInSuccessUrl: "/home",
   signInOptions: [
     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
     firebase.auth.FacebookAuthProvider.PROVIDER_ID,
     firebase.auth.TwitterAuthProvider.PROVIDER_ID,
-   firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID
+    firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID,
   ],
-  autoUpgradeAnonymousUsers:false,
+  autoUpgradeAnonymousUsers: false,
 };
 
 export const uiConfigSecand = {
-  signInFlow: 'redirect',
-  signInSuccessUrl: '/home',
+  signInFlow: "popup",
+  signInSuccessUrl: "/home",
   signInOptions: [
     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
     firebase.auth.FacebookAuthProvider.PROVIDER_ID,
     firebase.auth.TwitterAuthProvider.PROVIDER_ID,
   ],
-  signInSuccessUrl: '/home',
-  autoUpgradeAnonymousUsers:false,
-}
+  autoUpgradeAnonymousUsers: false,
+};
 var database = firebase.database();
-
-
 
 export default firebase;
