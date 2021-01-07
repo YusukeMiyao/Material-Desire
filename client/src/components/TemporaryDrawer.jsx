@@ -174,7 +174,7 @@ export default function TemporaryDrawer(props) {
   const [open, setOpen] = React.useState(false);
   // const theme = useTheme();
 
-  const { goodsName, url, img, price, place } = props;
+  const { goodsName, url, img, price, place, other } = props;
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (
@@ -304,6 +304,13 @@ export default function TemporaryDrawer(props) {
               <ItemTableTd>
                 {place === "" ? "-" : ""}
                 {place}
+              </ItemTableTd>
+            </ItemTableTr>
+            <ItemTableTr>
+              <ItemTableTh>その他</ItemTableTh>
+              <ItemTableTd>
+                {other === "" ? "-" : ""}
+                {other}
               </ItemTableTd>
             </ItemTableTr>
           </ItemTableTbody>

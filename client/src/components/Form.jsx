@@ -176,8 +176,8 @@ class Form extends React.Component {
           // },
         ],
         imgSub: [],
-        imgSubName: "",
         place: "",
+        other: "",
       },
       count: 0,
       priceError: false,
@@ -195,6 +195,7 @@ class Form extends React.Component {
             <ImageArea>
               <p>欲しい物の画像</p>
               <CardWrap>
+                {console.log(this.state.data.img)}
                 {this.state.data.img.map((el, index) => {
                   return (
                     <CardItem>
@@ -336,7 +337,7 @@ class Form extends React.Component {
                   name="other"
                   multiline
                   placeholder="1000文字まで"
-                  value={this.state.data.place}
+                  value={this.state.data.other}
                   onChange={this.handleChange}
                 />
               </label>
@@ -389,8 +390,8 @@ class Form extends React.Component {
     switch (e.target.name) {
       case "goodsName":
         data.goodsName = e.target.value;
-        if (data.goodsName > 41) {
-          this.setState({ textLimitedError: true });
+        if (data.goodsName.length > 1000) {
+          return;
         }
         break;
       case "url":
@@ -406,9 +407,15 @@ class Form extends React.Component {
         } else if (data.url.length <= 0) {
           this.resetErrors();
         }
+        if (data.url.length > 1000) {
+          return;
+        }
         break;
       case "place":
         data.place = e.target.value;
+        if (data.place.length > 1000) {
+          return;
+        }
         break;
       case "price":
         let price = e.target.value.replace(/,/g, "");
@@ -425,7 +432,17 @@ class Form extends React.Component {
         } else {
           this.setState({ priceError: true });
         }
+
+        if (data.price.length > 1000) {
+          return;
+        }
         break;
+      case "other":
+        let other = e.target.value;
+        if (data.price.length > 1000) {
+          return;
+        }
+        data.other = other;
       case "delete":
         e.preventDefault();
         data.img = [{ name: "icon", data: Icon }];
@@ -442,8 +459,12 @@ class Form extends React.Component {
 
   selectImages = async (e) => {
     const files = e.target.files;
+    console.log(files);
     let ArrayFiles = Array.from(files);
-    let newFiles = [...(this.state.data.imgSub || []), ...ArrayFiles];
+    console.log(ArrayFiles);
+    let ableNum = 5 - this.state.data.img.length;
+    ArrayFiles.splice(ableNum - 1);
+    let newFiles = [...ArrayFiles];
     let prevImg = [...(this.state.data.img || [])];
     console.log(newFiles);
     let count = this.state.count;
@@ -453,29 +474,33 @@ class Form extends React.Component {
     // firebase.database().ref("/users/" + uid);
     if (files.length > 0) {
       // 初回追加時に初期画像を削除
-      if (count === 1) {
-        this.state.data.img.splice(0, 1);
-      }
+      // if (count === 1) {
+      //   this.state.data.img.splice(0, 1);
+      // }
       for (const file of newFiles) {
         prevImg.splice(1, 0, {
           name: file.name,
           data: URL.createObjectURL(file),
         });
       }
-      if (prevImg.length > 5) {
-        prevImg.splice(5);
-      }
-      if (newFiles.length > 5) {
-        newFiles.splice(5);
-      }
-      if (newFiles.length > 4) {
+      // if (prevImg.length > 5) {
+      //   prevImg.splice(5);
+      // }
+      // if (newFiles.length > 5) {
+      //   newFiles.splice(5);
+      // }
+      if (prevImg.length > 4) {
         this.state.imgLimited = true;
       }
-      this.state.data.imgSub = newFiles;
+      this.state.data.imgSub = [...(this.state.data.imgSub || []), ...newFiles];
+      console.log(this.state.data.imgSub);
       this.state.data.img = prevImg;
     } else {
-      this.state.data.img = [{ name: "icon", data: Icon }];
-      this.state.data.imgSub = "";
+      return;
+      // this.state.data.img = [
+      //   // { name: "icon", data: Icon }
+      // ];
+      // this.state.data.imgSub = "";
     }
     this.setState({
       data: this.state.data,
@@ -502,11 +527,7 @@ class Form extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     const data = this.state.data;
-    if (
-      data.goodsName === "" &&
-      data.url === "" &&
-      data.img[0].name === "icon"
-    ) {
+    if (data.goodsName === "") {
       this.setState({ submitError: true });
       return;
     } else if (this.state.urlError) {

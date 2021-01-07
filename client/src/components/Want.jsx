@@ -35,6 +35,7 @@ class Want extends React.Component {
       price,
       url,
       place,
+      other,
       itemIndex,
       listIndex,
       onClickEdit,
@@ -43,10 +44,7 @@ class Want extends React.Component {
     return (
       <div>
         <WantImages>
-          {img[0].map((el,url,name, index) => {
-            {
-              console.log(img);
-            }
+          {img[0].map((el, index) => {
             return (
               <CardMedia
                 component="img"
@@ -73,6 +71,7 @@ class Want extends React.Component {
             place={place}
             price={price}
             img={img}
+            other={other}
             listIndex={listIndex}
             itemIndex={itemIndex}
             onClickEdit={onClickEdit}

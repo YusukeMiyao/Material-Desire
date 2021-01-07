@@ -8,6 +8,9 @@ import AddIcon from "@material-ui/icons/Add";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import CardMedia from "@material-ui/core/CardMedia";
 import Card from "@material-ui/core/Card";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import ImageIcon from "@material-ui/icons/Image";
 
 const ModalBg = styled.div`
   position: fixed;
@@ -142,6 +145,15 @@ const DeleteButton = styled.p`
   margin: 10px;
 `;
 
+const ImgLabel = styled(InputLabel)`
+  padding: 15px;
+  max-width: 120px;
+  text-align: center;
+  display: block;
+  background-color: #f1f1f1;
+  color: #73a9ff;
+`;
+
 class EditWant extends React.Component {
   constructor(props) {
     super(props);
@@ -153,11 +165,13 @@ class EditWant extends React.Component {
         place: props.place,
         price: props.price,
         img: props.img,
+        imgSub: [],
+        other: props.other,
       },
       priceError: false,
       submitError: false,
       urlError: false,
-      selectedImages: [],
+      imgLimited: false,
     };
   }
   render() {
@@ -168,30 +182,50 @@ class EditWant extends React.Component {
             <ImageArea>
               <p>欲しい物の画像</p>
               <CardWrap>
+                {console.log(this.state.data.img)}
                 {this.state.data.img.map((el, index) => {
                   return (
                     <CardItem>
                       <CardMedia
                         component="img"
                         key={index}
-                        image={el.data}
-                        title={el.name}
+                        image={el[0].url}
+                        title={el[0].name}
                       />
-                      <DeleteButton>削除</DeleteButton>
+                      <DeleteButton
+                        color="primary"
+                        name="delete"
+                        onClick={this.selectDelete}
+                      >
+                        削除
+                      </DeleteButton>
                     </CardItem>
                   );
                 })}
               </CardWrap>
-              <input
-                type="file"
-                name="img"
-                accept="image/*"
-                multiple
-                onChange={this.handleChange}
-                onClick={(e) => {
-                  e.target.value = null;
-                }}
-              />
+              {this.state.imgLimited ? (
+                ""
+              ) : (
+                <FormControl>
+                  <ImgLabel htmlFor="img-input">
+                    <CardMedia>
+                      <ImageIcon />
+                      <input
+                        id="img-input"
+                        hidden
+                        type="file"
+                        name="img"
+                        accept="image/*"
+                        multiple
+                        onChange={this.selectImages}
+                        onClick={(e) => {
+                          e.target.value = null;
+                        }}
+                      />
+                    </CardMedia>
+                  </ImgLabel>
+                </FormControl>
+              )}
               {/* <button onClick={this.deleteImages}>選択画像削除</button>
               <button name="delete" onClick={this.handleChange}>
                 画像リセット
@@ -200,6 +234,7 @@ class EditWant extends React.Component {
             <InputArea>
               <label>
                 <p>欲しい物の名前</p>
+                <a>必須</a>
                 <TextField
                   variant="outlined"
                   size="small"
@@ -288,14 +323,12 @@ class EditWant extends React.Component {
                   name="other"
                   multiline
                   placeholder="1000文字まで"
-                  value={this.state.data.place}
+                  value={this.state.data.other}
                   onChange={this.handleChange}
                 />
               </label>
               {this.state.submitError ? (
-                <ErrorMessage>
-                  欲しいもの、URL、画像のどれか一つは入力して下さい
-                </ErrorMessage>
+                <ErrorMessage>欲しい物の名前は必須です</ErrorMessage>
               ) : (
                 ""
               )}
@@ -342,6 +375,9 @@ class EditWant extends React.Component {
     switch (e.target.name) {
       case "goodsName":
         data.goodsName = e.target.value;
+        if (data.goodsName.length > 1000) {
+          return;
+        }
         break;
       case "url":
         data.url = e.target.value;
@@ -355,9 +391,15 @@ class EditWant extends React.Component {
         } else if (data.url.length <= 0) {
           this.resetErrors();
         }
+        if (data.url.length > 1000) {
+          return;
+        }
         break;
       case "place":
         data.place = e.target.value;
+        if (data.place.length > 1000) {
+          return;
+        }
         break;
       case "price":
         let price = e.target.value.replace(/,/g, "");
@@ -374,24 +416,33 @@ class EditWant extends React.Component {
         } else {
           this.setState({ priceError: true });
         }
-        break;
-      case "img":
-        let files = e.target.files;
-        if (files.length > 0) {
-          if (this.state.data.img[0].name === "icon") {
-            this.state.data.img.splice(0, 1);
-          }
-          for (const file of files) {
-            this.state.data.img.splice(1, 0, {
-              name: file.name,
-              data: URL.createObjectURL(file),
-            });
-          }
-          break;
-        } else {
-          data.img = [{ name: "", data: "" }];
+        if (data.price.length > 1000) {
+          return;
         }
         break;
+      // case "img":
+      //   let files = e.target.files;
+      //   if (files.length > 0) {
+      //     if (this.state.data.img[0].name === "icon") {
+      //       this.state.data.img.splice(0, 1);
+      //     }
+      //     for (const file of files) {
+      //       this.state.data.img.splice(1, 0, {
+      //         name: file.name,
+      //         data: URL.createObjectURL(file),
+      //       });
+      //     }
+      //     break;
+      //   } else {
+      //     data.img = [{ name: "", data: "" }];
+      //   }
+      //   break;
+      case "other":
+        let other = e.target.value;
+        if (data.price.length > 1000) {
+          return;
+        }
+        data.other = other;
       case "delete":
         data.img = [{ name: "", data: "" }];
         break;
@@ -404,25 +455,100 @@ class EditWant extends React.Component {
     });
   };
 
+  selectImages = async (e) => {
+    const files = e.target.files;
+    console.log(files);
+    let ArrayFiles = Array.from(files);
+    console.log(ArrayFiles);
+    let ableNum = 5 - this.state.data.img.length;
+    console.log(ableNum);
+    ArrayFiles.splice(ableNum - 1);
+    console.log(ArrayFiles);
+    const newFiles = [...ArrayFiles];
+    let prevImg = [...(this.state.data.img || [])];
+    console.log(newFiles);
+    let count = this.state.count;
+    count++;
+    // var user = firebase.auth().currentUser;
+    // const uid = user.uid;
+    // firebase.database().ref("/users/" + uid);
+    if (files.length > 0) {
+      // 初回追加時に初期画像を削除
+      // if (count === 1) {
+      //   this.state.data.img.splice(0, 1);
+      // }
+      for (const file of newFiles) {
+        prevImg.splice(1, 0, [
+          {
+            name: file.name,
+            url: URL.createObjectURL(file),
+          },
+        ]);
+      }
+      console.log(prevImg);
+      // if (prevImg.length > 5) {
+      //   prevImg.splice(5);
+      // }
+      // if (newFiles.length > 5) {
+      //   newFiles.splice(5);
+      // }
+      if (prevImg.length > 4) {
+        this.state.imgLimited = true;
+      }
+      this.state.data.imgSub = newFiles;
+      this.state.data.img = prevImg;
+      {
+        console.log(this.state.data.img);
+      }
+    } else {
+      return;
+      // this.state.data.img = [
+      //   // { name: "icon", data: Icon }
+      // ];
+      // this.state.data.imgSub = "";
+    }
+    this.setState({
+      data: this.state.data,
+      count: count,
+      imgLimited: this.state.imgLimited,
+    });
+  };
+
+  selectDelete = (index) => {
+    this.state.data.img.splice(index, 1);
+    let newFiles = Array.from(this.state.data.imgSub);
+    newFiles.splice(index, 1);
+    this.state.data.imgSub = newFiles;
+    if (this.state.data.imgSub.length > 4) {
+      this.state.imgLimited = true;
+    } else {
+      this.state.imgLimited = false;
+    }
+    this.setState({
+      data: this.state.data,
+    });
+  };
+
+  // selectImages = (e) => {
+  //   // TODO
+  //   console.log(e);
+  // };
+
+  // deleteImages = (e) => {
+  //   // TODO
+  //   console.log(e);
+  // };
+
+  // resetImages = () => {
+  //   this.state.data.img = [{ name: "icon", data: Icon }];
+  //   this.setState({ data: this.state.data });
+  // };
+
   clickCancel = () => {
     const { onCancel, listIndex, itemIndex } = this.props;
     onCancel(listIndex, itemIndex, false);
   };
 
-  selectImages = (e) => {
-    // TODO
-    console.log(e);
-  };
-
-  deleteImages = (e) => {
-    // TODO
-    console.log(e);
-  };
-
-  resetImages = () => {
-    this.state.data.img = [{ name: "icon", data: Icon }];
-    this.setState({ data: this.state.data });
-  };
   handleSubmit = (e) => {
     e.preventDefault();
     const { listIndex, itemIndex, onSubmit } = this.props;

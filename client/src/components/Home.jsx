@@ -17,6 +17,7 @@ import { array } from "yup";
 import Fab from "@material-ui/core/Fab";
 import Card from "@material-ui/core/Card";
 import AddIcon from "@material-ui/icons/Add";
+import { reject } from "lodash";
 
 class Home extends React.Component {
   constructor(props) {
@@ -49,8 +50,7 @@ class Home extends React.Component {
 
   componentDidMount() {
     const user = firebase.auth().currentUser;
-    console.log(user.uid);
-    console.log(user.isAnonymous);
+
     if (user.isAnonymous === false) {
       let userName = user.displayName;
       let uid = user.uid;
@@ -205,6 +205,7 @@ class Home extends React.Component {
           place,
           price,
           img,
+          other,
           listIndex,
           itemIndex,
           editing,
@@ -231,6 +232,7 @@ class Home extends React.Component {
                       place={place}
                       price={price}
                       img={img}
+                      other={other}
                       listIndex={listIndex}
                       itemIndex={itemIndex}
                       onCancel={onCancel}
@@ -244,6 +246,7 @@ class Home extends React.Component {
                       place={place}
                       price={price}
                       img={img}
+                      other={other}
                       listIndex={listIndex}
                       itemIndex={itemIndex}
                       onClickEdit={onClickEdit}
@@ -396,6 +399,7 @@ class Home extends React.Component {
                                 price,
                                 img,
                                 editing,
+                                other,
                               },
                               itemIndex
                             ) => {
@@ -409,6 +413,7 @@ class Home extends React.Component {
                                   price={price}
                                   img={img}
                                   editing={editing}
+                                  other={other}
                                   itemIndex={itemIndex}
                                   listIndex={listIndex}
                                   onClickEdit={this.clickEdit}
@@ -444,7 +449,7 @@ class Home extends React.Component {
       </Main>
     );
   }
-  handleSubmit = async (e) => {
+  handleSubmit = async (e, imgArray) => {
     let currentId = this.state.count;
     currentId++;
     if (this.state.isAnonymous) {
@@ -467,6 +472,7 @@ class Home extends React.Component {
                       data: e.img.data,
                     },
                   ],
+                  other: e.other,
                   editing: false,
                 },
                 ...prev.lists[0].items,
@@ -506,7 +512,8 @@ class Home extends React.Component {
                   url: e.url,
                   place: e.place,
                   price: e.price,
-                  img: this.state.image,
+                  img: imgArray,
+                  other: e.other,
                   editing: false,
                 },
                 ...prev.lists[0].items,
@@ -665,6 +672,7 @@ class Home extends React.Component {
 
   imgUp = async (e) => {
     let fileName = [];
+    let imgArray = [];
 
     if (this.state.isAnonymous) {
       this.handleSubmit(e);
@@ -690,37 +698,86 @@ class Home extends React.Component {
         //     });
         // });
 
-        files.map((File, index) => {
-          console.log(File);
-          storageRef.child("images/" + this.state.count + File.name).put(File);
-          let ext = File.name.split(".").pop();
-          let imgName = File.name.replace(`.${ext}`, "");
-          let newImgName = `${imgName}_200x200.${ext}`;
-          fileName = [...fileName, newImgName];
-          console.log(fileName);
-        });
-        setTimeout(() => {
-          fileName.map((el) => {
-            console.log(el);
-            storageRef
-              .child("images/" + this.state.count + el)
-              .getDownloadURL()
-              .then((downloadURL) => {
-                let image = [{ name: el, url: downloadURL }];
-                this.state.image = [...(this.state.image || []), image];
-                console.log(image);
-              });
-          });
-        }, 10000);
+        await Promise.all(
+          files.map(async (File, index) => {
+            console.log(File, 0);
+            await storageRef
+              .child("images/" + this.state.count + File.name)
+              .put(File);
+            let ext = File.name.split(".").pop();
+            if (ext === "svg") {
+              let svgImg = File.name;
+              fileName = [...fileName, svgImg];
+            } else {
+              let imgName = File.name.replace(`.${ext}`, "");
+              let newImgName = `${imgName}_200x200.${ext}`;
+              fileName = [...fileName, newImgName];
+            }
+          })
+        );
 
-        setTimeout(() => {
-          console.log(this.state);
-          this.handleSubmit(e);
-        }, 11000);
-        // Promise.all(FilesMap).then(() => {
-        //   this.handleSubmit(e)
-        //   console.log('promiseall')
-        // })
+        await console.log(2);
+
+        setTimeout(async () => {
+          await Promise.all(
+            fileName.map(async (el) => {
+              console.log(el);
+              await storageRef
+                .child("images/" + this.state.count + el)
+                .getDownloadURL()
+                .then((downloadURL) => {
+                  let image = [{ name: el, url: downloadURL }];
+                  imgArray = [...(imgArray || []), image];
+                  console.log(image, 3);
+                })
+                .catch((error) => {
+                  console.log(error.code);
+                });
+              await console.log(3.5);
+            })
+          );
+          await console.log(4);
+
+          await console.log(this.state, 5);
+          await this.handleSubmit(e, imgArray);
+        }, 3000);
+
+        // setTimeout(() => {
+        //   fileName.map((el) => {
+        //     console.log(el);
+        //     storageRef
+        //       .child("images/" + this.state.count + el)
+        //       .getDownloadURL()
+        //       .then((downloadURL) => {
+        //         let image = [{ name: el, url: downloadURL }];
+        //         this.state.image = [...(this.state.image || []), image];
+        //         console.log(image);
+        //       });
+        //   });
+        // }, 10000);
+
+        // let newImgUrl = await Promise.all(filesMap).then(() => {
+        //   fileName.map((el) => {
+        //     console.log(el);
+        //     storageRef
+        //       .child("images/" + this.state.count + el)
+        //       .getDownloadURL()
+        //       .then((downloadURL) => {
+        //         let image = [{ name: el, url: downloadURL }];
+        //         this.state.image = [...(this.state.image || []), image];
+        //         console.log(image);
+        //       });
+        //   });
+        // });
+        // Promise.all(newImgUrl).then(() => {
+        //   console.log(this.state);
+        //   this.handleSubmit(e);
+        // });
+
+        // setTimeout(() => {
+        //   console.log(this.state);
+        //   this.handleSubmit(e);
+        // }, 11000);
       }
     }
   };
