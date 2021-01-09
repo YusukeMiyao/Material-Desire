@@ -5,6 +5,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import TemporaryDrawer from "./TemporaryDrawer";
+import Icon from "../assets/images/Icon.png";
 
 const WantImages = styled.div`
   /* display: flex;
@@ -41,10 +42,15 @@ class Want extends React.Component {
       onClickEdit,
       onDelete,
     } = this.props;
+
+    {
+      console.log(this.props);
+    }
+
     return (
       <div>
         <WantImages>
-          {img[0].map((el, index) => {
+          {img.map((el, index) => {
             return (
               <CardMedia
                 component="img"

@@ -174,6 +174,37 @@ class EditWant extends React.Component {
       imgLimited: false,
     };
   }
+
+  componentDidMount() {
+    if (
+      this.state.data.img[0].name === "icon" &&
+      this.state.data.img[0].url === "/static/media/Icon.f6ae3dbc.png"
+    ) {
+      this.setState((prev) => {
+        console.log(prev);
+        return {
+          ...prev,
+          data: {
+            goodsName: prev.data.goodsName,
+            url: prev.data.url,
+            place: prev.data.place,
+            price: prev.data.price,
+            img: [],
+            imgSub: [],
+            other: prev.data.other,
+          },
+          priceError: prev.priceError,
+          submitError: prev.submitError,
+          urlError: prev.urlError,
+          imgLimited: prev.imgLimited,
+        };
+      });
+    } else {
+      return;
+    }
+    console.log(this.state);
+  }
+
   render() {
     return (
       <ModalBg>
@@ -182,20 +213,21 @@ class EditWant extends React.Component {
             <ImageArea>
               <p>欲しい物の画像</p>
               <CardWrap>
-                {console.log(this.state.data.img)}
+                {console.log(this.state)}
+
                 {this.state.data.img.map((el, index) => {
                   return (
                     <CardItem>
                       <CardMedia
                         component="img"
                         key={index}
-                        image={el[0].url}
-                        title={el[0].name}
+                        image={el.url}
+                        title={el.name}
                       />
                       <DeleteButton
                         color="primary"
                         name="delete"
-                        onClick={this.selectDelete}
+                        onClick={() => this.selectDelete(index)}
                       >
                         削除
                       </DeleteButton>
@@ -443,9 +475,9 @@ class EditWant extends React.Component {
           return;
         }
         data.other = other;
-      case "delete":
-        data.img = [{ name: "", data: "" }];
-        break;
+      // case "delete":
+      //   data.img = [{ name: "", data: "" }];
+      //   break;
       default:
         break;
     }
@@ -457,12 +489,12 @@ class EditWant extends React.Component {
 
   selectImages = async (e) => {
     const files = e.target.files;
-    console.log(files);
+    console.log(files, this.state.data.img);
     let ArrayFiles = Array.from(files);
     console.log(ArrayFiles);
     let ableNum = 5 - this.state.data.img.length;
     console.log(ableNum);
-    ArrayFiles.splice(ableNum - 1);
+    ArrayFiles.splice(ableNum);
     console.log(ArrayFiles);
     const newFiles = [...ArrayFiles];
     let prevImg = [...(this.state.data.img || [])];
@@ -477,13 +509,12 @@ class EditWant extends React.Component {
       // if (count === 1) {
       //   this.state.data.img.splice(0, 1);
       // }
+      console.log(newFiles);
       for (const file of newFiles) {
-        prevImg.splice(1, 0, [
-          {
-            name: file.name,
-            url: URL.createObjectURL(file),
-          },
-        ]);
+        prevImg.splice(0, 0, {
+          name: file.name,
+          url: URL.createObjectURL(file),
+        });
       }
       console.log(prevImg);
       // if (prevImg.length > 5) {
@@ -551,18 +582,16 @@ class EditWant extends React.Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
+    const data = this.state.data;
     const { listIndex, itemIndex, onSubmit } = this.props;
-    if (
-      this.state.data.goodsName === "" &&
-      this.state.data.url === "" &&
-      this.state.data.img[0].name === "icon"
-    ) {
+    if (this.state.data.goodsName === "") {
       this.setState({ submitError: true });
       return;
     } else if (this.state.urlError) {
       return;
     } else {
-      onSubmit(listIndex, itemIndex, this.state.data);
+      console.log(data);
+      onSubmit(data, listIndex, itemIndex);
     }
   };
 }

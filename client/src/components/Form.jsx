@@ -1,5 +1,5 @@
 import React from "react";
-import Icon from "../assets/images/Icon.png";
+// import Icon from "../assets/images/Icon.png";
 import styled from "styled-components";
 import firebase from "../utils/firebase";
 import TextField from "@material-ui/core/TextField";
@@ -202,13 +202,13 @@ class Form extends React.Component {
                       <CardMedia
                         component="img"
                         key={index}
-                        image={el.data}
+                        image={el.url}
                         title={el.name}
                       />
                       <DeleteButton
                         color="primary"
                         name="delete"
-                        onClick={this.selectDelete}
+                        onClick={() => this.selectDelete(index)}
                       >
                         削除
                       </DeleteButton>
@@ -443,11 +443,11 @@ class Form extends React.Component {
           return;
         }
         data.other = other;
-      case "delete":
-        e.preventDefault();
-        data.img = [{ name: "icon", data: Icon }];
-        e.target.value = null;
-        break;
+      // case "delete":
+      //   e.preventDefault();
+      //   data.img = [{ name: "icon", data: Icon }];
+      //   e.target.value = null;
+      //   break;
       default:
         break;
     }
@@ -463,10 +463,11 @@ class Form extends React.Component {
     let ArrayFiles = Array.from(files);
     console.log(ArrayFiles);
     let ableNum = 5 - this.state.data.img.length;
-    ArrayFiles.splice(ableNum - 1);
+    ArrayFiles.splice(ableNum);
     let newFiles = [...ArrayFiles];
     let prevImg = [...(this.state.data.img || [])];
-    console.log(newFiles);
+
+    console.log(newFiles, prevImg);
     let count = this.state.count;
     count++;
     // var user = firebase.auth().currentUser;
@@ -478,9 +479,10 @@ class Form extends React.Component {
       //   this.state.data.img.splice(0, 1);
       // }
       for (const file of newFiles) {
-        prevImg.splice(1, 0, {
+        console.log(file);
+        prevImg.splice(0, 0, {
           name: file.name,
-          data: URL.createObjectURL(file),
+          url: URL.createObjectURL(file),
         });
       }
       // if (prevImg.length > 5) {
@@ -495,6 +497,7 @@ class Form extends React.Component {
       this.state.data.imgSub = [...(this.state.data.imgSub || []), ...newFiles];
       console.log(this.state.data.imgSub);
       this.state.data.img = prevImg;
+      console.log(this.state.data, prevImg);
     } else {
       return;
       // this.state.data.img = [
@@ -541,7 +544,9 @@ class Form extends React.Component {
           url: "",
           place: "",
           price: "",
-          img: [{ name: "icon", data: Icon }],
+          img: [
+            // { name: "icon", data: Icon }
+          ],
           imgSub: "",
           imgLimited: false,
         },

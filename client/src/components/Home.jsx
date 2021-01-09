@@ -18,6 +18,7 @@ import Fab from "@material-ui/core/Fab";
 import Card from "@material-ui/core/Card";
 import AddIcon from "@material-ui/icons/Add";
 import { reject } from "lodash";
+import Icon from "../assets/images/Icon.png";
 
 class Home extends React.Component {
   constructor(props) {
@@ -204,16 +205,22 @@ class Home extends React.Component {
           url,
           place,
           price,
-          img,
+          // img,
           other,
           listIndex,
           itemIndex,
           editing,
           onClickEdit,
           onDelete,
-          onSubmit,
+          editImgUp,
           onCancel,
         } = this.props;
+        let { img } = this.props;
+        {
+          if (img === undefined) {
+            img = [{ name: "icon", url: Icon }];
+          }
+        }
         return (
           <Draggable key={id} index={itemIndex} draggableId={String(id)}>
             {(provided, snapshot) => {
@@ -236,7 +243,7 @@ class Home extends React.Component {
                       listIndex={listIndex}
                       itemIndex={itemIndex}
                       onCancel={onCancel}
-                      onSubmit={onSubmit}
+                      onSubmit={editImgUp}
                     />
                   ) : (
                     <Want
@@ -418,7 +425,7 @@ class Home extends React.Component {
                                   listIndex={listIndex}
                                   onClickEdit={this.clickEdit}
                                   onDelete={this.clickDelete}
-                                  onSubmit={this.editListItem}
+                                  editImgUp={this.editImgUp}
                                   onCancel={this.clickEdit}
                                 />
                               );
@@ -452,6 +459,7 @@ class Home extends React.Component {
   handleSubmit = async (e, imgArray) => {
     let currentId = this.state.count;
     currentId++;
+    console.log(e, imgArray);
     if (this.state.isAnonymous) {
       await this.setState((prev) => {
         return {
@@ -468,8 +476,8 @@ class Home extends React.Component {
                   price: e.price,
                   img: [
                     {
-                      name: e.img.name,
-                      data: e.img.data,
+                      name: e.img[0].name,
+                      url: e.img[0].url,
                     },
                   ],
                   other: e.other,
@@ -541,20 +549,48 @@ class Home extends React.Component {
     }
   };
 
-  editListItem = async (listIndex, itemIndex, data) => {
-    const lists = Array.from(this.state.lists);
-    const item = lists[listIndex].items[itemIndex];
-    item.goodsName = data.goodsName;
-    item.price = data.price;
-    item.place = data.place;
-    item.url = data.url;
-    item.img = data.img;
-    item.editing = false;
-    await this.setState({ lists: lists });
-    if (this.state.isAnonymous) {
-      return;
-    } else this.saveList();
-    this.calculatePrice();
+  editListItem = async (listIndex, itemIndex, data, imgArray) => {
+    console.log(data);
+    if (imgArray === []) {
+      const lists = Array.from(this.state.lists);
+      const item = lists[listIndex].items[itemIndex];
+      item.goodsName = data.goodsName;
+      item.price = data.price;
+      item.place = data.place;
+      item.url = data.url;
+      item.img = data.img;
+      item.editing = false;
+      await this.setState({ lists: lists });
+      if (this.state.isAnonymous) {
+        return;
+      } else this.saveList();
+      this.calculatePrice();
+    } else {
+      const lists = Array.from(this.state.lists);
+      const item = lists[listIndex].items[itemIndex];
+
+      const imgSubLength = data.imgSub.length;
+      console.log(imgSubLength);
+      const imgArrayLength = imgArray.length;
+      console.log(imgArrayLength);
+      const newLength = imgSubLength - imgArrayLength;
+      console.log(newLength);
+      data.img.splice(newLength, imgArrayLength);
+      console.log(data.img);
+      Array.prototype.push.apply(data.img, imgArray);
+      console.log(data.img);
+      item.goodsName = data.goodsName;
+      item.price = data.price;
+      item.place = data.place;
+      item.url = data.url;
+      item.img = data.img;
+      item.editing = false;
+      await this.setState({ lists: lists });
+      if (this.state.isAnonymous) {
+        return;
+      } else this.saveList();
+      this.calculatePrice();
+    }
   };
 
   clickDelete = async (listIndex, itemIndex) => {
@@ -614,6 +650,7 @@ class Home extends React.Component {
     let total = 0;
     const lists = Array.from(this.state.lists);
     const todo = lists[0].items;
+    console.log(todo, this.state.lists);
     todo.map(({ price }) => {
       price = price.replace(/,/g, "");
       price = Number(price);
@@ -673,9 +710,10 @@ class Home extends React.Component {
   imgUp = async (e) => {
     let fileName = [];
     let imgArray = [];
-
-    if (this.state.isAnonymous) {
-      this.handleSubmit(e);
+    console.log(e.imgSub);
+    if (e.imgSub === [] || this.state.isAnonymous) {
+      this.handleSubmit(e, imgArray);
+      return;
     } else {
       var user = firebase.auth().currentUser;
       const uid = user.uid;
@@ -726,7 +764,7 @@ class Home extends React.Component {
                 .child("images/" + this.state.count + el)
                 .getDownloadURL()
                 .then((downloadURL) => {
-                  let image = [{ name: el, url: downloadURL }];
+                  let image = { name: el, url: downloadURL };
                   imgArray = [...(imgArray || []), image];
                   console.log(image, 3);
                 })
@@ -778,6 +816,69 @@ class Home extends React.Component {
         //   console.log(this.state);
         //   this.handleSubmit(e);
         // }, 11000);
+      }
+    }
+  };
+
+  editImgUp = async (e, listIndex, itemIndex) => {
+    let fileName = [];
+    let imgArray = [];
+    console.log(e.imgSub, e);
+    if (e.imgSub === [] || this.state.isAnonymous) {
+      this.editListItem(listIndex, itemIndex, e, imgArray);
+      return;
+    } else {
+      var user = firebase.auth().currentUser;
+      const uid = user.uid;
+      firebase.database().ref("/users/" + uid);
+
+      if (user != null) {
+        const storageRef = firebase.storage().ref("/users/" + uid);
+
+        let files = Array.from(e.imgSub);
+        await Promise.all(
+          files.map(async (File, index) => {
+            console.log(File, 0);
+            await storageRef
+              .child("images/" + this.state.count + File.name)
+              .put(File);
+            let ext = File.name.split(".").pop();
+            if (ext === "svg") {
+              let svgImg = File.name;
+              fileName = [...fileName, svgImg];
+            } else {
+              let imgName = File.name.replace(`.${ext}`, "");
+              let newImgName = `${imgName}_200x200.${ext}`;
+              fileName = [...fileName, newImgName];
+            }
+          })
+        );
+
+        await console.log(2);
+
+        setTimeout(async () => {
+          await Promise.all(
+            fileName.map(async (el) => {
+              console.log(el);
+              await storageRef
+                .child("images/" + this.state.count + el)
+                .getDownloadURL()
+                .then((downloadURL) => {
+                  let image = { name: el, url: downloadURL };
+                  imgArray = [...(imgArray || []), image];
+                  console.log(image, 3);
+                })
+                .catch((error) => {
+                  console.log(error.code);
+                });
+              await console.log(3.5);
+            })
+          );
+          await console.log(4);
+
+          await console.log(this.state, 5);
+          await this.editListItem(listIndex, itemIndex, e, imgArray);
+        }, 3000);
       }
     }
   };

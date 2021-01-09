@@ -240,9 +240,9 @@ export default function TemporaryDrawer(props) {
                 <CardMedia
                   component="img"
                   key={index}
-                  image={el[0].url}
-                  title={el[0].name}
-                  alt={el[0].name}
+                  image={el.url}
+                  title={el.name}
+                  alt={el.name}
                 />
               </SwiperSlide>
             </Swiper>
@@ -269,9 +269,9 @@ export default function TemporaryDrawer(props) {
                 <CardMedia
                   component="img"
                   key={index}
-                  image={el[0].url}
-                  title={el[0].name}
-                  alt={el[0].name}
+                  image={el.url}
+                  title={el.name}
+                  alt={el.name}
                 />
               </CardActionArea>
             </SwiperSlide>
