@@ -174,7 +174,7 @@ export default function TemporaryDrawer(props) {
   const [open, setOpen] = React.useState(false);
   // const theme = useTheme();
 
-  const { goodsName, url, img, price, place } = props;
+  const { goodsName, url, img, price, place, other } = props;
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (
@@ -226,6 +226,7 @@ export default function TemporaryDrawer(props) {
               pagination={{
                 clickable: true,
                 type: "fraction",
+
                 // formatFractionTotal
                 // formatFractionCurrent?: (number: number) => number;
               }}
@@ -235,14 +236,13 @@ export default function TemporaryDrawer(props) {
               loop={img.length === 1 ? false : true}
               loopedSlides={img.length}
             >
-              <SwiperSlide
-              // zoom={true}
-              >
+              <SwiperSlide zoom={true}>
                 <CardMedia
                   component="img"
                   key={index}
-                  image={el.data}
+                  image={el.url}
                   title={el.name}
+                  alt={el.name}
                 />
               </SwiperSlide>
             </Swiper>
@@ -256,26 +256,22 @@ export default function TemporaryDrawer(props) {
         pagination={{
           clickable: true,
           type: "fraction",
-          // formatFractionTotal
-          // formatFractionCurrent?: (number: number) => number;
         }}
         scrollbar={{ draggable: true }}
-        // onSwiper={(swiper) => console.log(swiper)}
-        // onSlideChange={() => console.log("slide change")}
-
         loop={img.length === 1 ? false : true}
         loopedSlides={img.length}
       >
         {/* <WantImages> */}
         {img.map((el, index) => {
           return (
-            <SwiperSlide zoom={true}>
+            <SwiperSlide>
               <CardActionArea onClick={handleClickOpen}>
                 <CardMedia
                   component="img"
                   key={index}
-                  image={el.data}
+                  image={el.url}
                   title={el.name}
+                  alt={el.name}
                 />
               </CardActionArea>
             </SwiperSlide>
@@ -308,6 +304,13 @@ export default function TemporaryDrawer(props) {
               <ItemTableTd>
                 {place === "" ? "-" : ""}
                 {place}
+              </ItemTableTd>
+            </ItemTableTr>
+            <ItemTableTr>
+              <ItemTableTh>その他</ItemTableTh>
+              <ItemTableTd>
+                {other === "" ? "-" : ""}
+                {other}
               </ItemTableTd>
             </ItemTableTr>
           </ItemTableTbody>

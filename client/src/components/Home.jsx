@@ -17,10 +17,13 @@ import { array } from "yup";
 import Fab from "@material-ui/core/Fab";
 import Card from "@material-ui/core/Card";
 import AddIcon from "@material-ui/icons/Add";
+import { reject } from "lodash";
+import Icon from "../assets/images/Icon.png";
 
 class Home extends React.Component {
   constructor(props) {
     super(props);
+    // this.imgSetState = this.imgSetState.bind(this);
     this.state = {
       lists: [
         // {
@@ -48,8 +51,7 @@ class Home extends React.Component {
 
   componentDidMount() {
     const user = firebase.auth().currentUser;
-    console.log(user.uid);
-    console.log(user.isAnonymous);
+
     if (user.isAnonymous === false) {
       let userName = user.displayName;
       let uid = user.uid;
@@ -107,37 +109,43 @@ class Home extends React.Component {
               count: 0,
               totalPrice: 0,
               formOpen: false,
+              image: [
+                // {
+                //   url: [],
+                //   name: [],
+                // },
+              ],
               isAnonymous: false,
               userName: userName,
             });
           }
         });
     } else {
+      this.setState({
+        lists: [
+          {
+            title: "Todo",
+            items: [],
+            editing: false,
+          },
+          {
+            title: "InProgress",
+            items: [],
+            editing: false,
+          },
+          {
+            title: "Done",
+            items: [],
+            editing: false,
+          },
+        ],
+        count: 0,
+        totalPrice: 0,
+        formOpen: false,
+        userName: "ゲスト",
+        isAnonymous: true,
+      });
     }
-    this.setState({
-      lists: [
-        {
-          title: "Todo",
-          items: [],
-          editing: false,
-        },
-        {
-          title: "InProgress",
-          items: [],
-          editing: false,
-        },
-        {
-          title: "Done",
-          items: [],
-          editing: false,
-        },
-      ],
-      count: 0,
-      totalPrice: 0,
-      formOpen: false,
-      isAnonymous: true,
-      userName: "ゲスト",
-    });
   }
 
   render() {
@@ -197,15 +205,22 @@ class Home extends React.Component {
           url,
           place,
           price,
-          img,
+          // img,
+          other,
           listIndex,
           itemIndex,
           editing,
           onClickEdit,
           onDelete,
-          onSubmit,
+          editImgUp,
           onCancel,
         } = this.props;
+        let { img } = this.props;
+        {
+          if (img === undefined) {
+            img = [{ name: "icon", url: Icon }];
+          }
+        }
         return (
           <Draggable key={id} index={itemIndex} draggableId={String(id)}>
             {(provided, snapshot) => {
@@ -224,10 +239,11 @@ class Home extends React.Component {
                       place={place}
                       price={price}
                       img={img}
+                      other={other}
                       listIndex={listIndex}
                       itemIndex={itemIndex}
                       onCancel={onCancel}
-                      onSubmit={onSubmit}
+                      onSubmit={editImgUp}
                     />
                   ) : (
                     <Want
@@ -237,6 +253,7 @@ class Home extends React.Component {
                       place={place}
                       price={price}
                       img={img}
+                      other={other}
                       listIndex={listIndex}
                       itemIndex={itemIndex}
                       onClickEdit={onClickEdit}
@@ -341,7 +358,7 @@ class Home extends React.Component {
           ) : (
             ""
           )}
-          {/* {console.log(this.state)} */}
+          {/* {console.log(this.state)a} */}
           <DragDropContext
             onDragEnd={handleDragEnd}
             onDragStart={handleDragStart}
@@ -389,6 +406,7 @@ class Home extends React.Component {
                                 price,
                                 img,
                                 editing,
+                                other,
                               },
                               itemIndex
                             ) => {
@@ -402,11 +420,12 @@ class Home extends React.Component {
                                   price={price}
                                   img={img}
                                   editing={editing}
+                                  other={other}
                                   itemIndex={itemIndex}
                                   listIndex={listIndex}
                                   onClickEdit={this.clickEdit}
                                   onDelete={this.clickDelete}
-                                  onSubmit={this.editListItem}
+                                  editImgUp={this.editImgUp}
                                   onCancel={this.clickEdit}
                                 />
                               );
@@ -437,62 +456,141 @@ class Home extends React.Component {
       </Main>
     );
   }
-  handleSubmit = async (e) => {
+  handleSubmit = async (e, imgArray) => {
     let currentId = this.state.count;
     currentId++;
-    await this.setState((prev) => {
-      return {
-        ...prev,
-        lists: [
-          {
-            title: prev.lists[0].title,
-            items: [
-              {
-                id: currentId,
-                goodsName: e.goodsName,
-                url: e.url,
-                place: e.place,
-                price: e.price,
-                img: e.img,
-                editing: false,
-              },
-              ...prev.lists[0].items,
-            ],
-            editing: false,
-          },
-          {
-            title: prev.lists[1].title,
-            items: [...prev.lists[1].items],
-            editing: false,
-          },
-          {
-            title: prev.lists[2].title,
-            items: [...prev.lists[2].items],
-            editing: false,
-          },
-        ],
-        count: currentId,
-      };
-    });
-    // this.saveList();
-    this.calculatePrice();
-    this.setState({ formOpen: false });
+    console.log(e, imgArray);
+    if (this.state.isAnonymous) {
+      await this.setState((prev) => {
+        return {
+          ...prev,
+          lists: [
+            {
+              title: prev.lists[0].title,
+              items: [
+                {
+                  id: currentId,
+                  goodsName: e.goodsName,
+                  url: e.url,
+                  place: e.place,
+                  price: e.price,
+                  img: [
+                    {
+                      name: e.img[0].name,
+                      url: e.img[0].url,
+                    },
+                  ],
+                  other: e.other,
+                  editing: false,
+                },
+                ...prev.lists[0].items,
+              ],
+              editing: false,
+            },
+            {
+              title: prev.lists[1].title,
+              items: [...prev.lists[1].items],
+              editing: false,
+            },
+            {
+              title: prev.lists[2].title,
+              items: [...prev.lists[2].items],
+              editing: false,
+            },
+          ],
+          count: currentId,
+          image: [],
+        };
+      });
+      // this.saveList();
+      this.calculatePrice();
+      this.setState({ formOpen: false });
+    } else {
+      console.log(this.state.image, e);
+      await this.setState((prev) => {
+        return {
+          ...prev,
+          lists: [
+            {
+              title: prev.lists[0].title,
+              items: [
+                {
+                  id: currentId,
+                  goodsName: e.goodsName,
+                  url: e.url,
+                  place: e.place,
+                  price: e.price,
+                  img: imgArray,
+                  other: e.other,
+                  editing: false,
+                },
+                ...prev.lists[0].items,
+              ],
+              editing: false,
+            },
+            {
+              title: prev.lists[1].title,
+              items: [...prev.lists[1].items],
+              editing: false,
+            },
+            {
+              title: prev.lists[2].title,
+              items: [...prev.lists[2].items],
+              editing: false,
+            },
+          ],
+          count: currentId,
+          image: [],
+        };
+      });
+      this.saveList();
+      this.calculatePrice();
+      this.setState({ formOpen: false });
+    }
   };
 
-  editListItem = async (listIndex, itemIndex, data) => {
-    const lists = Array.from(this.state.lists);
-    const item = lists[listIndex].items[itemIndex];
-    item.goodsName = data.goodsName;
-    item.price = data.price;
-    item.place = data.place;
-    item.url = data.url;
-    item.img = data.img;
-    item.editing = false;
-    await this.setState({ lists: lists });
-    if (this.state.isAnonymous) {
-      return;
-    } else this.saveList();
-    this.calculatePrice();
+  editListItem = async (listIndex, itemIndex, data, imgArray) => {
+    console.log(data);
+    if (imgArray === []) {
+      const lists = Array.from(this.state.lists);
+      const item = lists[listIndex].items[itemIndex];
+      item.goodsName = data.goodsName;
+      item.price = data.price;
+      item.place = data.place;
+      item.url = data.url;
+      item.img = data.img;
+      item.editing = false;
+      await this.setState({ lists: lists });
+      if (this.state.isAnonymous) {
+        return;
+      } else this.saveList();
+      this.calculatePrice();
+    } else {
+      const lists = Array.from(this.state.lists);
+      const item = lists[listIndex].items[itemIndex];
+
+      const imgSubLength = data.imgSub.length;
+      console.log(imgSubLength);
+      const imgArrayLength = imgArray.length;
+      console.log(imgArrayLength);
+      const newLength = imgSubLength - imgArrayLength;
+      console.log(newLength);
+      data.img.splice(newLength, imgArrayLength);
+      console.log(data.img);
+      Array.prototype.push.apply(data.img, imgArray);
+      console.log(data.img);
+      item.goodsName = data.goodsName;
+      item.price = data.price;
+      item.place = data.place;
+      item.url = data.url;
+      item.img = data.img;
+      item.editing = false;
+      await this.setState({ lists: lists });
+      if (this.state.isAnonymous) {
+        return;
+      } else this.saveList();
+      this.calculatePrice();
+    }
   };
 
   clickDelete = async (listIndex, itemIndex) => {
@@ -532,9 +630,10 @@ class Home extends React.Component {
       };
     });
     // localStorage.clear();
-    firebase.database().ref("TotalPrice/").set({
-      totalPrice: this.state.totalPrice,
-    });
+
+    // firebase.database().ref("TotalPrice/").set({
+    //   totalPrice: this.state.totalPrice,
+    // });
     if (this.state.isAnonymous) {
       return;
     } else this.saveList();
@@ -551,6 +650,7 @@ class Home extends React.Component {
     let total = 0;
     const lists = Array.from(this.state.lists);
     const todo = lists[0].items;
+    console.log(todo, this.state.lists);
     todo.map(({ price }) => {
       price = price.replace(/,/g, "");
       price = Number(price);
@@ -565,9 +665,9 @@ class Home extends React.Component {
     } else this.saveList();
   };
 
-  saveList = () => {
-    var user = firebase.auth().currentUser;
-    if (user != null) {
+  saveList = async () => {
+    const user = firebase.auth().currentUser;
+    if (user !== null) {
       const uid = user.uid;
       firebase
         .database()
@@ -608,19 +708,179 @@ class Home extends React.Component {
   };
 
   imgUp = async (e) => {
-    console.log("come");
-    var user = firebase.auth().currentUser;
-    const uid = user.uid;
-    firebase.database().ref("/users/" + uid);
+    let fileName = [];
+    let imgArray = [];
+    console.log(e.imgSub);
+    if (e.imgSub === [] || this.state.isAnonymous) {
+      this.handleSubmit(e, imgArray);
+      return;
+    } else {
+      var user = firebase.auth().currentUser;
+      const uid = user.uid;
+      firebase.database().ref("/users/" + uid);
 
-    if (user != null) {
-      const storageRef = firebase.storage().ref("/users/" + uid);
-      // await storageRef.put(e.imgSub[0], (snapshot) => {
-      // e.img = snapshot.ref.getDownloadURL();
-      this.handleSubmit(e);
-      // });
+      if (user != null) {
+        const storageRef = firebase.storage().ref("/users/" + uid);
+
+        let files = Array.from(e.imgSub);
+        // files.map((File, index) => {
+        //   console.log(File);
+        //   storageRef
+        //     .child("images/" + this.state.count + File.name)
+        //     .put(File)
+        //     .then((snapshot) => {
+        //       snapshot.ref.getDownloadURL().then((downloadURL) => {
+        //         let image = [{ name: File.name, url: downloadURL }];
+        //         this.state.image = [...(this.state.image || []), image];
+        //       });
+        //     });
+        // });
+
+        await Promise.all(
+          files.map(async (File, index) => {
+            console.log(File, 0);
+            await storageRef
+              .child("images/" + this.state.count + File.name)
+              .put(File);
+            let ext = File.name.split(".").pop();
+            if (ext === "svg") {
+              let svgImg = File.name;
+              fileName = [...fileName, svgImg];
+            } else {
+              let imgName = File.name.replace(`.${ext}`, "");
+              let newImgName = `${imgName}_200x200.${ext}`;
+              fileName = [...fileName, newImgName];
+            }
+          })
+        );
+
+        await console.log(2);
+
+        setTimeout(async () => {
+          await Promise.all(
+            fileName.map(async (el) => {
+              console.log(el);
+              await storageRef
+                .child("images/" + this.state.count + el)
+                .getDownloadURL()
+                .then((downloadURL) => {
+                  let image = { name: el, url: downloadURL };
+                  imgArray = [...(imgArray || []), image];
+                  console.log(image, 3);
+                })
+                .catch((error) => {
+                  console.log(error.code);
+                });
+              await console.log(3.5);
+            })
+          );
+          await console.log(4);
+
+          await console.log(this.state, 5);
+          await this.handleSubmit(e, imgArray);
+        }, 3000);
+
+        // setTimeout(() => {
+        //   fileName.map((el) => {
+        //     console.log(el);
+        //     storageRef
+        //       .child("images/" + this.state.count + el)
+        //       .getDownloadURL()
+        //       .then((downloadURL) => {
+        //         let image = [{ name: el, url: downloadURL }];
+        //         this.state.image = [...(this.state.image || []), image];
+        //         console.log(image);
+        //       });
+        //   });
+        // }, 10000);
+
+        // let newImgUrl = await Promise.all(filesMap).then(() => {
+        //   fileName.map((el) => {
+        //     console.log(el);
+        //     storageRef
+        //       .child("images/" + this.state.count + el)
+        //       .getDownloadURL()
+        //       .then((downloadURL) => {
+        //         let image = [{ name: el, url: downloadURL }];
+        //         this.state.image = [...(this.state.image || []), image];
+        //         console.log(image);
+        //       });
+        //   });
+        // });
+        // Promise.all(newImgUrl).then(() => {
+        //   console.log(this.state);
+        //   this.handleSubmit(e);
+        // });
+
+        // setTimeout(() => {
+        //   console.log(this.state);
+        //   this.handleSubmit(e);
+        // }, 11000);
+      }
+    }
+  };
+
+  editImgUp = async (e, listIndex, itemIndex) => {
+    let fileName = [];
+    let imgArray = [];
+    console.log(e.imgSub, e);
+    if (e.imgSub === [] || this.state.isAnonymous) {
+      this.editListItem(listIndex, itemIndex, e, imgArray);
+      return;
+    } else {
+      var user = firebase.auth().currentUser;
+      const uid = user.uid;
+      firebase.database().ref("/users/" + uid);
+
+      if (user != null) {
+        const storageRef = firebase.storage().ref("/users/" + uid);
+
+        let files = Array.from(e.imgSub);
+        await Promise.all(
+          files.map(async (File, index) => {
+            console.log(File, 0);
+            await storageRef
+              .child("images/" + this.state.count + File.name)
+              .put(File);
+            let ext = File.name.split(".").pop();
+            if (ext === "svg") {
+              let svgImg = File.name;
+              fileName = [...fileName, svgImg];
+            } else {
+              let imgName = File.name.replace(`.${ext}`, "");
+              let newImgName = `${imgName}_200x200.${ext}`;
+              fileName = [...fileName, newImgName];
+            }
+          })
+        );
+
+        await console.log(2);
+
+        setTimeout(async () => {
+          await Promise.all(
+            fileName.map(async (el) => {
+              console.log(el);
+              await storageRef
+                .child("images/" + this.state.count + el)
+                .getDownloadURL()
+                .then((downloadURL) => {
+                  let image = { name: el, url: downloadURL };
+                  imgArray = [...(imgArray || []), image];
+                  console.log(image, 3);
+                })
+                .catch((error) => {
+                  console.log(error.code);
+                });
+              await console.log(3.5);
+            })
+          );
+          await console.log(4);
+
+          await console.log(this.state, 5);
+          await this.editListItem(listIndex, itemIndex, e, imgArray);
+        }, 3000);
+      }
     }
   };
 }
-
 export default Home;

@@ -5,6 +5,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import TemporaryDrawer from "./TemporaryDrawer";
+import Icon from "../assets/images/Icon.png";
 
 const WantImages = styled.div`
   /* display: flex;
@@ -35,11 +36,17 @@ class Want extends React.Component {
       price,
       url,
       place,
+      other,
       itemIndex,
       listIndex,
       onClickEdit,
       onDelete,
     } = this.props;
+
+    {
+      console.log(this.props);
+    }
+
     return (
       <div>
         <WantImages>
@@ -48,8 +55,9 @@ class Want extends React.Component {
               <CardMedia
                 component="img"
                 key={index}
-                image={el.data}
+                image={el.url}
                 title={el.name}
+                alt={el.name}
               />
             );
           })}
@@ -69,6 +77,7 @@ class Want extends React.Component {
             place={place}
             price={price}
             img={img}
+            other={other}
             listIndex={listIndex}
             itemIndex={itemIndex}
             onClickEdit={onClickEdit}
