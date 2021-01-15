@@ -77,8 +77,14 @@ const InputArea = styled.div`
     div {
       width: 100%;
       p {
-        margin: 8px 0 0 0;
+        margin: 0;
+        position: absolute;
+        bottom: -8px;
       }
+    }
+    > div {
+      position: relative;
+      padding-bottom: 14px;
     }
     > p {
       width: 100%;
@@ -97,30 +103,36 @@ const InputArea = styled.div`
   }
 `;
 const ButtonArea = styled.div`
-  text-align: right;
   margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
 `;
-const CancelButton = styled(Fab)`
-  position: fixed;
-  bottom: 8px;
+const CancelButton = styled(Button)`
   border: solid 1px #0000001f;
-  color: #03dac5;
-  font-weight: bold;
   background-color: #fff;
-  transform: 0.2s;
+  color: #96d4ce;
+  width: 100%;
+  display: flex;
+  justify-content: center;
   :hover {
-    background-color: #03dac5;
-    border: #03dac5;
-    svg {
-      color: #fff;
-    }
+    background-color: #6200ee0a;
+  }
+  @media screen and (min-width: 768px) {
+    justify-content: space-between;
   }
 `;
 const AddButton = styled(Button)`
   background-color: #03dac5;
   color: #ffffff;
+  width: 100%;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: center;
   :hover {
     background-color: #96d4ce;
+  }
+  @media screen and (min-width: 768px) {
+    justify-content: space-between;
   }
 `;
 const ErrorMessage = styled.p`
@@ -132,6 +144,9 @@ const CardWrap = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  position: relative;
 `;
 const CardItem = styled(Card)`
   width: calc(100% / 3 - 5px);
@@ -139,6 +154,7 @@ const CardItem = styled(Card)`
   height: auto;
   transition: all 0.3s;
   margin-bottom: 8px;
+  text-align: center;
   :nth-of-type(3n-1) {
     margin: 0 4px 8px;
   }
@@ -153,6 +169,7 @@ const DeleteButton = styled(Button)`
 const ImgLabel = styled(InputLabel)`
   padding: 15px;
   max-width: 120px;
+  height: 20px;
   text-align: center;
   display: block;
   background-color: #f1f1f1;
@@ -215,11 +232,9 @@ class Form extends React.Component {
                     </CardItem>
                   );
                 })}
-              </CardWrap>
-              {this.state.imgLimited ? (
-                ""
-              ) : (
-                <FormControl>
+                {this.state.imgLimited ? (
+                  ""
+                ) : (
                   <ImgLabel htmlFor="img-input">
                     <CardMedia>
                       <ImageIcon />
@@ -237,8 +252,8 @@ class Form extends React.Component {
                       />
                     </CardMedia>
                   </ImgLabel>
-                </FormControl>
-              )}
+                )}
+              </CardWrap>
               {/* <button name="delete" onClick={this.selectImages}>
                 画像リセット
               </button> */}
@@ -352,10 +367,11 @@ class Form extends React.Component {
                 <AddIcon />
                 登録
               </AddButton>
+              <CancelButton onClick={this.clickCancel}>
+                <ArrowBackIcon />
+                キャンセル
+              </CancelButton>
             </ButtonArea>
-            <CancelButton size="small" onClick={this.clickCancel}>
-              <ArrowBackIcon />
-            </CancelButton>
           </ModalItem>
         </ModalContent>
       </ModalBg>

@@ -26,6 +26,8 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import { useTheme } from "@material-ui/core/styles";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import CloseIcon from "@material-ui/icons/Close";
 
 // import "swiper/swiper-bundle.css";
 import "swiper/swiper-bundle.min.css";
@@ -43,6 +45,9 @@ const WantTitle = styled(Typography)`
   line-height: 1.4;
   display: block;
   font-weight: Medium;
+  @media screen and (min-width: 768px) {
+    display: none;
+  }
 `;
 const Price = styled(Typography)`
   color: #00000099;
@@ -67,13 +72,38 @@ const WantImages = styled.div`
   transform-origin: 0px 0px;
 `;
 
+const ListWrap = styled.div`
+  position: relative;
+  @media screen and (min-width: 768px) {
+    max-width: 700px;
+    min-width: 700px;
+    height: 100vh;
+    margin: 20px auto;
+  }
+`;
+const ListContents = styled.div`
+  @media screen and (min-width: 768px) {
+    border: solid 1px #707070;
+  }
+`;
+const CloseButton = styled(Button)`
+  position: fixed;
+  right: -10px;
+  top: 2px;
+  z-index: 2;
+`;
+
 const WantList = styled.div`
   display: flex;
+  @media screen and (min-width: 768px) {
+    display: none;
+  }
 `;
 
 const ButtonArea = styled.div`
-  text-align: right;
   margin: 16px;
+  display: flex;
+  flex-wrap: wrap;
 `;
 
 const ItemTable = styled.table`
@@ -128,22 +158,40 @@ const EditButton = styled(Button)`
   padding: 4px 16px;
   background-color: #03dac5;
   transition: 0.2s;
+  width: 100%;
+  margin-bottom: 8px;
   :hover {
     background-color: #96d4ce;
+  }
+  @media screen and (min-width: 768px) {
+    > span {
+      display: flex;
+      justify-content: space-between;
+    }
   }
 `;
 
 const DeleteButton = styled(Button)`
-  color: #03dac5;
+  color: #f44336;
   font-size: 14px;
   padding: 4px 16px;
   background-color: #fff;
   transition: 0.2s;
+  width: 100%;
+  border: solid 1px #0000001f;
   :hover {
-    background-color: #96d4ce;
+    background-color: #6200ee0a;
+  }
+  @media screen and (min-width: 768px) {
+    > span {
+      display: flex;
+      justify-content: space-between;
+    }
   }
 `;
-
+const TemporaryWrap = styled.div`
+  width: 100%;
+`;
 // const CardFullImg = styled(CardMedia)`
 //   height: auto;
 //   width: 100%;
@@ -155,6 +203,20 @@ const DeleteButton = styled(Button)`
 //   hight: ${(props) => (props.set ? "" : "")};
 // `;
 
+const DetailButton = styled(Button)`
+  min-width: 24px;
+  padding: 0;
+`;
+
+const WantTitleVerTablet = styled.h5`
+  display: none;
+  @media screen and (min-width: 768px) {
+    display: block;
+    margin: 20px;
+    font-size: 25px;
+    text-align: center;
+  }
+`;
 const useStyles = makeStyles({
   list: {
     width: 250,
@@ -206,132 +268,139 @@ export default function TemporaryDrawer(props) {
   };
 
   const list = (anchor) => (
-    <div
+    <ListWrap
       className={clsx(classes.list, {
         [classes.fullList]: anchor === "top" || anchor === "bottom",
       })}
       role="presentation"
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <Button onClick={toggleDrawer(anchor, false)}>閉じる</Button>
-
-      <Dialog fullScreen open={open} onClose={handleClose}>
-        <Button onClick={handleClose}>閉じる</Button>
-        {img.map((el, index) => {
-          return (
-            <Swiper
-              spaceBetween={50}
-              slidesPerView="auto"
-              navigation
-              pagination={{
-                clickable: true,
-                type: "fraction",
-
-                // formatFractionTotal
-                // formatFractionCurrent?: (number: number) => number;
-              }}
-              scrollbar={{ draggable: true }}
-              // onSwiper={(swiper) => console.log(swiper)}
-              // onSlideChange={() => console.log("slide change")}
-              loop={img.length === 1 ? false : true}
-              loopedSlides={img.length}
-            >
-              <SwiperSlide zoom={true}>
-                <CardMedia
-                  component="img"
-                  key={index}
-                  image={el.url}
-                  title={el.name}
-                  alt={el.name}
-                />
+      <ListContents>
+        <CloseButton onClick={toggleDrawer(anchor, false)}>
+          <CloseIcon />
+        </CloseButton>
+        <Dialog fullScreen open={open} onClose={handleClose}>
+          <CloseButton onClick={handleClose}>
+            <CloseIcon />
+          </CloseButton>
+          {img.map((el, index) => {
+            return (
+              <Swiper
+                spaceBetween={50}
+                slidesPerView="auto"
+                navigation
+                pagination={{
+                  clickable: true,
+                  type: "fraction",
+                  // formatFractionTotal
+                  // formatFractionCurrent?: (number: number) => number;
+                }}
+                scrollbar={{ draggable: true }}
+                // onSwiper={(swiper) => console.log(swiper)}
+                // onSlideChange={() => console.log("slide change")}
+                loop={img.length === 1 ? false : true}
+                loopedSlides={img.length}
+              >
+                <SwiperSlide zoom={true}>
+                  <CardMedia
+                    component="img"
+                    key={index}
+                    image={el.url}
+                    title={el.name}
+                    alt={el.name}
+                  />
+                </SwiperSlide>
+              </Swiper>
+            );
+          })}
+        </Dialog>
+        <WantTitleVerTablet>{goodsName}</WantTitleVerTablet>
+        <Swiper
+          spaceBetween={50}
+          slidesPerView="auto"
+          navigation
+          pagination={{
+            clickable: true,
+            type: "fraction",
+          }}
+          scrollbar={{ draggable: true }}
+          loop={img.length === 1 ? false : true}
+          loopedSlides={img.length}
+        >
+          {/* <WantImages> */}
+          {img.map((el, index) => {
+            return (
+              <SwiperSlide>
+                <CardActionArea onClick={handleClickOpen}>
+                  <CardMedia
+                    component="img"
+                    key={index}
+                    image={el.url}
+                    title={el.name}
+                    alt={el.name}
+                  />
+                </CardActionArea>
               </SwiperSlide>
-            </Swiper>
-          );
-        })}
-      </Dialog>
-      <Swiper
-        spaceBetween={50}
-        slidesPerView="auto"
-        navigation
-        pagination={{
-          clickable: true,
-          type: "fraction",
-        }}
-        scrollbar={{ draggable: true }}
-        loop={img.length === 1 ? false : true}
-        loopedSlides={img.length}
-      >
-        {/* <WantImages> */}
-        {img.map((el, index) => {
-          return (
-            <SwiperSlide>
-              <CardActionArea onClick={handleClickOpen}>
-                <CardMedia
-                  component="img"
-                  key={index}
-                  image={el.url}
-                  title={el.name}
-                  alt={el.name}
-                />
-              </CardActionArea>
-            </SwiperSlide>
-          );
-        })}
-        {/* </WantImages> */}
-      </Swiper>
-      <WantTitle>{goodsName}</WantTitle>
-      <WantList>
-        <ItemTable>
-          <ItemTableTbody>
-            <ItemTableTr>
-              <ItemTableTh>値段</ItemTableTh>
-              <ItemTableTd>
-                {price !== "" ? "¥" : "¥ - "}
-                {price}
-              </ItemTableTd>
-            </ItemTableTr>
-            <ItemTableTr>
-              <ItemTableTh>URL</ItemTableTh>
-              <ItemTableTd>
-                {url === "" ? "-" : ""}
-                <a target="_blank" rel="noopener noreferrer" href={url}>
-                  {url}
-                </a>
-              </ItemTableTd>
-            </ItemTableTr>
-            <ItemTableTr>
-              <ItemTableTh>場所</ItemTableTh>
-              <ItemTableTd>
-                {place === "" ? "-" : ""}
-                {place}
-              </ItemTableTd>
-            </ItemTableTr>
-            <ItemTableTr>
-              <ItemTableTh>その他</ItemTableTh>
-              <ItemTableTd>
-                {other === "" ? "-" : ""}
-                {other}
-              </ItemTableTd>
-            </ItemTableTr>
-          </ItemTableTbody>
-        </ItemTable>
-      </WantList>
-      <ButtonArea>
-        <DeleteButton startIcon={<DeleteIcon />} onClick={ClickDelete}>
-          Delete
-        </DeleteButton>
-        <EditButton startIcon={<EditIcon />} onClick={ClickEdit}>
-          Edit
-        </EditButton>
-      </ButtonArea>
-    </div>
+            );
+          })}
+          {/* </WantImages> */}
+        </Swiper>
+        <WantTitle>{goodsName}</WantTitle>
+        <WantList>
+          <ItemTable>
+            <ItemTableTbody>
+              <ItemTableTr>
+                <ItemTableTh>値段</ItemTableTh>
+                <ItemTableTd>
+                  {price !== "" ? "¥" : "¥ - "}
+                  {price}
+                </ItemTableTd>
+              </ItemTableTr>
+              <ItemTableTr>
+                <ItemTableTh>URL</ItemTableTh>
+                <ItemTableTd>
+                  {url === "" ? "-" : ""}
+                  <a target="_blank" rel="noopener noreferrer" href={url}>
+                    {url}
+                  </a>
+                </ItemTableTd>
+              </ItemTableTr>
+              <ItemTableTr>
+                <ItemTableTh>場所</ItemTableTh>
+                <ItemTableTd>
+                  {place === "" ? "-" : ""}
+                  {place}
+                </ItemTableTd>
+              </ItemTableTr>
+              <ItemTableTr>
+                <ItemTableTh>その他</ItemTableTh>
+                <ItemTableTd>
+                  {other === "" ? "-" : ""}
+                  {other}
+                </ItemTableTd>
+              </ItemTableTr>
+            </ItemTableTbody>
+          </ItemTable>
+        </WantList>
+        <ButtonArea>
+          <EditButton startIcon={<EditIcon />} onClick={ClickEdit}>
+            編集
+          </EditButton>
+          <DeleteButton startIcon={<DeleteIcon />} onClick={ClickDelete}>
+            削除
+          </DeleteButton>
+        </ButtonArea>
+      </ListContents>
+    </ListWrap>
   );
 
   return (
-    <div>
+    <TemporaryWrap>
       {["bottom"].map((anchor) => (
         <React.Fragment key={anchor}>
-          <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button>
+          <DetailButton onClick={toggleDrawer(anchor, true)}>
+            <ChevronRightIcon />
+          </DetailButton>
           <Drawer
             anchor={anchor}
             open={state[anchor]}
@@ -341,6 +410,6 @@ export default function TemporaryDrawer(props) {
           </Drawer>
         </React.Fragment>
       ))}
-    </div>
+    </TemporaryWrap>
   );
 }

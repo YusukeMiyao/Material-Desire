@@ -4,14 +4,15 @@ import styled from "styled-components";
 const FooterWrap = styled.footer`
   width: 100%;
   height: 56px;
-  background-color: #ebebeb;
+  background-color: #666666;
   display: flex;
   justify-content: center;
   align-items: center;
 `;
 const Button = styled.button`
   color: #ffffff;
-  border: solid 1px lightgray;
+  background-color: #666666;
+  border: solid 1px #000000;
   border-radius: 4px;
   padding: 8px 16px;
   font-size: 8px;

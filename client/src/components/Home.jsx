@@ -12,13 +12,14 @@ import styled from "styled-components";
 import { PureComponent } from "react";
 import firebase, { uiConfigSecand } from "../utils/firebase";
 import FirebaseUIAuth from "react-firebaseui/StyledFirebaseAuth";
-import { Button } from "reactstrap";
+import Button from "@material-ui/core/Button";
 import { array } from "yup";
 import Fab from "@material-ui/core/Fab";
 import Card from "@material-ui/core/Card";
 import AddIcon from "@material-ui/icons/Add";
 import { reject } from "lodash";
 import Icon from "../assets/images/Icon.png";
+import DeleteIcon from "@material-ui/icons/Delete";
 
 class Home extends React.Component {
   constructor(props) {
@@ -269,10 +270,14 @@ class Home extends React.Component {
       }
     }
 
-    const Main = styled.main``;
+    const Main = styled.main`
+      width: calc(100% - 16px);
+      max-width: 768px;
+      margin: auto;
+    `;
     const Wrap = styled.div`
       width: calc(100% - 16px);
-      max-width: 1200px;
+      /* max-width: 1200px; */
       margin: 20px auto;
       padding: 0 8px;
     `;
@@ -285,7 +290,7 @@ class Home extends React.Component {
       height: auto;
       /* min-height: 120px; */
       margin: 0 auto 20px;
-      padding: 20px 0;
+      padding: 5px 0 20px;
       display: flex;
       flex-wrap: wrap;
     `;
@@ -293,13 +298,27 @@ class Home extends React.Component {
       background-color: ${(props) =>
         props.isDragging ? "lightgreen" : "white"};
       width: calc(100% / 3 - 5px);
+      height: 200px;
       display: flex;
       border-radius: 10px;
-      height: 100%;
       overflow: hidden;
       transition: all 0.3s;
+      margin-bottom: 4px;
       :nth-of-type(3n-1) {
-        margin: 0 4px;
+        margin: 0 4px 4px;
+      }
+      @media screen and (min-width: 768px) {
+        width: calc(100% / 5 - 7px);
+        height: 222px;
+        margin-right: 8px;
+        margin-bottom: 8px;
+        :nth-of-type(3n-1) {
+          margin-right: 8px;
+          margin-left: 0;
+        }
+        :nth-of-type(5n) {
+          margin-right: 0;
+        }
       }
     `;
     const Section = styled.div`
@@ -318,7 +337,7 @@ class Home extends React.Component {
       width: fit-content;
       color: #1d1d1ddd;
       font-weight: bold;
-      margin-bottom: 0;
+      margin: 0;
     `;
     const FormOpenButton = styled(Fab)`
       position: fixed;
@@ -336,7 +355,20 @@ class Home extends React.Component {
         background-color: #96d4ce;
       }
     `;
-
+    const AllDeleteButton = styled(Button)`
+      color: #f44336;
+      border: solid 1px #0000001f;
+      padding: 4px 16px 4px 10px;
+      svg {
+        width: 20px;
+        padding-right: 6px;
+      }
+    `;
+    const Block = styled.div`
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    `;
     return (
       <Main>
         <div>{this.state.userName}さん</div>
@@ -350,9 +382,15 @@ class Home extends React.Component {
           <AddIcon /> ADD WISH
         </FormOpenButton>
         <Wrap>
-          <TotalPrice>
-            総額 ¥{this.state.totalPrice.toLocaleString()}
-          </TotalPrice>
+          <Block>
+            <TotalPrice>
+              総額 ¥{this.state.totalPrice.toLocaleString()}
+            </TotalPrice>
+            <AllDeleteButton onClick={this.allDelete}>
+              <DeleteIcon />
+              全削除
+            </AllDeleteButton>
+          </Block>
           {this.state.formOpen ? (
             <Form onCancel={this.cancelAdd} onSubmit={this.imgUp} />
           ) : (
@@ -441,7 +479,6 @@ class Home extends React.Component {
             })}
           </DragDropContext>
         </Wrap>
-        <button onClick={this.allDelete}>全消去</button>
         {this.state.isAnonymous ? (
           <div>
             データを残すには新規登録してください

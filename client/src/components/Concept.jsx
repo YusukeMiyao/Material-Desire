@@ -42,7 +42,6 @@ class Concept extends React.Component {
           </Desc>
         </Content>
         <Content>
-          <Image src={OnlineShopping} />
           <Desc>
             あなたが追加した欲しいものは
             <br />
@@ -53,6 +52,7 @@ class Concept extends React.Component {
             <br />
             その時間が一番楽しいはずです。
           </Desc>
+          <Image src={OnlineShopping} />
         </Content>
       </Wrap>
     );

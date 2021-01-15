@@ -7,25 +7,53 @@ import Typography from "@material-ui/core/Typography";
 import TemporaryDrawer from "./TemporaryDrawer";
 import Icon from "../assets/images/Icon.png";
 
-const WantImages = styled.div`
-  /* display: flex;
-  overflow: auto;
-  img {
-    width: calc(100% - 2px);
-    height: 180px;
-    object-fit: cover; */
-  // 画像の位置を把握するため
-  /* border: solid 1px black; */
-  // 画像の位置を把握するため
-  /* :nth-child(n + 2) {
-      margin-left: 20px;
-    }
-  } */
+const WantWrap = styled.div`
+  width: 100%;
+  position: relative;
 `;
-const WantTitle = styled(Typography)``;
+const WantImages = styled.div`
+  display: flex;
+  overflow: auto;
+  width: 100%;
+  img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    margin: auto;
+    :nth-child(n + 2) {
+      display: none;
+    }
+  }
+  @media screen and (min-width: 768px) {
+    img {
+      width: calc(100% - 2px);
+      height: 140px;
+    }
+  }
+`;
+const WantTitle = styled(Typography)`
+  @media screen and (min-width: 768px) {
+    font-size: 20px;
+  }
+`;
 const Price = styled(Typography)`
   color: #00000099;
   font-size: 14px;
+`;
+const CardWrap = styled.div`
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 12px;
+`;
+const CardActionsEx = styled(CardActions)`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 24px;
+`;
+const CardContentEx = styled(CardContent)`
+  padding: 12px;
 `;
 class Want extends React.Component {
   render() {
@@ -48,7 +76,7 @@ class Want extends React.Component {
     }
 
     return (
-      <div>
+      <WantWrap>
         <WantImages>
           {img.map((el, index) => {
             return (
@@ -62,14 +90,14 @@ class Want extends React.Component {
             );
           })}
         </WantImages>
-        <CardContent>
+        <CardContentEx>
           <WantTitle>{goodsName}</WantTitle>
           <Price>
             {price !== "" ? "¥" : "¥ - "}
             {price}
           </Price>
-        </CardContent>
-        <CardActions>
+        </CardContentEx>
+        <CardActionsEx>
           <TemporaryDrawer
             id={id}
             goodsName={goodsName}
@@ -83,8 +111,8 @@ class Want extends React.Component {
             onClickEdit={onClickEdit}
             onDelete={onDelete}
           />
-        </CardActions>
-      </div>
+        </CardActionsEx>
+      </WantWrap>
     );
   }
 
