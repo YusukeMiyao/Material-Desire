@@ -74,16 +74,21 @@ const WantImages = styled.div`
 
 const ListWrap = styled.div`
   position: relative;
+  height: 100vh;
   @media screen and (min-width: 768px) {
     max-width: 700px;
     min-width: 700px;
-    height: 100vh;
     margin: 20px auto;
   }
 `;
 const ListContents = styled.div`
+  box-shadow: 0 0 4px gray;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 5px;
   @media screen and (min-width: 768px) {
-    border: solid 1px #707070;
+    padding: 40px;
+    margin: 10px;
   }
 `;
 const CloseButton = styled(Button)`
@@ -99,18 +104,21 @@ const WantList = styled.div`
     display: none;
   }
 `;
-
+const WantListVerTablet = styled.div`
+  @media screen and (max-width: 767px) {
+    display: none;
+  }
+`;
 const ButtonArea = styled.div`
-  margin: 16px;
   display: flex;
   flex-wrap: wrap;
+  margin-top: 20px;
 `;
 
 const ItemTable = styled.table`
   display: table;
   width: 100%;
-  max-width: 360px;
-  margin: 8px auto 0;
+  height: 295px;
   border-collapse: collapse;
   border: 1px solid #f5f5f5;
   border-collapse: separate;
@@ -131,7 +139,7 @@ const ItemTableTr = styled.tr`
 `;
 
 const ItemTableTh = styled.th`
-  width: 39%;
+  width: 30%;
   text-align: left;
   font-weight: 400;
   background: #fafafa;
@@ -143,7 +151,7 @@ const ItemTableTh = styled.th`
 `;
 
 const ItemTableTd = styled.td`
-  width: 61%;
+  width: 70%;
   background: #fff;
   border-collapse: collapse;
   border: 1px solid #f5f5f5;
@@ -163,12 +171,6 @@ const EditButton = styled(Button)`
   :hover {
     background-color: #96d4ce;
   }
-  @media screen and (min-width: 768px) {
-    > span {
-      display: flex;
-      justify-content: space-between;
-    }
-  }
 `;
 
 const DeleteButton = styled(Button)`
@@ -181,12 +183,6 @@ const DeleteButton = styled(Button)`
   border: solid 1px #0000001f;
   :hover {
     background-color: #6200ee0a;
-  }
-  @media screen and (min-width: 768px) {
-    > span {
-      display: flex;
-      justify-content: space-between;
-    }
   }
 `;
 const TemporaryWrap = styled.div`
@@ -212,9 +208,28 @@ const WantTitleVerTablet = styled.h5`
   display: none;
   @media screen and (min-width: 768px) {
     display: block;
-    margin: 20px;
+    margin: 0 0 20px;
     font-size: 25px;
     text-align: center;
+  }
+`;
+const SwiperWrap = styled.div`
+  @media screen and (min-width: 768px) {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    > div {
+      width: 300px;
+      div {
+        margin: 0 !important;
+      }
+    }
+    > div:nth-of-type(1) {
+      margin: 0 5px 0 0 !important;
+    }
+    > div:nth-of-type(2) {
+      margin: 0 0 0 5px !important;
+    }
   }
 `;
 const useStyles = makeStyles({
@@ -315,36 +330,74 @@ export default function TemporaryDrawer(props) {
           })}
         </Dialog>
         <WantTitleVerTablet>{goodsName}</WantTitleVerTablet>
-        <Swiper
-          spaceBetween={50}
-          slidesPerView="auto"
-          navigation
-          pagination={{
-            clickable: true,
-            type: "fraction",
-          }}
-          scrollbar={{ draggable: true }}
-          loop={img.length === 1 ? false : true}
-          loopedSlides={img.length}
-        >
-          {/* <WantImages> */}
-          {img.map((el, index) => {
-            return (
-              <SwiperSlide>
-                <CardActionArea onClick={handleClickOpen}>
-                  <CardMedia
-                    component="img"
-                    key={index}
-                    image={el.url}
-                    title={el.name}
-                    alt={el.name}
-                  />
-                </CardActionArea>
-              </SwiperSlide>
-            );
-          })}
-          {/* </WantImages> */}
-        </Swiper>
+        <SwiperWrap>
+          <Swiper
+            spaceBetween={50}
+            slidesPerView="auto"
+            navigation
+            pagination={{
+              clickable: true,
+              type: "fraction",
+            }}
+            scrollbar={{ draggable: true }}
+            loop={img.length === 1 ? false : true}
+            loopedSlides={img.length}
+          >
+            {/* <WantImages> */}
+            {img.map((el, index) => {
+              return (
+                <SwiperSlide>
+                  <CardActionArea onClick={handleClickOpen}>
+                    <CardMedia
+                      component="img"
+                      key={index}
+                      image={el.url}
+                      title={el.name}
+                      alt={el.name}
+                    />
+                  </CardActionArea>
+                </SwiperSlide>
+              );
+            })}
+            {/* </WantImages> */}
+          </Swiper>
+          <WantListVerTablet>
+            <ItemTable>
+              <ItemTableTbody>
+                <ItemTableTr>
+                  <ItemTableTh>値段</ItemTableTh>
+                  <ItemTableTd>
+                    {price !== "" ? "¥" : "¥ - "}
+                    {price}
+                  </ItemTableTd>
+                </ItemTableTr>
+                <ItemTableTr>
+                  <ItemTableTh>URL</ItemTableTh>
+                  <ItemTableTd>
+                    {url === "" ? "-" : ""}
+                    <a target="_blank" rel="noopener noreferrer" href={url}>
+                      {url}
+                    </a>
+                  </ItemTableTd>
+                </ItemTableTr>
+                <ItemTableTr>
+                  <ItemTableTh>場所</ItemTableTh>
+                  <ItemTableTd>
+                    {place === "" ? "-" : ""}
+                    {place}
+                  </ItemTableTd>
+                </ItemTableTr>
+                <ItemTableTr>
+                  <ItemTableTh>その他</ItemTableTh>
+                  <ItemTableTd>
+                    {other === "" ? "-" : ""}
+                    {other}
+                  </ItemTableTd>
+                </ItemTableTr>
+              </ItemTableTbody>
+            </ItemTable>
+          </WantListVerTablet>
+        </SwiperWrap>
         <WantTitle>{goodsName}</WantTitle>
         <WantList>
           <ItemTable>

@@ -61,81 +61,93 @@ class SignInOrUp extends React.Component {
       <div className="container">
         <div
           className="mx-auto"
-          style={{ width: 400, background: "#eee", padding: 20, marginTop: 60 }}
+          style={{
+            width: "100%",
+            background: "#f2e7fe",
+            padding: "20px 0",
+            margin: "60px auto",
+          }}
         >
-          <p style={{ textAlign: "center" }}>サインイン</p>
-          <Formik
-            initialValues={{ email: "", password: "" }}
-            onSubmit={(values) => this.handleOnSubmit(values)}
-            validationSchema={Yup.object().shape({
-              email: Yup.string().email().required(),
-              password: Yup.string().required(),
-            })}
+          <div
+            style={{
+              width: "400px",
+              margin: "auto",
+              padding: "20px 0",
+              background: "#ffffff",
+            }}
           >
-            {({
-              handleSubmit,
-              handleChange,
-              handleBlur,
-              values,
-              errors,
-              touched,
-            }) => (
-              <Form onSubmit={handleSubmit}>
-                <FormGroup>
+            <p style={{ textAlign: "center", marginTop: 0 }}>
+              ソーシャルアカウントで登録/ログイン
+              <br />
+              <span>（無料で使用できます）</span>
+            </p>
+            <Formik
+              initialValues={{ email: "", password: "" }}
+              onSubmit={(values) => this.handleOnSubmit(values)}
+              validationSchema={Yup.object().shape({
+                email: Yup.string().email().required(),
+                password: Yup.string().required(),
+              })}
+            >
+              {({
+                handleSubmit,
+                handleChange,
+                handleBlur,
+                values,
+                errors,
+                touched,
+              }) => (
+                <Form onSubmit={handleSubmit}>
+                  {/* <FormGroup>
                   <Label for="email">Email</Label>
                   <Input
-                    type="email"
-                    name="email"
-                    id="email"
-                    value={values.email}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    invalid={touched.email && errors.email ? true : false}
+                  type="email"
+                  name="email"
+                  id="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  invalid={touched.email && errors.email ? true : false}
                   />
                   <FormFeedback>{errors.email}</FormFeedback>
-                </FormGroup>
-                <FormGroup>
+                  </FormGroup>
+                  <FormGroup>
                   <Label for="password">Password</Label>
                   <Input
-                    type="password"
-                    name="password"
-                    id="password"
-                    value={values.password}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    invalid={touched.password && errors.password ? true : false}
+                  type="password"
+                  name="password"
+                  id="password"
+                  value={values.password}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  invalid={touched.password && errors.password ? true : false}
                   />
                   <FormFeedback>{errors.password}</FormFeedback>
-                </FormGroup>
-                <div style={{ textAlign: "center" }}>
-                  <Button
+                </FormGroup> */}
+                  <div style={{ textAlign: "center" }}>
+                    {/* <Button
                     color="primary"
                     type="submit"
                     disabled={this.state.loading}
-                  >
+                    >
                     <Spinner
-                      size="sm"
-                      color="light"
-                      style={{ marginRight: 5 }}
-                      hidden={!this.state.loading}
+                    size="sm"
+                    color="light"
+                    style={{ marginRight: 5 }}
+                    hidden={!this.state.loading}
                     />
                     ログイン
-                  </Button>
-                  <FirebaseUIAuth
-                    uiConfig={uiConfig}
-                    firebaseAuth={firebase.auth()}
-                  />
-                  （ログインせずに試すにはこちら）
-                </div>
-              </Form>
-            )}
-          </Formik>
-        </div>
-        <div
-          className="mx-auto"
-          style={{ width: 400, background: "#fff", padding: 20 }}
-        >
-          <Link to="/signup">新規登録はこちら。</Link>
+                  </Button> */}
+                    <FirebaseUIAuth
+                      uiConfig={uiConfig}
+                      firebaseAuth={firebase.auth()}
+                    />
+                    （ログインせずに試すにはこちら）
+                  </div>
+                </Form>
+              )}
+            </Formik>
+          </div>
         </div>
       </div>
     );

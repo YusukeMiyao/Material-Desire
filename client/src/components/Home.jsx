@@ -271,15 +271,16 @@ class Home extends React.Component {
     }
 
     const Main = styled.main`
-      width: calc(100% - 16px);
+      width: calc(100% - 40px);
       max-width: 768px;
-      margin: auto;
+      margin: 10px auto;
+      box-shadow: 0 0 4px gray;
+      padding: 10px;
+      border-radius: 10px;
     `;
     const Wrap = styled.div`
-      width: calc(100% - 16px);
-      /* max-width: 1200px; */
+      width: 100%;
       margin: 20px auto;
-      padding: 0 8px;
     `;
     const List = styled.div`
       background-color: ${(props) =>
@@ -342,8 +343,7 @@ class Home extends React.Component {
     const FormOpenButton = styled(Fab)`
       position: fixed;
       bottom: 8px;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      right: 8px;
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
@@ -378,8 +378,8 @@ class Home extends React.Component {
           ""
         )}
         <Button onClick={this.handleLogout}>ログアウト</Button>
-        <FormOpenButton variant="extended" onClick={this.clickFormOpen}>
-          <AddIcon /> ADD WISH
+        <FormOpenButton onClick={this.clickFormOpen}>
+          <AddIcon />
         </FormOpenButton>
         <Wrap>
           <Block>

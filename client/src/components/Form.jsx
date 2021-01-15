@@ -43,6 +43,9 @@ const ModalItem = styled.form`
   margin: 20px 8px;
   width: calc(100% - 16px);
   position: relative;
+  padding: 10px;
+  box-shadow: 0 0 4px gray;
+  border-radius: 10px;
 `;
 const ImageArea = styled.div`
   > p {
@@ -102,37 +105,43 @@ const InputArea = styled.div`
     }
   }
 `;
+const Attention = styled.span`
+  background-color: #ff0211;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 3px 12px;
+  border-radius: 5px;
+`;
 const ButtonArea = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 8px;
   display: flex;
   flex-wrap: wrap;
 `;
-const CancelButton = styled(Button)`
+const CancelButton = styled(Fab)`
+  position: fixed;
+  bottom: 8px;
   border: solid 1px #0000001f;
+  color: #03dac5;
+  font-weight: bold;
   background-color: #fff;
-  color: #96d4ce;
-  width: 100%;
-  display: flex;
-  justify-content: center;
+  transform: 0.2s;
   :hover {
-    background-color: #6200ee0a;
-  }
-  @media screen and (min-width: 768px) {
-    justify-content: space-between;
+    background-color: #03dac5;
+    border: #03dac5;
+    svg {
+      color: #fff;
+    }
   }
 `;
 const AddButton = styled(Button)`
   background-color: #03dac5;
   color: #ffffff;
   width: 100%;
-  margin-bottom: 8px;
   display: flex;
   justify-content: center;
   :hover {
     background-color: #96d4ce;
-  }
-  @media screen and (min-width: 768px) {
-    justify-content: space-between;
   }
 `;
 const ErrorMessage = styled.p`
@@ -168,10 +177,12 @@ const DeleteButton = styled(Button)`
 
 const ImgLabel = styled(InputLabel)`
   padding: 15px;
-  max-width: 120px;
-  height: 20px;
+  width: 100%;
+  height: 200px;
   text-align: center;
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #f1f1f1;
   color: #73a9ff;
 `;
@@ -261,9 +272,8 @@ class Form extends React.Component {
             <InputArea>
               <label>
                 <p>
-                  欲しい物の名前<a>必須</a>
+                  欲しい物の名前<Attention>必須</Attention>
                 </p>
-
                 <TextField
                   variant="outlined"
                   size="small"
@@ -367,11 +377,10 @@ class Form extends React.Component {
                 <AddIcon />
                 登録
               </AddButton>
-              <CancelButton onClick={this.clickCancel}>
-                <ArrowBackIcon />
-                キャンセル
-              </CancelButton>
             </ButtonArea>
+            <CancelButton size="small" onClick={this.clickCancel}>
+              <ArrowBackIcon />
+            </CancelButton>
           </ModalItem>
         </ModalContent>
       </ModalBg>

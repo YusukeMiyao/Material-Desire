@@ -14,7 +14,6 @@ class Index extends React.Component {
         {/* <Header /> */}
         <Fv />
         <Concept />
-        <SignUp />
         <SignIn />
       </Wrap>
     );

@@ -102,18 +102,20 @@ const ButtonArea = styled.div`
   flex-wrap: wrap;
   margin-bottom: 20px;
 `;
-const CancelButton = styled(Button)`
+const CancelButton = styled(Fab)`
+  position: fixed;
+  bottom: 8px;
   border: solid 1px #0000001f;
+  color: #03dac5;
+  font-weight: bold;
   background-color: #fff;
-  color: #96d4ce;
-  width: 100%;
-  display: flex;
-  justify-content: center;
+  transform: 0.2s;
   :hover {
-    background-color: #6200ee0a;
-  }
-  @media screen and (min-width: 768px) {
-    justify-content: space-between;
+    background-color: #03dac5;
+    border: #03dac5;
+    svg {
+      color: #fff;
+    }
   }
 `;
 const AddButton = styled(Button)`
@@ -125,9 +127,6 @@ const AddButton = styled(Button)`
   justify-content: center;
   :hover {
     background-color: #96d4ce;
-  }
-  @media screen and (min-width: 768px){
-    justify-content: space-between;
   }
 `;
 const ErrorMessage = styled.p`
@@ -162,12 +161,22 @@ const DeleteButton = styled.p`
 
 const ImgLabel = styled(InputLabel)`
   padding: 15px;
-  max-width: 120px;
-  height: 20px;
+  width: 100%;
+  height: 200px;
   text-align: center;
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: #f1f1f1;
   color: #73a9ff;
+`;
+const Attention = styled.span`
+  background-color: #ff0211;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 3px 12px;
+  border-radius: 5px;
 `;
 class EditWant extends React.Component {
   constructor(props) {
@@ -278,8 +287,9 @@ class EditWant extends React.Component {
             </ImageArea>
             <InputArea>
               <label>
-                <p>欲しい物の名前</p>
-                <a>必須</a>
+                <p>
+                  欲しい物の名前<Attention>必須</Attention>
+                </p>
                 <TextField
                   variant="outlined"
                   size="small"
@@ -383,11 +393,10 @@ class EditWant extends React.Component {
                 <AddIcon />
                 登録
               </AddButton>
-              <CancelButton onClick={this.clickCancel}>
-                <ArrowBackIcon />
-                キャンセル
-              </CancelButton>
             </ButtonArea>
+            <CancelButton size="small" onClick={this.clickCancel}>
+              <ArrowBackIcon />
+            </CancelButton>
           </ModalItem>
         </ModalContent>
       </ModalBg>
