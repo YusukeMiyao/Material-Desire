@@ -22,19 +22,19 @@ export const uiConfig = {
   signInSuccessUrl: "/home",
   signInOptions: [
     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-    firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+    // firebase.auth.FacebookAuthProvider.PROVIDER_ID,
     firebase.auth.TwitterAuthProvider.PROVIDER_ID,
     firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID,
   ],
   autoUpgradeAnonymousUsers: false,
 };
 
-export const uiConfigSecand = {
+export const uiConfigSecond = {
   signInFlow: "popup",
   signInSuccessUrl: "/home",
   signInOptions: [
     firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-    firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+    // firebase.auth.FacebookAuthProvider.PROVIDER_ID,
     firebase.auth.TwitterAuthProvider.PROVIDER_ID,
   ],
   autoUpgradeAnonymousUsers: false,
