@@ -82,7 +82,7 @@ const ListWrap = styled.div`
   }
 `;
 const ListContents = styled.div`
-  box-shadow: 0 0 4px gray;
+  box-shadow: 0 0 4px grey;
   border-radius: 10px;
   padding: 20px;
   margin: 5px;

@@ -4,9 +4,9 @@ import OnlineShopping from "../assets/images/online_shopping.svg";
 
 const Wrap = styled.div``;
 const Content = styled.div`
-  border-bottom: solid 1px black;
   margin-bottom: 32px;
   text-align: center;
+  box-shadow: 0px 5px 5px -5px grey;
 `;
 const Message = styled.p`
   font-weight: bold;
@@ -14,7 +14,7 @@ const Message = styled.p`
 `;
 const Desc = styled.p`
   font-size: 16px;
-  margin-bottom: 40px;
+  padding-bottom: 40px;
 `;
 const Image = styled.img`
   width: 100%;

@@ -36,8 +36,11 @@ const ModalContent = styled.div`
 `;
 const ModalItem = styled.form`
   margin: 20px 8px;
-  width: calc(100% - 16px);
+  width: calc(100% - 36px);
   position: relative;
+  padding: 10px;
+  box-shadow: 0 0 4px grey;
+  border-radius: 10px;
 `;
 const ImageArea = styled.div`
   > p {
@@ -47,10 +50,8 @@ const ImageArea = styled.div`
   img {
     width: 100%;
     height: 128px;
-    object-fit: cover;
-    // 画像の位置を把握するため
+    object-fit: contain;
     border: solid 1px #0000000a;
-    // 画像の位置を把握するため
   }
 `;
 const InputArea = styled.div`
@@ -147,29 +148,44 @@ const CardItem = styled(Card)`
   border-radius: 10px;
   height: auto;
   transition: all 0.3s;
-  margin-bottom: 8px;
-  :nth-of-type(3n-1) {
-    margin: 0 4px 8px;
+  margin: 0 4px 8px 0;
+  text-align: center;
+  box-shadow: 0 0 3px grey;
+  :nth-of-type(3),
+  :nth-of-type(5) {
+    margin: 0 0 8px;
   }
 `;
-const DeleteButton = styled.p`
-  text-align: center;
-  color: #284ff0de;
+const DeleteButton = styled(Button)`
   font-size: 16px;
+  text-align: center;
   margin: 10px;
+  color: #284ff0de;
 `;
 
-const ImgLabel = styled(InputLabel)`
+const ImgLabelFull = styled(InputLabel)`
   padding: 15px;
   width: 100%;
   height: 200px;
-  text-align: center;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #f1f1f1;
   color: #73a9ff;
 `;
+const ImgLabel = styled(InputLabel)`
+  width: calc(100% / 3 - 5px);
+  border-radius: 10px;
+  height: 190px;
+  background-color: #f1f1f1;
+  color: #73a9ff;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 3px grey;
+`;
+
 const Attention = styled.span`
   background-color: #ff0211;
   color: #fff;
@@ -258,10 +274,28 @@ class EditWant extends React.Component {
                     </CardItem>
                   );
                 })}
-                {this.state.imgLimited ? (
+                {!Object.keys(this.state.data.img).length ? (
+                  <ImgLabelFull htmlFor="img-input">
+                    <CardMedia>
+                      <ImageIcon />
+                      <input
+                        id="img-input"
+                        hidden
+                        type="file"
+                        name="img"
+                        accept="image/*"
+                        multiple
+                        onChange={this.selectImages}
+                        onClick={(e) => {
+                          e.target.value = null;
+                        }}
+                      />
+                    </CardMedia>
+                  </ImgLabelFull>
+                ) : this.state.imgLimited ? (
                   ""
                 ) : (
-                  <ImgLabel htmlFor="img-input">
+                  <ImgLabel>
                     <CardMedia>
                       <ImageIcon />
                       <input

@@ -16,14 +16,22 @@ const Button = styled.button`
   border-radius: 4px;
   padding: 8px 16px;
   font-size: 8px;
+  outline: none;
+  cursor: pointer;
 `;
 class Footer extends React.Component {
   render() {
     return (
       <FooterWrap>
-        <Button>↑ページ上部へ戻る</Button>
+        <Button onClick={this.scrollToTop}>↑ ページ上部へ戻る</Button>
       </FooterWrap>
     );
+  }
+  scrollToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   }
 }
 

@@ -1,7 +1,5 @@
 import React from "react";
 import "../assets/css/App.css";
-import Header from "./Header.jsx";
-import Concept from "./Concept.jsx";
 import Form from "./Form.jsx";
 import Want from "./Want.jsx";
 import EditWant from "./EditWant.jsx";
@@ -9,15 +7,12 @@ import Title from "./Title.jsx";
 import EditTitle from "./EditTitle.jsx";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
-import { PureComponent } from "react";
-import firebase, { uiConfigSecand } from "../utils/firebase";
+import firebase, { uiConfigSecond } from "../utils/firebase";
 import FirebaseUIAuth from "react-firebaseui/StyledFirebaseAuth";
 import Button from "@material-ui/core/Button";
-import { array } from "yup";
 import Fab from "@material-ui/core/Fab";
 import Card from "@material-ui/core/Card";
 import AddIcon from "@material-ui/icons/Add";
-import { reject } from "lodash";
 import Icon from "../assets/images/Icon.png";
 import DeleteIcon from "@material-ui/icons/Delete";
 
@@ -274,19 +269,19 @@ class Home extends React.Component {
       width: calc(100% - 40px);
       max-width: 768px;
       margin: 10px auto;
-      box-shadow: 0 0 4px gray;
+      box-shadow: 0 0 4px grey;
       padding: 10px;
       border-radius: 10px;
     `;
     const Wrap = styled.div`
       width: 100%;
-      margin: 20px auto;
+      margin: 16px auto;
     `;
     const List = styled.div`
       background-color: ${(props) =>
         props.isDraggingOver ? "lightblue" : "#fff"};
       transition: background-color 0.2s ease;
-      border-bottom: 1px solid gray;
+      border-bottom: 1px solid grey;
       width: 100%;
       height: auto;
       /* min-height: 120px; */
@@ -342,8 +337,8 @@ class Home extends React.Component {
     `;
     const FormOpenButton = styled(Fab)`
       position: fixed;
-      bottom: 8px;
-      right: 8px;
+      bottom: 16px;
+      right: 16px;
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
@@ -353,6 +348,11 @@ class Home extends React.Component {
       transition: 0.2s;
       :hover {
         background-color: #96d4ce;
+      }
+      @media screen and (min-width: 788px) {
+        margin-left: 716px;
+        right: auto;
+        left: auto;
       }
     `;
     const AllDeleteButton = styled(Button)`
@@ -369,6 +369,22 @@ class Home extends React.Component {
       justify-content: space-between;
       align-items: center;
     `;
+    const SignUpWrap = styled.div`
+      width: calc(100% + 20px);
+      background: #f2e7fe;
+      padding: 20px 0;
+      box-shadow: 0px 5px 5px -5px grey;
+      margin: 5px -10px;
+    `;
+    const SignUpContent = styled.div`
+      width: 340px;
+      margin: auto;
+      text-align: center;
+      padding: 20px 0;
+      background: #ffffff;
+      border: solid 1px #e0e0e0;
+      border-radius: 4px;
+    `;
     return (
       <Main>
         <div>{this.state.userName}さん</div>
@@ -377,11 +393,10 @@ class Home extends React.Component {
         ) : (
           ""
         )}
-        <Button onClick={this.handleLogout}>ログアウト</Button>
-        <FormOpenButton onClick={this.clickFormOpen}>
-          <AddIcon />
-        </FormOpenButton>
         <Wrap>
+          <FormOpenButton onClick={this.clickFormOpen}>
+            <AddIcon />
+          </FormOpenButton>
           <Block>
             <TotalPrice>
               総額 ¥{this.state.totalPrice.toLocaleString()}
@@ -480,13 +495,15 @@ class Home extends React.Component {
           </DragDropContext>
         </Wrap>
         {this.state.isAnonymous ? (
-          <div>
-            データを残すには新規登録してください
-            <FirebaseUIAuth
-              uiConfig={uiConfigSecand}
-              firebaseAuth={firebase.auth()}
-            />
-          </div>
+          <SignUpWrap>
+            <SignUpContent>
+              データを残すには新規登録してください
+              <FirebaseUIAuth
+                uiConfig={uiConfigSecond}
+                firebaseAuth={firebase.auth()}
+              />
+            </SignUpContent>
+          </SignUpWrap>
         ) : (
           ""
         )}
@@ -738,10 +755,6 @@ class Home extends React.Component {
   };
   cancelAdd = () => {
     this.setState({ formOpen: false });
-  };
-
-  handleLogout = () => {
-    firebase.auth().signOut();
   };
 
   imgUp = async (e) => {
