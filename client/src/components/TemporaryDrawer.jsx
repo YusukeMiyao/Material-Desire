@@ -301,7 +301,7 @@ export default function TemporaryDrawer(props) {
           {img.map((el, index) => {
             return (
               <Swiper
-                spaceBetween={50}
+                // spaceBetween={50}
                 slidesPerView="auto"
                 navigation
                 pagination={{
@@ -314,9 +314,9 @@ export default function TemporaryDrawer(props) {
                 // onSwiper={(swiper) => console.log(swiper)}
                 // onSlideChange={() => console.log("slide change")}
                 loop={img.length === 1 ? false : true}
-                loopedSlides={img.length}
+                // loopedSlides={img.length}
               >
-                <SwiperSlide zoom={true}>
+                <SwiperSlide>
                   <CardMedia
                     component="img"
                     key={index}
@@ -332,7 +332,7 @@ export default function TemporaryDrawer(props) {
         <WantTitleVerTablet>{goodsName}</WantTitleVerTablet>
         <SwiperWrap>
           <Swiper
-            spaceBetween={50}
+            // spaceBetween={50}
             slidesPerView="auto"
             navigation
             pagination={{
