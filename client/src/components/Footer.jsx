@@ -19,6 +19,8 @@ const Button = styled.button`
   font-size: 14px;
   outline: none;
   cursor: pointer;
+  align-items: center;
+  display: flex;
 `;
 class Footer extends React.Component {
   render() {
