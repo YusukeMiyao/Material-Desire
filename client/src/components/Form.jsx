@@ -87,7 +87,8 @@ const InputArea = styled.div`
     > p {
       width: 100%;
       display: flex;
-      justify-content: space-between;
+      justify-content: start;
+      align-items: center;
       margin: 10px 1em 10px 0;
       font-size: 14px;
       color: #00000099;
@@ -107,6 +108,7 @@ const Attention = styled.span`
   font-weight: bold;
   padding: 3px 12px;
   border-radius: 5px;
+  margin-left: 10px;
 `;
 const ButtonArea = styled.div`
   margin-bottom: 8px;

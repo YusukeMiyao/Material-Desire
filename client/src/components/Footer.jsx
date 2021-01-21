@@ -22,12 +22,16 @@ const Button = styled.button`
   align-items: center;
   display: flex;
 `;
+const ArrowUpwardIconEx = styled(ArrowUpwardIcon)`
+  width: 16px;
+  height: 16px;
+`;
 class Footer extends React.Component {
   render() {
     return (
       <FooterWrap>
         <Button onClick={this.scrollToTop}>
-          <ArrowUpwardIcon fontSize="small" /> ページ上部へ戻る
+          <ArrowUpwardIconEx fontSize="small" /> ページ上部へ戻る
         </Button>
       </FooterWrap>
     );
