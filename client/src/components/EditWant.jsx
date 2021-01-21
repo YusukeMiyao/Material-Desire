@@ -35,8 +35,8 @@ const ModalContent = styled.div`
   top: 0;
 `;
 const ModalItem = styled.form`
-  margin: 20px 8px;
-  width: calc(100% - 36px);
+  margin: 5px;
+  width: calc(100% - 30px);
   position: relative;
   padding: 10px;
   box-shadow: 0 0 4px grey;

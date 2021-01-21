@@ -48,9 +48,12 @@ const CardWrap = styled.div`
 `;
 const CardActionsEx = styled(CardActions)`
   position: absolute;
-  bottom: 0;
+  bottom: 4px;
   right: 0;
   width: 24px;
+  @media screen and (min-width: 768px) {
+    bottom: 3px;
+  }
 `;
 const CardContentEx = styled(CardContent)`
   padding: 12px;

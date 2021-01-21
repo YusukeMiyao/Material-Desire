@@ -300,7 +300,7 @@ class Home extends React.Component {
       background-color: ${(props) =>
         props.isDragging ? "lightgreen" : "white"};
       width: calc(100% / 3 - 5px);
-      height: 200px;
+      height: 190px;
       display: flex;
       border-radius: 10px;
       overflow: hidden;
@@ -311,7 +311,7 @@ class Home extends React.Component {
       }
       @media screen and (min-width: 768px) {
         width: calc(100% / 5 - 7px);
-        height: 222px;
+        height: 215px;
         margin-right: 9px;
         margin-bottom: 8px;
         :nth-of-type(3n-1) {
