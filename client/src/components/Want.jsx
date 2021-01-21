@@ -71,10 +71,6 @@ class Want extends React.Component {
       onDelete,
     } = this.props;
 
-    {
-      console.log(this.props);
-    }
-
     return (
       <WantWrap>
         <WantImages>

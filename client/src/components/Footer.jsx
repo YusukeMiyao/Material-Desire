@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 
 const FooterWrap = styled.footer`
   width: 100%;
@@ -15,7 +16,7 @@ const Button = styled.button`
   border: solid 1px #000000;
   border-radius: 4px;
   padding: 8px 16px;
-  font-size: 8px;
+  font-size: 14px;
   outline: none;
   cursor: pointer;
 `;
@@ -23,7 +24,9 @@ class Footer extends React.Component {
   render() {
     return (
       <FooterWrap>
-        <Button onClick={this.scrollToTop}>↑ ページ上部へ戻る</Button>
+        <Button onClick={this.scrollToTop}>
+          <ArrowUpwardIcon fontSize="small" /> ページ上部へ戻る
+        </Button>
       </FooterWrap>
     );
   }

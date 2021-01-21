@@ -1,7 +1,6 @@
 import React from "react";
-// import Icon from "../assets/images/Icon.png";
 import styled from "styled-components";
-import firebase from "../utils/firebase";
+
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Fab from "@material-ui/core/Fab";
@@ -9,13 +8,11 @@ import AddIcon from "@material-ui/icons/Add";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
-import FormControl from "@material-ui/core/FormControl";
-import Input from "@material-ui/core/Input";
+
 import InputLabel from "@material-ui/core/InputLabel";
 
-import ImageIcon from "@material-ui/icons/Image";
-import { CardActions } from "@material-ui/core";
-import { array } from "yup";
+import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
+import LoadingOverlay from "react-loading-overlay";
 
 const ModalBg = styled.div`
   position: fixed;
@@ -223,192 +220,200 @@ class Form extends React.Component {
       submitError: false,
       urlError: false,
       imgLimited: false,
+      isLoading: false,
     };
   }
 
   render() {
     return (
       <ModalBg>
-        <ModalContent>
-          <ModalItem>
-            <ImageArea>
-              <p>欲しい物の画像</p>
-              <CardWrap>
-                {console.log(typeof this.state.data.img)}
-                {this.state.data.img.map((el, index) => {
-                  return (
-                    <CardItem>
-                      <CardMedia
-                        component="img"
-                        key={index}
-                        image={el.url}
-                        title={el.name}
-                      />
-                      <DeleteButton
-                        color="primary"
-                        name="delete"
-                        onClick={() => this.selectDelete(index)}
-                      >
-                        削除
-                      </DeleteButton>
-                    </CardItem>
-                  );
-                })}
-                {!Object.keys(this.state.data.img).length ? (
-                  <ImgLabelFull htmlFor="img-input">
-                    <CardMedia>
-                      <ImageIcon />
-                      <input
-                        id="img-input"
-                        hidden
-                        type="file"
-                        name="img"
-                        accept="image/*"
-                        multiple
-                        onChange={this.selectImages}
-                        onClick={(e) => {
-                          e.target.value = null;
-                        }}
-                      />
-                    </CardMedia>
-                  </ImgLabelFull>
-                ) : this.state.imgLimited ? (
+        {this.state.isLoading ? (
+          <LoadingOverlay active={true} spinner text="Loading...">
+            <div style={{ height: "100vh", width: "100vw" }}></div>
+            {console.log("loding")}
+          </LoadingOverlay>
+        ) : (
+          <ModalContent>
+            <ModalItem>
+              <ImageArea>
+                <p>欲しい物の画像</p>
+                <CardWrap>
+                  {console.log(typeof this.state.data.img)}
+                  {this.state.data.img.map((el, index) => {
+                    return (
+                      <CardItem>
+                        <CardMedia
+                          component="img"
+                          key={index}
+                          image={el.url}
+                          title={el.name}
+                        />
+                        <DeleteButton
+                          color="primary"
+                          name="delete"
+                          onClick={() => this.selectDelete(index)}
+                        >
+                          削除
+                        </DeleteButton>
+                      </CardItem>
+                    );
+                  })}
+                  {!Object.keys(this.state.data.img).length ? (
+                    <ImgLabelFull htmlFor="img-input">
+                      <CardMedia>
+                        <AddPhotoAlternateIcon fontSize="large" />
+                        <input
+                          id="img-input"
+                          hidden
+                          type="file"
+                          name="img"
+                          accept="image/*"
+                          multiple
+                          onChange={this.selectImages}
+                          onClick={(e) => {
+                            e.target.value = null;
+                          }}
+                        />
+                      </CardMedia>
+                    </ImgLabelFull>
+                  ) : this.state.imgLimited ? (
+                    ""
+                  ) : (
+                    <ImgLabel>
+                      <CardMedia>
+                        <AddPhotoAlternateIcon fontSize="large" />
+                        <input
+                          id="img-input"
+                          hidden
+                          type="file"
+                          name="img"
+                          accept="image/*"
+                          multiple
+                          onChange={this.selectImages}
+                          onClick={(e) => {
+                            e.target.value = null;
+                          }}
+                        />
+                      </CardMedia>
+                    </ImgLabel>
+                  )}
+                </CardWrap>
+              </ImageArea>
+              <InputArea>
+                <label>
+                  <p>
+                    欲しい物の名前<Attention>必須</Attention>
+                  </p>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    type="text"
+                    name="goodsName"
+                    placeholder="40文字まで"
+                    value={this.state.data.goodsName}
+                    onChange={this.handleChange}
+                  />
+                </label>
+                <label>
+                  <p>欲しい物の金額</p>
+
+                  {this.state.priceError ? (
+                    <TextField
+                      error
+                      variant="outlined"
+                      size="small"
+                      type="tel"
+                      name="price"
+                      helperText="半角数字のみ入力して下さい"
+                      value={this.state.data.price}
+                      onChange={this.handleChange}
+                      placeholder="半角数字のみ"
+                      onBlur={this.resetErrors}
+                    />
+                  ) : (
+                    <TextField
+                      variant="outlined"
+                      size="small"
+                      type="tel"
+                      name="price"
+                      value={this.state.data.price}
+                      onChange={this.handleChange}
+                      placeholder="半角数字のみ"
+                      onBlur={this.resetErrors}
+                    />
+                  )}
+                </label>
+                <label>
+                  <p>URL</p>
+                  {this.state.urlError ? (
+                    <TextField
+                      error
+                      variant="outlined"
+                      size="small"
+                      type="url"
+                      name="url"
+                      helperText="URLが正しくありません"
+                      placeholder="40文字まで"
+                      value={this.state.data.url}
+                      onChange={this.handleChange}
+                      onBlur={this.checkUrlError}
+                    />
+                  ) : (
+                    <TextField
+                      variant="outlined"
+                      size="small"
+                      type="url"
+                      name="url"
+                      placeholder="40文字まで"
+                      value={this.state.data.url}
+                      onChange={this.handleChange}
+                      onBlur={this.checkUrlError}
+                    />
+                  )}
+                </label>
+                <label>
+                  <p>場所</p>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    type="text"
+                    name="place"
+                    placeholder="40文字まで"
+                    value={this.state.data.place}
+                    onChange={this.handleChange}
+                  />
+                </label>
+                <label>
+                  <p>その他</p>
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    type="text"
+                    name="other"
+                    multiline
+                    placeholder="1000文字まで"
+                    value={this.state.data.other}
+                    onChange={this.handleChange}
+                  />
+                </label>
+                {this.state.submitError ? (
+                  <ErrorMessage>欲しい物の名前は必須です</ErrorMessage>
+                ) : (
                   ""
-                ) : (
-                  <ImgLabel>
-                    <CardMedia>
-                      <ImageIcon />
-                      <input
-                        id="img-input"
-                        hidden
-                        type="file"
-                        name="img"
-                        accept="image/*"
-                        multiple
-                        onChange={this.selectImages}
-                        onClick={(e) => {
-                          e.target.value = null;
-                        }}
-                      />
-                    </CardMedia>
-                  </ImgLabel>
                 )}
-              </CardWrap>
-            </ImageArea>
-            <InputArea>
-              <label>
-                <p>
-                  欲しい物の名前<Attention>必須</Attention>
-                </p>
-                <TextField
-                  variant="outlined"
-                  size="small"
-                  type="text"
-                  name="goodsName"
-                  placeholder="40文字まで"
-                  value={this.state.data.goodsName}
-                  onChange={this.handleChange}
-                />
-              </label>
-              <label>
-                <p>欲しい物の金額</p>
-                {/* {this.state.data.price !== "" ? "¥" : null} */}
-                {this.state.priceError ? (
-                  <TextField
-                    error
-                    variant="outlined"
-                    size="small"
-                    type="tel"
-                    name="price"
-                    helperText="半角数字のみ入力して下さい"
-                    value={this.state.data.price}
-                    onChange={this.handleChange}
-                    placeholder="半角数字のみ"
-                    onBlur={this.resetErrors}
-                  />
-                ) : (
-                  <TextField
-                    variant="outlined"
-                    size="small"
-                    type="tel"
-                    name="price"
-                    value={this.state.data.price}
-                    onChange={this.handleChange}
-                    placeholder="半角数字のみ"
-                    onBlur={this.resetErrors}
-                  />
-                )}
-              </label>
-              <label>
-                <p>URL</p>
-                {this.state.urlError ? (
-                  <TextField
-                    error
-                    variant="outlined"
-                    size="small"
-                    type="url"
-                    name="url"
-                    helperText="URLが正しくありません"
-                    placeholder="40文字まで"
-                    value={this.state.data.url}
-                    onChange={this.handleChange}
-                    onBlur={this.checkUrlError}
-                  />
-                ) : (
-                  <TextField
-                    variant="outlined"
-                    size="small"
-                    type="url"
-                    name="url"
-                    placeholder="40文字まで"
-                    value={this.state.data.url}
-                    onChange={this.handleChange}
-                    onBlur={this.checkUrlError}
-                  />
-                )}
-              </label>
-              <label>
-                <p>場所</p>
-                <TextField
-                  variant="outlined"
-                  size="small"
-                  type="text"
-                  name="place"
-                  placeholder="40文字まで"
-                  value={this.state.data.place}
-                  onChange={this.handleChange}
-                />
-              </label>
-              <label>
-                <p>その他</p>
-                <TextField
-                  variant="outlined"
-                  size="small"
-                  type="text"
-                  name="other"
-                  multiline
-                  placeholder="1000文字まで"
-                  value={this.state.data.other}
-                  onChange={this.handleChange}
-                />
-              </label>
-              {this.state.submitError ? (
-                <ErrorMessage>欲しい物の名前は必須です</ErrorMessage>
-              ) : (
-                ""
-              )}
-            </InputArea>
-            <ButtonArea>
-              <AddButton onClick={this.handleSubmit}>
-                <AddIcon />
-                登録
-              </AddButton>
-            </ButtonArea>
-            <CancelButton size="small" onClick={this.clickCancel}>
-              <ArrowBackIcon />
-            </CancelButton>
-          </ModalItem>
-        </ModalContent>
+              </InputArea>
+              <ButtonArea>
+                <AddButton onClick={this.handleSubmit}>
+                  <AddIcon />
+                  登録
+                </AddButton>
+              </ButtonArea>
+              <CancelButton size="small" onClick={this.clickCancel}>
+                <ArrowBackIcon />
+              </CancelButton>
+            </ModalItem>
+          </ModalContent>
+        )}
       </ModalBg>
     );
   }
@@ -587,7 +592,7 @@ class Form extends React.Component {
     } else if (this.state.urlError) {
       return;
     } else {
-      this.setState({ submitError: false });
+      this.setState({ submitError: false, isLoading: true });
       this.props.onSubmit(data);
       this.setState({
         data: {
@@ -599,8 +604,9 @@ class Form extends React.Component {
             // { name: "icon", data: Icon }
           ],
           imgSub: "",
-          imgLimited: false,
+          other: "",
         },
+        imgLimited: false,
         count: 0,
       });
     }

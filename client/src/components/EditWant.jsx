@@ -10,7 +10,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Card from "@material-ui/core/Card";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
-import ImageIcon from "@material-ui/icons/Image";
+import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
 
 const ModalBg = styled.div`
   position: fixed;
@@ -277,7 +277,7 @@ class EditWant extends React.Component {
                 {!Object.keys(this.state.data.img).length ? (
                   <ImgLabelFull htmlFor="img-input">
                     <CardMedia>
-                      <ImageIcon />
+                      <AddPhotoAlternateIcon fontSize="large" />
                       <input
                         id="img-input"
                         hidden
@@ -297,7 +297,7 @@ class EditWant extends React.Component {
                 ) : (
                   <ImgLabel>
                     <CardMedia>
-                      <ImageIcon />
+                      <AddPhotoAlternateIcon fontSize="large" />
                       <input
                         id="img-input"
                         hidden

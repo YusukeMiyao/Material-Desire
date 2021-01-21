@@ -385,6 +385,7 @@ class Home extends React.Component {
       border: solid 1px #e0e0e0;
       border-radius: 4px;
     `;
+
     return (
       <Main>
         <div>{this.state.userName}さん</div>
@@ -829,43 +830,6 @@ class Home extends React.Component {
           await console.log(this.state, 5);
           await this.handleSubmit(e, imgArray);
         }, 3000);
-
-        // setTimeout(() => {
-        //   fileName.map((el) => {
-        //     console.log(el);
-        //     storageRef
-        //       .child("images/" + this.state.count + el)
-        //       .getDownloadURL()
-        //       .then((downloadURL) => {
-        //         let image = [{ name: el, url: downloadURL }];
-        //         this.state.image = [...(this.state.image || []), image];
-        //         console.log(image);
-        //       });
-        //   });
-        // }, 10000);
-
-        // let newImgUrl = await Promise.all(filesMap).then(() => {
-        //   fileName.map((el) => {
-        //     console.log(el);
-        //     storageRef
-        //       .child("images/" + this.state.count + el)
-        //       .getDownloadURL()
-        //       .then((downloadURL) => {
-        //         let image = [{ name: el, url: downloadURL }];
-        //         this.state.image = [...(this.state.image || []), image];
-        //         console.log(image);
-        //       });
-        //   });
-        // });
-        // Promise.all(newImgUrl).then(() => {
-        //   console.log(this.state);
-        //   this.handleSubmit(e);
-        // });
-
-        // setTimeout(() => {
-        //   console.log(this.state);
-        //   this.handleSubmit(e);
-        // }, 11000);
       }
     }
   };
