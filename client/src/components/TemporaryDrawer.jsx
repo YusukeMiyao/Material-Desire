@@ -71,24 +71,29 @@ const WantImages = styled.div`
   transform: translate(-90.4167px, -108.5px) scale(1.48222, 1.48222);
   transform-origin: 0px 0px;
 `;
-
 const ListWrap = styled.div`
+  background-color: #ffffff;
+  @media screen and (min-width: 768px) {
+    background-color: #f0f0f0;
+  }
+`;
+
+const ListContents = styled.div`
   position: relative;
   height: 100vh;
   @media screen and (min-width: 768px) {
     max-width: 700px;
     min-width: 700px;
-    margin: 20px auto;
+    margin: 5px auto;
   }
 `;
-const ListContents = styled.div`
-  box-shadow: 0 0 4px grey;
-  border-radius: 10px;
+const ListItems = styled.div`
   padding: 20px;
-  margin: 5px;
+  background-color: #ffffff;
   @media screen and (min-width: 768px) {
     padding: 40px;
-    margin: 10px;
+    border: solid 1px grey;
+    border-radius: 10px;
   }
 `;
 const CloseButton = styled(Button)`
@@ -283,71 +288,42 @@ export default function TemporaryDrawer(props) {
   };
 
   const list = (anchor) => (
-    <ListWrap
-      className={clsx(classes.list, {
-        [classes.fullList]: anchor === "top" || anchor === "bottom",
-      })}
-      role="presentation"
-      onKeyDown={toggleDrawer(anchor, false)}
-    >
-      <ListContents>
-        <CloseButton onClick={toggleDrawer(anchor, false)}>
-          <CloseIcon />
-        </CloseButton>
-        <Dialog fullScreen open={open} onClose={handleClose}>
-          <CloseButton onClick={handleClose}>
+    <ListWrap>
+      <ListContents
+        className={clsx(classes.list, {
+          [classes.fullList]: anchor === "top" || anchor === "bottom",
+        })}
+        role="presentation"
+        onKeyDown={toggleDrawer(anchor, false)}
+      >
+        <ListItems>
+          <CloseButton onClick={toggleDrawer(anchor, false)}>
             <CloseIcon />
           </CloseButton>
-          {img.map((el, index) => {
-            return (
-              <Swiper
-                spaceBetween={50}
-                slidesPerView="auto"
-                navigation
-                pagination={{
-                  clickable: true,
-                  type: "fraction",
-                  // formatFractionTotal
-                  // formatFractionCurrent?: (number: number) => number;
-                }}
-                scrollbar={{ draggable: true }}
-                // onSwiper={(swiper) => console.log(swiper)}
-                // onSlideChange={() => console.log("slide change")}
-                loop={img.length === 1 ? false : true}
-                loopedSlides={img.length}
-              >
-                <SwiperSlide zoom={true}>
-                  <CardMedia
-                    component="img"
-                    key={index}
-                    image={el.url}
-                    title={el.name}
-                    alt={el.name}
-                  />
-                </SwiperSlide>
-              </Swiper>
-            );
-          })}
-        </Dialog>
-        <WantTitleVerTablet>{goodsName}</WantTitleVerTablet>
-        <SwiperWrap>
-          <Swiper
-            spaceBetween={50}
-            slidesPerView="auto"
-            navigation
-            pagination={{
-              clickable: true,
-              type: "fraction",
-            }}
-            scrollbar={{ draggable: true }}
-            loop={img.length === 1 ? false : true}
-            loopedSlides={img.length}
-          >
-            {/* <WantImages> */}
+          <Dialog fullScreen open={open} onClose={handleClose}>
+            <CloseButton onClick={handleClose}>
+              <CloseIcon />
+            </CloseButton>
             {img.map((el, index) => {
               return (
-                <SwiperSlide>
-                  <CardActionArea onClick={handleClickOpen}>
+                <Swiper
+                  spaceBetween={50}
+                  slidesPerView="auto"
+                  navigation
+                  pagination={{
+                    clickable: true,
+                    type: "fraction",
+                    // formatFractionTotal
+                    // formatFractionCurrent?: (number: number) => number;
+                  }}
+                  scrollbar={{ draggable: true }}
+                  // onSwiper={(swiper) => console.log(swiper)}
+                  // onSlideChange={() => console.log("slide change")}
+
+                  loop={img.length === 1 ? false : true}
+                  loopedSlides={img.length}
+                >
+                  <SwiperSlide zoom={true}>
                     <CardMedia
                       component="img"
                       key={index}
@@ -355,13 +331,82 @@ export default function TemporaryDrawer(props) {
                       title={el.name}
                       alt={el.name}
                     />
-                  </CardActionArea>
-                </SwiperSlide>
+                  </SwiperSlide>
+                </Swiper>
               );
             })}
-            {/* </WantImages> */}
-          </Swiper>
-          <WantListVerTablet>
+          </Dialog>
+          <WantTitleVerTablet>{goodsName}</WantTitleVerTablet>
+          <SwiperWrap>
+            <Swiper
+              spaceBetween={50}
+              slidesPerView="auto"
+              navigation
+              pagination={{
+                clickable: true,
+                type: "fraction",
+              }}
+              scrollbar={{ draggable: true }}
+              loop={img.length === 1 ? false : true}
+              loopedSlides={img.length}
+            >
+              {/* <WantImages> */}
+              {img.map((el, index) => {
+                return (
+                  <SwiperSlide>
+                    <CardActionArea onClick={handleClickOpen}>
+                      <CardMedia
+                        component="img"
+                        key={index}
+                        image={el.url}
+                        title={el.name}
+                        alt={el.name}
+                      />
+                    </CardActionArea>
+                  </SwiperSlide>
+                );
+              })}
+              {/* </WantImages> */}
+            </Swiper>
+            <WantListVerTablet>
+              <ItemTable>
+                <ItemTableTbody>
+                  <ItemTableTr>
+                    <ItemTableTh>値段</ItemTableTh>
+                    <ItemTableTd>
+                      {price !== "" ? "¥" : "¥ - "}
+                      {price}
+                    </ItemTableTd>
+                  </ItemTableTr>
+                  <ItemTableTr>
+                    <ItemTableTh>URL</ItemTableTh>
+                    <ItemTableTd>
+                      {url === "" ? "-" : ""}
+                      <a target="_blank" rel="noopener noreferrer" href={url}>
+                        {url}
+                      </a>
+                    </ItemTableTd>
+                  </ItemTableTr>
+                  <ItemTableTr>
+                    <ItemTableTh>場所</ItemTableTh>
+                    <ItemTableTd>
+                      {place === "" ? "-" : ""}
+                      {place}
+                    </ItemTableTd>
+                  </ItemTableTr>
+                  <ItemTableTr>
+                    <ItemTableTh>その他</ItemTableTh>
+                    <ItemTableTd>
+                      {other === "" ? "-" : ""}
+                      {other}
+                    </ItemTableTd>
+                  </ItemTableTr>
+                </ItemTableTbody>
+              </ItemTable>
+            </WantListVerTablet>
+          </SwiperWrap>
+          <WantTitle>{goodsName}</WantTitle>
+          <WantList>
             <ItemTable>
               <ItemTableTbody>
                 <ItemTableTr>
@@ -396,53 +441,16 @@ export default function TemporaryDrawer(props) {
                 </ItemTableTr>
               </ItemTableTbody>
             </ItemTable>
-          </WantListVerTablet>
-        </SwiperWrap>
-        <WantTitle>{goodsName}</WantTitle>
-        <WantList>
-          <ItemTable>
-            <ItemTableTbody>
-              <ItemTableTr>
-                <ItemTableTh>値段</ItemTableTh>
-                <ItemTableTd>
-                  {price !== "" ? "¥" : "¥ - "}
-                  {price}
-                </ItemTableTd>
-              </ItemTableTr>
-              <ItemTableTr>
-                <ItemTableTh>URL</ItemTableTh>
-                <ItemTableTd>
-                  {url === "" ? "-" : ""}
-                  <a target="_blank" rel="noopener noreferrer" href={url}>
-                    {url}
-                  </a>
-                </ItemTableTd>
-              </ItemTableTr>
-              <ItemTableTr>
-                <ItemTableTh>場所</ItemTableTh>
-                <ItemTableTd>
-                  {place === "" ? "-" : ""}
-                  {place}
-                </ItemTableTd>
-              </ItemTableTr>
-              <ItemTableTr>
-                <ItemTableTh>その他</ItemTableTh>
-                <ItemTableTd>
-                  {other === "" ? "-" : ""}
-                  {other}
-                </ItemTableTd>
-              </ItemTableTr>
-            </ItemTableTbody>
-          </ItemTable>
-        </WantList>
-        <ButtonArea>
-          <EditButton startIcon={<EditIcon />} onClick={ClickEdit}>
-            編集
-          </EditButton>
-          <DeleteButton startIcon={<DeleteIcon />} onClick={ClickDelete}>
-            削除
-          </DeleteButton>
-        </ButtonArea>
+          </WantList>
+          <ButtonArea>
+            <EditButton startIcon={<EditIcon />} onClick={ClickEdit}>
+              編集
+            </EditButton>
+            <DeleteButton startIcon={<DeleteIcon />} onClick={ClickDelete}>
+              削除
+            </DeleteButton>
+          </ButtonArea>
+        </ListItems>
       </ListContents>
     </ListWrap>
   );

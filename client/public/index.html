@@ -22,10 +22,21 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
   <title>React App</title>
+  <style>
+    #root {
+      background-color: #ffffff;
+    }
+
+    @media screen and (min-width: 768px) {
+      #root {
+        background-color: #f0f0f0;
+      }
+    }
+  </style>
 </head>
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
-  <div id="root" style="background-color: #f0f0f0;"></div>
+  <div id="root"></div>
   <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

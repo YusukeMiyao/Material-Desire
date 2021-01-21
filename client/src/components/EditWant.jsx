@@ -14,7 +14,7 @@ import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
 
 const ModalBg = styled.div`
   position: fixed;
-  background-color: #ffffff;
+  background-color: #f0f0f0;
   width: 100%;
   height: 100%;
   top: 0;
@@ -39,8 +39,15 @@ const ModalItem = styled.form`
   width: calc(100% - 30px);
   position: relative;
   padding: 10px;
-  box-shadow: 0 0 4px grey;
+  border: solid 1px grey;
+  background-color: #ffffff;
   border-radius: 10px;
+  @media screen and (max-width: 767px) {
+    width: calc(100% - 20px);
+    margin: 0;
+    border: none;
+    border-radius: none;
+  }
 `;
 const ImageArea = styled.div`
   > p {
