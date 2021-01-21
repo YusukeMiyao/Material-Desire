@@ -269,9 +269,15 @@ class Home extends React.Component {
       width: calc(100% - 40px);
       max-width: 768px;
       margin: 10px auto;
-      box-shadow: 0 0 4px grey;
       padding: 10px;
       border-radius: 10px;
+      border: solid 1px grey;
+      background-color: #ffffff;
+      @media screen and (max-width: 767px) {
+        width: calc(100% - 20px);
+        border: none;
+        border-radius: 0;
+      }
     `;
     const Wrap = styled.div`
       width: 100%;
@@ -301,12 +307,12 @@ class Home extends React.Component {
       transition: all 0.3s;
       margin-bottom: 4px;
       :nth-of-type(3n-1) {
-        margin: 0 4px 4px;
+        margin: 0 7px 4px;
       }
       @media screen and (min-width: 768px) {
         width: calc(100% / 5 - 7px);
         height: 222px;
-        margin-right: 8px;
+        margin-right: 9px;
         margin-bottom: 8px;
         :nth-of-type(3n-1) {
           margin-right: 8px;
