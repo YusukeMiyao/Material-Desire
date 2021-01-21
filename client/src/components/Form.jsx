@@ -42,7 +42,7 @@ const ModalItem = styled.form`
   position: relative;
   padding: 10px;
   border-radius: 10px;
-  border: solid 1px grey;
+  border: solid 1px grey; 
   background-color: #ffffff;
   @media screen and (max-width: 767px) {
     width: calc(100% - 20px);
