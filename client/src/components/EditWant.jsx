@@ -46,6 +46,7 @@ const ImageArea = styled.div`
   > p {
     font-size: 14px;
     color: #00000099;
+    margin-top: 0;
   }
   img {
     width: 100%;
