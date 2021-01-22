@@ -1,19 +1,9 @@
 import React from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
-import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import Button from "@material-ui/core/Button";
-import List from "@material-ui/core/List";
-import Divider from "@material-ui/core/Divider";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
 import Drawer from "@material-ui/core/Drawer";
 import CardActionArea from "@material-ui/core/CardActionArea";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import styled from "styled-components";
@@ -22,20 +12,9 @@ import EditIcon from "@material-ui/icons/Edit";
 import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import { useTheme } from "@material-ui/core/styles";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import CloseIcon from "@material-ui/icons/Close";
-
-// import "swiper/swiper-bundle.css";
 import "swiper/swiper-bundle.min.css";
-// import "swiper/components/navigation/navigation.min.css";
-// import "swiper/components/pagination/pagination.min.css";
-// import "swiper/components/scrollbar/scrollbar.min.css";
-// import "swiper/components/zoom/zoom.min.css";
-import { number } from "yup";
 
 SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
 
@@ -74,7 +53,7 @@ const WantImages = styled.div`
 const ListWrap = styled.div`
   background-color: #ffffff;
   @media screen and (min-width: 768px) {
-    background-color: #f0f0f0;
+    background-color: #f5f5f5;
   }
 `;
 
@@ -92,7 +71,6 @@ const ListItems = styled.div`
   background-color: #ffffff;
   @media screen and (min-width: 768px) {
     padding: 40px;
-    border: solid 1px grey;
     border-radius: 10px;
   }
 `;
@@ -193,16 +171,6 @@ const DeleteButton = styled(Button)`
 const TemporaryWrap = styled.div`
   width: 100%;
 `;
-// const CardFullImg = styled(CardMedia)`
-//   height: auto;
-//   width: 100%;
-// `;
-
-// const CardImg = styled(CardMedia)`
-//   transform: translate${(props) => (props.isSlided ? '(-90.4167px, -108.5px)scale(1.48222, 1.48222':)};
-//   transform-origin: 0px 0px;
-//   hight: ${(props) => (props.set ? "" : "")};
-// `;
 
 const DetailButton = styled(Button)`
   min-width: 24px;
@@ -254,7 +222,6 @@ export default function TemporaryDrawer(props) {
     bottom: false,
   });
   const [open, setOpen] = React.useState(false);
-  // const theme = useTheme();
 
   const { goodsName, url, img, price, place, other } = props;
 
@@ -304,42 +271,8 @@ export default function TemporaryDrawer(props) {
             <CloseButton onClick={handleClose}>
               <CloseIcon />
             </CloseButton>
-            {img.map((el, index) => {
-              return (
-                <Swiper
-                  spaceBetween={50}
-                  slidesPerView="auto"
-                  navigation
-                  pagination={{
-                    clickable: true,
-                    type: "fraction",
-                    // formatFractionTotal
-                    // formatFractionCurrent?: (number: number) => number;
-                  }}
-                  scrollbar={{ draggable: true }}
-                  // onSwiper={(swiper) => console.log(swiper)}
-                  // onSlideChange={() => console.log("slide change")}
 
-                  loop={img.length === 1 ? false : true}
-                  loopedSlides={img.length}
-                >
-                  <SwiperSlide zoom={true}>
-                    <CardMedia
-                      component="img"
-                      key={index}
-                      image={el.url}
-                      title={el.name}
-                      alt={el.name}
-                    />
-                  </SwiperSlide>
-                </Swiper>
-              );
-            })}
-          </Dialog>
-          <WantTitleVerTablet>{goodsName}</WantTitleVerTablet>
-          <SwiperWrap>
             <Swiper
-              spaceBetween={50}
               slidesPerView="auto"
               navigation
               pagination={{
@@ -350,7 +283,34 @@ export default function TemporaryDrawer(props) {
               loop={img.length === 1 ? false : true}
               loopedSlides={img.length}
             >
-              {/* <WantImages> */}
+              {img.map((el, index) => {
+                return (
+                  <SwiperSlide zoom={true}>
+                    <CardMedia
+                      component="img"
+                      key={index}
+                      image={el.url}
+                      title={el.name}
+                      alt={el.name}
+                    />
+                  </SwiperSlide>
+                );
+              })}
+            </Swiper>
+          </Dialog>
+          <WantTitleVerTablet>{goodsName}</WantTitleVerTablet>
+          <SwiperWrap>
+            <Swiper
+              slidesPerView="auto"
+              navigation
+              pagination={{
+                clickable: true,
+                type: "fraction",
+              }}
+              scrollbar={{ draggable: true }}
+              loop={img.length === 1 ? false : true}
+              loopedSlides={img.length}
+            >
               {img.map((el, index) => {
                 return (
                   <SwiperSlide>
@@ -366,7 +326,6 @@ export default function TemporaryDrawer(props) {
                   </SwiperSlide>
                 );
               })}
-              {/* </WantImages> */}
             </Swiper>
             <WantListVerTablet>
               <ItemTable>

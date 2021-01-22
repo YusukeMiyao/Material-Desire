@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import Header from "./Header.jsx";
 
 const WantWrap = styled.div`
   width: 100%;

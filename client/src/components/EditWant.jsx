@@ -1,5 +1,4 @@
 import React from "react";
-import Icon from "../assets/images/Icon.png";
 import styled from "styled-components";
 import TextField from "@material-ui/core/TextField";
 import Fab from "@material-ui/core/Fab";
@@ -8,13 +7,12 @@ import AddIcon from "@material-ui/icons/Add";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import CardMedia from "@material-ui/core/CardMedia";
 import Card from "@material-ui/core/Card";
-import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
 
 const ModalBg = styled.div`
   position: fixed;
-  background-color: #f0f0f0;
+  background-color: #f5f5f5;
   width: 100%;
   height: 100%;
   top: 0;
@@ -39,13 +37,11 @@ const ModalItem = styled.form`
   width: calc(100% - 30px);
   position: relative;
   padding: 10px;
-  border: solid 1px grey;
   background-color: #ffffff;
   border-radius: 10px;
   @media screen and (max-width: 767px) {
     width: calc(100% - 20px);
     margin: 0;
-    border: none;
     border-radius: none;
   }
 `;
@@ -231,7 +227,6 @@ class EditWant extends React.Component {
       this.state.data.img[0].url === "/static/media/Icon.f6ae3dbc.png"
     ) {
       this.setState((prev) => {
-        console.log(prev);
         return {
           ...prev,
           data: {
@@ -252,7 +247,6 @@ class EditWant extends React.Component {
     } else {
       return;
     }
-    console.log(this.state);
   }
 
   render() {
@@ -263,8 +257,6 @@ class EditWant extends React.Component {
             <ImageArea>
               <p>欲しい物の画像</p>
               <CardWrap>
-                {console.log(this.state)}
-
                 {this.state.data.img.map((el, index) => {
                   return (
                     <CardItem>
@@ -324,10 +316,6 @@ class EditWant extends React.Component {
                   </ImgLabel>
                 )}
               </CardWrap>
-              {/* <button onClick={this.deleteImages}>選択画像削除</button>
-              <button name="delete" onClick={this.handleChange}>
-                画像リセット
-              </button> */}
             </ImageArea>
             <InputArea>
               <label>
@@ -346,7 +334,6 @@ class EditWant extends React.Component {
               </label>
               <label>
                 <p>欲しい物の金額</p>
-                {/* {this.state.data.price !== "" ? "¥" : null} */}
                 {this.state.priceError ? (
                   <TextField
                     error
@@ -519,32 +506,12 @@ class EditWant extends React.Component {
           return;
         }
         break;
-      // case "img":
-      //   let files = e.target.files;
-      //   if (files.length > 0) {
-      //     if (this.state.data.img[0].name === "icon") {
-      //       this.state.data.img.splice(0, 1);
-      //     }
-      //     for (const file of files) {
-      //       this.state.data.img.splice(1, 0, {
-      //         name: file.name,
-      //         data: URL.createObjectURL(file),
-      //       });
-      //     }
-      //     break;
-      //   } else {
-      //     data.img = [{ name: "", data: "" }];
-      //   }
-      //   break;
       case "other":
         let other = e.target.value;
         if (data.price.length > 1000) {
           return;
         }
         data.other = other;
-      // case "delete":
-      //   data.img = [{ name: "", data: "" }];
-      //   break;
       default:
         break;
     }
@@ -556,54 +523,27 @@ class EditWant extends React.Component {
 
   selectImages = async (e) => {
     const files = e.target.files;
-    console.log(files, this.state.data.img);
     let ArrayFiles = Array.from(files);
-    console.log(ArrayFiles);
     let ableNum = 5 - this.state.data.img.length;
-    console.log(ableNum);
     ArrayFiles.splice(ableNum);
-    console.log(ArrayFiles);
     const newFiles = [...ArrayFiles];
     let prevImg = [...(this.state.data.img || [])];
-    console.log(newFiles);
     let count = this.state.count;
     count++;
-    // var user = firebase.auth().currentUser;
-    // const uid = user.uid;
-    // firebase.database().ref("/users/" + uid);
     if (files.length > 0) {
-      // 初回追加時に初期画像を削除
-      // if (count === 1) {
-      //   this.state.data.img.splice(0, 1);
-      // }
-      console.log(newFiles);
       for (const file of newFiles) {
         prevImg.splice(0, 0, {
           name: file.name,
           url: URL.createObjectURL(file),
         });
       }
-      console.log(prevImg);
-      // if (prevImg.length > 5) {
-      //   prevImg.splice(5);
-      // }
-      // if (newFiles.length > 5) {
-      //   newFiles.splice(5);
-      // }
       if (prevImg.length > 4) {
         this.state.imgLimited = true;
       }
       this.state.data.imgSub = newFiles;
       this.state.data.img = prevImg;
-      {
-        console.log(this.state.data.img);
-      }
     } else {
       return;
-      // this.state.data.img = [
-      //   // { name: "icon", data: Icon }
-      // ];
-      // this.state.data.imgSub = "";
     }
     this.setState({
       data: this.state.data,
@@ -627,21 +567,6 @@ class EditWant extends React.Component {
     });
   };
 
-  // selectImages = (e) => {
-  //   // TODO
-  //   console.log(e);
-  // };
-
-  // deleteImages = (e) => {
-  //   // TODO
-  //   console.log(e);
-  // };
-
-  // resetImages = () => {
-  //   this.state.data.img = [{ name: "icon", data: Icon }];
-  //   this.setState({ data: this.state.data });
-  // };
-
   clickCancel = () => {
     const { onCancel, listIndex, itemIndex } = this.props;
     onCancel(listIndex, itemIndex, false);
@@ -657,7 +582,6 @@ class EditWant extends React.Component {
     } else if (this.state.urlError) {
       return;
     } else {
-      console.log(data);
       onSubmit(data, listIndex, itemIndex);
     }
   };

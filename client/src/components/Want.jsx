@@ -5,7 +5,6 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import TemporaryDrawer from "./TemporaryDrawer";
-import Icon from "../assets/images/Icon.png";
 
 const WantWrap = styled.div`
   width: 100%;
@@ -77,6 +76,7 @@ class Want extends React.Component {
     return (
       <WantWrap>
         <WantImages>
+          {console.log(img)}
           {img.map((el, index) => {
             return (
               <CardMedia
