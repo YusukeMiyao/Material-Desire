@@ -1,6 +1,5 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import firebase from "./utils/firebase";
 import { StylesProvider } from "@material-ui/styles";
 import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
