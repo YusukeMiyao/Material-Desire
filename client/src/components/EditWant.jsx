@@ -226,6 +226,7 @@ class EditWant extends React.Component {
     if (
       this.state.data.img[0].name === "defaultImg" &&
       this.state.data.img[0].url === defaultImg
+
     ) {
       this.setState((prev) => {
         return {

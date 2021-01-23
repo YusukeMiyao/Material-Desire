@@ -76,6 +76,7 @@ class Want extends React.Component {
     return (
       <WantWrap>
         <WantImages>
+          {console.log(img)}
           {img.map((el, index) => {
             return (
               <CardMedia
