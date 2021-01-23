@@ -223,8 +223,8 @@ class EditWant extends React.Component {
 
   componentDidMount() {
     if (
-      this.state.data.img[0].name === "icon" &&
-      this.state.data.img[0].url === "/static/media/Icon.f6ae3dbc.png"
+      this.state.data.img[0].name === "defaultImg" &&
+      this.state.data.img[0].url === "/static/media/defaultImg.d4d235e9.svg"
     ) {
       this.setState((prev) => {
         return {
@@ -244,6 +244,9 @@ class EditWant extends React.Component {
           imgLimited: prev.imgLimited,
         };
       });
+    } else if (this.state.data.img.length <= 5) {
+      this.setState({ imgLimited: true });
+      console.log(this.state.data.img);
     } else {
       return;
     }

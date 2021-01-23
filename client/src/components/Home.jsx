@@ -13,7 +13,6 @@ import Button from "@material-ui/core/Button";
 import Fab from "@material-ui/core/Fab";
 import Card from "@material-ui/core/Card";
 import AddIcon from "@material-ui/icons/Add";
-import Icon from "../assets/images/Icon.png";
 import DeleteIcon from "@material-ui/icons/Delete";
 import defaultImg from "../assets/images/defaultImg.svg";
 
@@ -160,7 +159,6 @@ class Home extends React.Component {
     const handleDragUpdate = (update, provided) => {
       // console.log(provided);
     };
-
     class InnerList extends React.Component {
       shouldComponentUpdate(nextProps) {
         if (
@@ -477,7 +475,7 @@ class Home extends React.Component {
         {this.state.isAnonymous ? (
           <SignUpWrap>
             <SignUpContent>
-              データを残すには新規登録してください
+              データを残すには新規登録する必要があります
               <FirebaseUIAuth
                 uiConfig={uiConfigSecond}
                 firebaseAuth={firebase.auth()}
@@ -508,7 +506,7 @@ class Home extends React.Component {
                   url: e.url,
                   place: e.place,
                   price: e.price,
-                  img: e.img,
+                  img: imgArray,
                   other: e.other,
                   editing: false,
                 },
@@ -579,7 +577,7 @@ class Home extends React.Component {
   };
 
   editListItem = async (listIndex, itemIndex, data, imgArray) => {
-    if (imgArray === []) {
+    if (imgArray === [] || this.state.isAnonymous) {
       const lists = Array.from(this.state.lists);
       const item = lists[listIndex].items[itemIndex];
       item.goodsName = data.goodsName;
@@ -652,11 +650,6 @@ class Home extends React.Component {
         count: 0,
       };
     });
-    // localStorage.clear();
-
-    // firebase.database().ref("TotalPrice/").set({
-    //   totalPrice: this.state.totalPrice,
-    // });
     if (this.state.isAnonymous) {
       return;
     } else this.saveList();
@@ -728,10 +721,20 @@ class Home extends React.Component {
   imgUp = async (e) => {
     let fileName = [];
     let imgArray = [];
-    if (e.imgSub === [] || this.state.isAnonymous) {
-      // let image = { name: e.img.name, url: e.img.url };
-      // imgArray = { ...(imgArray || []), image };
+    if (this.state.isAnonymous && e.imgSub.length === 0) {
+      imgArray = [{ name: "defaultImg", url: defaultImg }];
       this.handleSubmit(e, imgArray);
+      console.log(1);
+      return;
+    } else if (this.state.isAnonymous) {
+      imgArray = e.img;
+
+      this.handleSubmit(e, imgArray);
+      console.log(2, e.imgSub);
+      return;
+    } else if (e.imgSub === []) {
+      this.handleSubmit(e, imgArray);
+      console.log(3);
       return;
     } else {
       var user = firebase.auth().currentUser;
@@ -782,7 +785,14 @@ class Home extends React.Component {
   editImgUp = async (e, listIndex, itemIndex) => {
     let fileName = [];
     let imgArray = [];
-    if (e.imgSub === [] || this.state.isAnonymous) {
+    if (this.state.isAnonymous && e.imgSub.length === 0) {
+      e.img = [{ name: "defaultImg", url: defaultImg }];
+      this.editListItem(listIndex, itemIndex, e, imgArray);
+      return;
+    } else if (this.state.isAnonymous) {
+      this.editListItem(listIndex, itemIndex, e, imgArray);
+      return;
+    } else if (e.imgSub === []) {
       this.editListItem(listIndex, itemIndex, e, imgArray);
       return;
     } else {

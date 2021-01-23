@@ -51,7 +51,7 @@ class Detail extends React.Component {
               return (
                 <img
                   key={index}
-                  src={el.data}
+                  src={el.url}
                   alt={el.name}
                   height={518}
                   width={375}

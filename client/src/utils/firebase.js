@@ -39,6 +39,6 @@ export const uiConfigSecond = {
   ],
   autoUpgradeAnonymousUsers: false,
 };
-var database = firebase.database();
+// var database = firebase.database();
 
 export default firebase;
