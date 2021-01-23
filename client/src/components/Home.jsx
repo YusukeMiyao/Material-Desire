@@ -13,31 +13,14 @@ import Button from "@material-ui/core/Button";
 import Fab from "@material-ui/core/Fab";
 import Card from "@material-ui/core/Card";
 import AddIcon from "@material-ui/icons/Add";
-import Icon from "../assets/images/Icon.png";
 import DeleteIcon from "@material-ui/icons/Delete";
+import defaultImg from "../assets/images/defaultImg.svg";
 
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    // this.imgSetState = this.imgSetState.bind(this);
     this.state = {
-      lists: [
-        // {
-        //   title: "Todo",
-        //   items: [],
-        //   editing: false,
-        // },
-        // {
-        //   title: "InProgress",
-        //   items: [],
-        //   editing: false,
-        // },
-        // {
-        //   title: "Done",
-        //   items: [],
-        //   editing: false,
-        // },
-      ],
+      lists: [],
       count: 0,
       totalPrice: 0,
       formOpen: false,
@@ -87,17 +70,17 @@ class Home extends React.Component {
             this.setState({
               lists: [
                 {
-                  title: "Todo",
+                  title: "欲しい度☆☆☆☆☆",
                   items: [],
                   editing: false,
                 },
                 {
-                  title: "InProgress",
+                  title: "欲しい度☆☆☆",
                   items: [],
                   editing: false,
                 },
                 {
-                  title: "Done",
+                  title: "欲しい度☆",
                   items: [],
                   editing: false,
                 },
@@ -105,12 +88,7 @@ class Home extends React.Component {
               count: 0,
               totalPrice: 0,
               formOpen: false,
-              image: [
-                // {
-                //   url: [],
-                //   name: [],
-                // },
-              ],
+              image: [],
               isAnonymous: false,
               userName: userName,
             });
@@ -120,17 +98,17 @@ class Home extends React.Component {
       this.setState({
         lists: [
           {
-            title: "Todo",
+            title: "欲しい度☆☆☆☆☆",
             items: [],
             editing: false,
           },
           {
-            title: "InProgress",
+            title: "欲しい度☆☆☆",
             items: [],
             editing: false,
           },
           {
-            title: "Done",
+            title: "欲しい度☆",
             items: [],
             editing: false,
           },
@@ -181,17 +159,14 @@ class Home extends React.Component {
     const handleDragUpdate = (update, provided) => {
       // console.log(provided);
     };
-
     class InnerList extends React.Component {
       shouldComponentUpdate(nextProps) {
         if (
           nextProps.itemIndex === this.props.itemIndex &&
           nextProps.listIndex === this.listIndex
         ) {
-          console.log("これ");
           return false;
         }
-        console.log("やほ");
         return true;
       }
       render() {
@@ -201,7 +176,6 @@ class Home extends React.Component {
           url,
           place,
           price,
-          // img,
           other,
           listIndex,
           itemIndex,
@@ -213,9 +187,10 @@ class Home extends React.Component {
         } = this.props;
         let { img } = this.props;
         {
-          if (img === undefined) {
-            img = [{ name: "icon", url: Icon }];
+          if (img === undefined || img === []) {
+            img = [{ name: "defaultImg", url: defaultImg }];
           }
+          console.log(img);
         }
         return (
           <Draggable key={id} index={itemIndex} draggableId={String(id)}>
@@ -271,11 +246,9 @@ class Home extends React.Component {
       margin: 10px auto;
       padding: 10px;
       border-radius: 10px;
-      border: solid 1px grey;
       background-color: #ffffff;
       @media screen and (max-width: 767px) {
         width: calc(100% - 20px);
-        border: none;
         border-radius: 0;
       }
     `;
@@ -379,7 +352,6 @@ class Home extends React.Component {
       width: calc(100% + 20px);
       background: #f2e7fe;
       padding: 20px 0;
-      box-shadow: 0px 5px 5px -5px grey;
       margin: 5px -10px;
     `;
     const SignUpContent = styled.div`
@@ -418,7 +390,6 @@ class Home extends React.Component {
           ) : (
             ""
           )}
-          {/* {console.log(this.state)a} */}
           <DragDropContext
             onDragEnd={handleDragEnd}
             onDragStart={handleDragStart}
@@ -504,7 +475,7 @@ class Home extends React.Component {
         {this.state.isAnonymous ? (
           <SignUpWrap>
             <SignUpContent>
-              データを残すには新規登録してください
+              データを残すには新規登録する必要があります
               <FirebaseUIAuth
                 uiConfig={uiConfigSecond}
                 firebaseAuth={firebase.auth()}
@@ -520,7 +491,7 @@ class Home extends React.Component {
   handleSubmit = async (e, imgArray) => {
     let currentId = this.state.count;
     currentId++;
-    console.log(e, imgArray);
+    console.log(e.img);
     if (this.state.isAnonymous) {
       await this.setState((prev) => {
         return {
@@ -535,12 +506,7 @@ class Home extends React.Component {
                   url: e.url,
                   place: e.place,
                   price: e.price,
-                  img: [
-                    {
-                      name: e.img[0].name,
-                      url: e.img[0].url,
-                    },
-                  ],
+                  img: imgArray,
                   other: e.other,
                   editing: false,
                 },
@@ -563,11 +529,10 @@ class Home extends React.Component {
           image: [],
         };
       });
-      // this.saveList();
+
       this.calculatePrice();
       this.setState({ formOpen: false });
     } else {
-      console.log(this.state.image, e);
       await this.setState((prev) => {
         return {
           ...prev,
@@ -608,11 +573,11 @@ class Home extends React.Component {
       this.calculatePrice();
       this.setState({ formOpen: false });
     }
+    console.log(this.state.lists);
   };
 
   editListItem = async (listIndex, itemIndex, data, imgArray) => {
-    console.log(data);
-    if (imgArray === []) {
+    if (imgArray === [] || this.state.isAnonymous) {
       const lists = Array.from(this.state.lists);
       const item = lists[listIndex].items[itemIndex];
       item.goodsName = data.goodsName;
@@ -631,15 +596,10 @@ class Home extends React.Component {
       const item = lists[listIndex].items[itemIndex];
 
       const imgSubLength = data.imgSub.length;
-      console.log(imgSubLength);
       const imgArrayLength = imgArray.length;
-      console.log(imgArrayLength);
       const newLength = imgSubLength - imgArrayLength;
-      console.log(newLength);
       data.img.splice(newLength, imgArrayLength);
-      console.log(data.img);
       Array.prototype.push.apply(data.img, imgArray);
-      console.log(data.img);
       item.goodsName = data.goodsName;
       item.price = data.price;
       item.place = data.place;
@@ -690,11 +650,6 @@ class Home extends React.Component {
         count: 0,
       };
     });
-    // localStorage.clear();
-
-    // firebase.database().ref("TotalPrice/").set({
-    //   totalPrice: this.state.totalPrice,
-    // });
     if (this.state.isAnonymous) {
       return;
     } else this.saveList();
@@ -711,7 +666,6 @@ class Home extends React.Component {
     let total = 0;
     const lists = Array.from(this.state.lists);
     const todo = lists[0].items;
-    console.log(todo, this.state.lists);
     todo.map(({ price }) => {
       price = price.replace(/,/g, "");
       price = Number(price);
@@ -767,9 +721,20 @@ class Home extends React.Component {
   imgUp = async (e) => {
     let fileName = [];
     let imgArray = [];
-    console.log(e.imgSub);
-    if (e.imgSub === [] || this.state.isAnonymous) {
+    if (this.state.isAnonymous && e.imgSub.length === 0) {
+      imgArray = [{ name: "defaultImg", url: defaultImg }];
       this.handleSubmit(e, imgArray);
+      console.log(1);
+      return;
+    } else if (this.state.isAnonymous) {
+      imgArray = e.img;
+
+      this.handleSubmit(e, imgArray);
+      console.log(2, e.imgSub);
+      return;
+    } else if (e.imgSub === []) {
+      this.handleSubmit(e, imgArray);
+      console.log(3);
       return;
     } else {
       var user = firebase.auth().currentUser;
@@ -780,22 +745,9 @@ class Home extends React.Component {
         const storageRef = firebase.storage().ref("/users/" + uid);
 
         let files = Array.from(e.imgSub);
-        // files.map((File, index) => {
-        //   console.log(File);
-        //   storageRef
-        //     .child("images/" + this.state.count + File.name)
-        //     .put(File)
-        //     .then((snapshot) => {
-        //       snapshot.ref.getDownloadURL().then((downloadURL) => {
-        //         let image = [{ name: File.name, url: downloadURL }];
-        //         this.state.image = [...(this.state.image || []), image];
-        //       });
-        //     });
-        // });
 
         await Promise.all(
-          files.map(async (File, index) => {
-            console.log(File, 0);
+          files.map(async (File) => {
             await storageRef
               .child("images/" + this.state.count + File.name)
               .put(File);
@@ -811,29 +763,19 @@ class Home extends React.Component {
           })
         );
 
-        await console.log(2);
-
         setTimeout(async () => {
           await Promise.all(
             fileName.map(async (el) => {
-              console.log(el);
               await storageRef
                 .child("images/" + this.state.count + el)
                 .getDownloadURL()
                 .then((downloadURL) => {
                   let image = { name: el, url: downloadURL };
                   imgArray = [...(imgArray || []), image];
-                  console.log(image, 3);
                 })
-                .catch((error) => {
-                  console.log(error.code);
-                });
-              await console.log(3.5);
+                .catch((error) => {});
             })
           );
-          await console.log(4);
-
-          await console.log(this.state, 5);
           await this.handleSubmit(e, imgArray);
         }, 3000);
       }
@@ -843,8 +785,14 @@ class Home extends React.Component {
   editImgUp = async (e, listIndex, itemIndex) => {
     let fileName = [];
     let imgArray = [];
-    console.log(e.imgSub, e);
-    if (e.imgSub === [] || this.state.isAnonymous) {
+    if (this.state.isAnonymous && e.imgSub.length === 0) {
+      e.img = [{ name: "defaultImg", url: defaultImg }];
+      this.editListItem(listIndex, itemIndex, e, imgArray);
+      return;
+    } else if (this.state.isAnonymous) {
+      this.editListItem(listIndex, itemIndex, e, imgArray);
+      return;
+    } else if (e.imgSub === []) {
       this.editListItem(listIndex, itemIndex, e, imgArray);
       return;
     } else {
@@ -857,8 +805,7 @@ class Home extends React.Component {
 
         let files = Array.from(e.imgSub);
         await Promise.all(
-          files.map(async (File, index) => {
-            console.log(File, 0);
+          files.map(async (File) => {
             await storageRef
               .child("images/" + this.state.count + File.name)
               .put(File);
@@ -874,29 +821,19 @@ class Home extends React.Component {
           })
         );
 
-        await console.log(2);
-
         setTimeout(async () => {
           await Promise.all(
             fileName.map(async (el) => {
-              console.log(el);
               await storageRef
                 .child("images/" + this.state.count + el)
                 .getDownloadURL()
                 .then((downloadURL) => {
                   let image = { name: el, url: downloadURL };
                   imgArray = [...(imgArray || []), image];
-                  console.log(image, 3);
                 })
-                .catch((error) => {
-                  console.log(error.code);
-                });
-              await console.log(3.5);
+                .catch((error) => {});
             })
           );
-          await console.log(4);
-
-          await console.log(this.state, 5);
           await this.editListItem(listIndex, itemIndex, e, imgArray);
         }, 3000);
       }
