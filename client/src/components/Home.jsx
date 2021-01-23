@@ -190,7 +190,6 @@ class Home extends React.Component {
           if (img === undefined || img === []) {
             img = [{ name: "defaultImg", url: defaultImg }];
           }
-          console.log(img);
         }
         return (
           <Draggable key={id} index={itemIndex} draggableId={String(id)}>
@@ -491,7 +490,6 @@ class Home extends React.Component {
   handleSubmit = async (e, imgArray) => {
     let currentId = this.state.count;
     currentId++;
-    console.log(e.img);
     if (this.state.isAnonymous) {
       await this.setState((prev) => {
         return {
@@ -573,7 +571,6 @@ class Home extends React.Component {
       this.calculatePrice();
       this.setState({ formOpen: false });
     }
-    console.log(this.state.lists);
   };
 
   editListItem = async (listIndex, itemIndex, data, imgArray) => {
@@ -724,17 +721,14 @@ class Home extends React.Component {
     if (this.state.isAnonymous && e.imgSub.length === 0) {
       imgArray = [{ name: "defaultImg", url: defaultImg }];
       this.handleSubmit(e, imgArray);
-      console.log(1);
       return;
     } else if (this.state.isAnonymous) {
       imgArray = e.img;
 
       this.handleSubmit(e, imgArray);
-      console.log(2, e.imgSub);
       return;
     } else if (e.imgSub === []) {
       this.handleSubmit(e, imgArray);
-      console.log(3);
       return;
     } else {
       var user = firebase.auth().currentUser;

@@ -9,6 +9,7 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Card from "@material-ui/core/Card";
 import InputLabel from "@material-ui/core/InputLabel";
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
+import defaultImg from "../assets/images/defaultImg.svg";
 
 const ModalBg = styled.div`
   position: fixed;
@@ -224,7 +225,7 @@ class EditWant extends React.Component {
   componentDidMount() {
     if (
       this.state.data.img[0].name === "defaultImg" &&
-      this.state.data.img[0].url === "/static/media/defaultImg.51b28fa6.svg"
+      this.state.data.img[0].url === defaultImg
     ) {
       this.setState((prev) => {
         return {
@@ -246,7 +247,6 @@ class EditWant extends React.Component {
       });
     } else if (this.state.data.img.length <= 5) {
       this.setState({ imgLimited: true });
-      console.log(this.state.data.img);
     } else {
       return;
     }
