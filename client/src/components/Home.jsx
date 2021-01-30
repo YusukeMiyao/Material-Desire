@@ -730,7 +730,6 @@ class Home extends React.Component {
       this.handleSubmit(e, imgArray);
       return;
     } else if (e.imgSub === []) {
-
       this.handleSubmit(e, imgArray);
       console.log(1);
       return;
@@ -793,7 +792,7 @@ class Home extends React.Component {
   editImgUp = async (e, listIndex, itemIndex) => {
     let fileName = [];
     let imgArray = [];
-    if (this.state.isAnonymous && e.imgSub.length === 0) {
+    if (this.state.isAnonymous && e.img.length === 0) {
       e.img = [{ name: "defaultImg", url: defaultImg }];
       this.editListItem(listIndex, itemIndex, e, imgArray);
       return;
