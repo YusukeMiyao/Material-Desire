@@ -2,6 +2,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
 import "firebase/storage";
+import "firebase/performance";
 
 var firebaseui = require("firebaseui");
 const firebaseConfig = {
@@ -40,5 +41,7 @@ export const uiConfigSecond = {
   autoUpgradeAnonymousUsers: false,
 };
 // var database = firebase.database();
+const perf = firebase.performance();
+
 
 export default firebase;
