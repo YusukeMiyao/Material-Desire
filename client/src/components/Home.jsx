@@ -779,7 +779,7 @@ class Home extends React.Component {
   editImgUp = async (e, listIndex, itemIndex) => {
     let fileName = [];
     let imgArray = [];
-    if (this.state.isAnonymous && e.imgSub.length === 0) {
+    if (this.state.isAnonymous && e.img.length === 0) {
       e.img = [{ name: "defaultImg", url: defaultImg }];
       this.editListItem(listIndex, itemIndex, e, imgArray);
       return;
