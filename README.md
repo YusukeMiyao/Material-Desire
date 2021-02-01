@@ -16,7 +16,7 @@
 - ルーティング機能(react-router-dom)
 - 欲しい物の追加・編集・削除(firebase/Realtime Database,Storage)
 - 追加した欲しい物のドラッグ&ドロップ(react-beautiful-dnd)
-- 一番欲しいリストに入っている欲しい物の総額
+- 一番欲しいリストに入っている欲しい物の総額の自動計算
 - リストタイトル編集
 - 詳細機能
 - 画像のスワイプ(Swiper)
