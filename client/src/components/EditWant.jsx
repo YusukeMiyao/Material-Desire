@@ -10,6 +10,7 @@ import Card from "@material-ui/core/Card";
 import InputLabel from "@material-ui/core/InputLabel";
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
 import defaultImg from "../assets/images/defaultImg.svg";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const ModalBg = styled.div`
   position: fixed;
@@ -219,6 +220,7 @@ class EditWant extends React.Component {
       submitError: false,
       urlError: false,
       imgLimited: false,
+      isLoading: false,
     };
   }
 
@@ -424,6 +426,7 @@ class EditWant extends React.Component {
             </InputArea>
             <ButtonArea>
               <AddButton onClick={this.handleSubmit} onBlur={this.resetErrors}>
+                {this.state.isLoading ? <CircularProgress /> : ""}
                 <AddIcon />
                 登録
               </AddButton>
@@ -515,6 +518,7 @@ class EditWant extends React.Component {
           return;
         }
         data.other = other;
+        break;
       default:
         break;
     }
@@ -585,6 +589,7 @@ class EditWant extends React.Component {
     } else if (this.state.urlError) {
       return;
     } else {
+      this.setState({ submitError: false, isLoading: true });
       onSubmit(data, listIndex, itemIndex);
     }
   };

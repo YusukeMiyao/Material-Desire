@@ -499,6 +499,7 @@ class Form extends React.Component {
           return;
         }
         data.other = other;
+        break;
       default:
         break;
     }
