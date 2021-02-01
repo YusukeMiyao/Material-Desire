@@ -1,59 +1,43 @@
-# ToDoList
+# [Material Desire](https://material-desire-c5ada.web.app/)
 
-## How to start
+## どんなアプリ?🤔
+
+- 🧥🥼👕👖🧢💍 **ほしい物リスト** 📝
+- ドラッグ&ドロップによる、視覚的に欲しい物の順位付けが可能
+
+### Demo
+
+[youtube で見る 👀](https://youtu.be/mWZBJO5Ju50)
+
+### Features
+
+- SNS による新規登録・ログイン(firebase/Authentication)
+- ゲストログイン
+- ルーティング機能(react-router-dom)
+- 欲しい物の追加・編集・削除(firebase/Realtime Database,Storage)
+- 追加した欲しい物のドラッグ&ドロップ(react-beautiful-dnd)
+- 一番欲しいリストに入っている欲しい物の総額の自動計算
+- リストタイトル編集
+- 詳細機能
+- 画像のスワイプ(Swiper)
+- バリデーションチェック
+- 画像アップロード後の圧縮(firebase/Resize Images) etc...
+
+## 開発用
 
 ### front
 
+1. `git clone https://github.com/YusukeMiyao/Material-Desire.git`
 1. `cd client`
+1. `touch .env`
+1. 下記\*のシークレット箇所を firebase コンソールで確認し、.env を編集
+   `REACT_APP_FIREBASE_KEY=******************** REACT_APP_FIREBASE_DOMAIN=******************** REACT_APP_FIREBASE_DATABASE=******************** REACT_APP_FIREBASE_PROJECT_ID=******************** REACT_APP_FIREBASE_STORAGE_BUCKET=******************** REACT_APP_FIREBASE_SENDER_ID=******************** REACT_APP_FIREBASE_APP_ID=******************** REACT_APP_FIREBASE_MEASUREMENT_ID=********************`
+
 1. `npm install`
 1. `npm start`
 1. `http://localhost:3000/`にアクセス
 
-## 開発ルール
+## 展望
 
-1. 自分の開発する機能に対応する issue を立てる。
-
-1. ローカルで`develop`ブランチに`checkout`。
-
-1. リモートの変更を反映するため、**必ずプルする**。
-
-   - `git pull origin develop`
-
-1. issue に対応したブランチを切る。
-
-   - ブランチの命名
-
-     - まず`feature`（機能追加）, `fix`（バグ修正）, `hotfix` （致命的なバグの修正）など、そのブランチで行う作業の概要を書く。
-     - "/" で区切り、詳細な説明をハイフン区切りで記述。
-     - "\_"で区切り、issue 番号を追加。
-
-     例
-
-     > about/detail-description-of-function_issue00
-
-   - コミットは細かく。細かい変更目的毎にコミットすること。
-
-   - コミットメッセージの書き方
-
-     - 一行目に概要。まず`ADD`, `DELETE`, `FIX`, `IMPROVE`など、そのコミットで行った作業を書く。
-     - ":"で区切り、詳細を書き足す。
-     - （もしあれば）二行目に TODO を書く。メモ代わり。
-     - 最終行には "#00" の形で対応する issue 番号を下記。
-
-     書き方
-
-     > ABOUT: write about your development
-     >
-     > TODO(optional): write about your (or someone's) to-do
-     >
-     > #00 (issue number)
-
-     具体例
-
-     > MODIFY: encoding of output csv of prediction
-     >
-     > TODO(optional): encoding of output accuracy
-     >
-     > #124
-
-1. issue で書いた内容を必要十分に開発できたら、適切なブランチに対して（だいたいは`develop`）マージする。
+- ネイティブアプリにする
+- EC サイトの商品ページから追加できるようにする etc...順次拡大
