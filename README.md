@@ -3,14 +3,13 @@
 ## どんなアプリ?
 
 - ほしい物リスト
-  - ドラッグ&ドロップ可能で、  
-    視覚的に欲しい物の、順位付けが可能
+- ドラッグ&ドロップによる、視覚的に欲しい物の順位付けが可能
 
 ### Demo
 
 - [youtube で見る](https://youtu.be/mWZBJO5Ju50)
 
-### 機能
+### Features
 
 - SNS による新規登録・ログイン(firebase/Authentication)
 - ゲストログイン
@@ -22,8 +21,7 @@
 - 詳細機能
 - 画像のスワイプ(Swiper)
 - バリデーションチェック
-- 画像アップロード後の圧縮 etc...(firebase/Resize Images)
-  react.js,firebase
+- 画像アップロード後の圧縮(firebase/Resize Images) etc...
 
 ## How to start
 
@@ -32,10 +30,8 @@
 1. `git clone https://github.com/YusukeMiyao/Material-Desire.git`
 1. `cd client`
 1. `touch .env`
-1. .env の編集
-
-- .env.sample の\*のシークレット箇所を firebase のコンソールで確認し、  
-  .env を編集
+1. 下記\*のシークレット箇所を firebase コンソールで確認し、.env を編集
+   `REACT_APP_FIREBASE_KEY=******************** REACT_APP_FIREBASE_DOMAIN=******************** REACT_APP_FIREBASE_DATABASE=******************** REACT_APP_FIREBASE_PROJECT_ID=******************** REACT_APP_FIREBASE_STORAGE_BUCKET=******************** REACT_APP_FIREBASE_SENDER_ID=******************** REACT_APP_FIREBASE_APP_ID=******************** REACT_APP_FIREBASE_MEASUREMENT_ID=********************`
 
 1. `npm install`
 1. `npm start`
