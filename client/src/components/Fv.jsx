@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Revenue from "../assets/images/revenue.svg";
+// import Revenue from "../assets/images/revenue.svg";
 
 const Wrap = styled.div`
   font-family: "Roboto";

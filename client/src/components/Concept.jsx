@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import OnlineShopping from "../assets/images/online_shopping.svg";
+// import OnlineShopping from "../assets/images/online_shopping.svg";
 
 const Wrap = styled.div``;
 const Content = styled.div`

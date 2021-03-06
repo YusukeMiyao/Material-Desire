@@ -1,10 +1,10 @@
 import React from "react";
-import "../assets/css/App.css";
-import Form from "./Form.jsx";
-import Want from "./Want.jsx";
+// import "../assets/css/App.css";
+import Form from "../components/Form.jsx";
+import Want from "../components/Want.jsx";
 import EditWant from "./EditWant.jsx";
-import Title from "./Title.jsx";
-import EditTitle from "./EditTitle.jsx";
+import Title from "../components/Title.jsx";
+import EditTitle from "../components/EditTitle.jsx";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import styled from "styled-components";
 import firebase, { uiConfigSecond } from "../utils/firebase";
