@@ -11,6 +11,7 @@ import Auth from "./Auth";
 
 class App extends React.Component {
   render() {
+    document.title = "Material Desire";
     return (
       <StylesProvider injectFirst>
         <Router>
